@@ -1,3 +1,5 @@
+package src;
+
 import java.util.function.Consumer;
 
 public class Timeit {
@@ -9,11 +11,12 @@ public class Timeit {
         this.timedMethod = m;
     }
 
-    public long measureNanos(Object...args) {
+    public float measureNanos(Object...args) {
         this.start = System.nanoTime();
         timedMethod.accept(args);
         this.stop = System.nanoTime();
         System.out.printf("Elapsed Time: %dns%n", (stop - start));
-        return this.stop - this.start;
+        float elapsed = (this.stop - this.start);
+        return elapsed;
     }
 }

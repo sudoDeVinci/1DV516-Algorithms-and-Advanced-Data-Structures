@@ -1,3 +1,4 @@
+package src;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,10 +10,10 @@ import java.util.Arrays;
  */
 public class Plotter {
 
-    String graphPath;
-    String x_label = null;
-    String y_label = null;
-    String title;
+    String graphPath = "graphs/";
+    String x_label = "Time";
+    String y_label = "Elements";
+    String title = "_";
 
     /**
      * Overloaded constructors so the labels and title are optional.
@@ -20,7 +21,7 @@ public class Plotter {
      * @param path
      */
     public Plotter(String path){
-        this.graphPath = path;
+        this.graphPath += path;
     }
     public Plotter(String path, String x_label, String y_label) {
         this.graphPath = path;
@@ -66,13 +67,8 @@ public class Plotter {
         String scriptPath = "scripts/plotter.py";
         String[] command;
 
-        // CReate command depending on the args passed
-        if (x_label == null || y_label == null) {
-            command = new String[]{keyword, scriptPath, graphPath, Arrays.toString(x), Arrays.toString(y)};
-        } else {
-            command = new String[]{keyword, scriptPath, graphPath, Arrays.toString(x), Arrays.toString(y), x_label, y_label};
-        }
-        
+        // Create command of the args passed
+        command = new String[]{keyword, scriptPath, graphPath, Arrays.toString(x), Arrays.toString(y), x_label, y_label, title};
         System.out.println(Arrays.toString(command));
         try{
             // Create and start python process.
@@ -91,16 +87,4 @@ public class Plotter {
             e.printStackTrace();
         }
     } 
-
-    public static void main(String[] args) {
-        String graphPath1 = "graphs/path1.png";
-        Plotter plotter = new Plotter(graphPath1);
-        plotter.plot(new Integer[]{2,3,4,5,6}, new Integer[]{12,13,14,15,16});
-
-        String graphPath2 = "graphs/path2.png";
-        plotter = new Plotter(graphPath2);
-        plotter.setXLabel("New X");
-        plotter.setYLabel("New Y");
-        plotter.plot(new Integer[]{2,3,4,5,6}, new Integer[]{12,13,14,15,16});
-    }
 }

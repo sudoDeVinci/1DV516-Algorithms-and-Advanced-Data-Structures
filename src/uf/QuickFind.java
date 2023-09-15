@@ -1,17 +1,15 @@
+package src.uf;
 /**
  * Quick Find implementation.
  */
-class QuickFind {
+public class QuickFind extends UnionFind{
     // array to hold nodes.
     private int[] S;
     // hold ont array size for use later.
     int N;
 
     public QuickFind(int N) {
-        // Each element points to itself as root initially.
-        for (int i = 0; i < N; i++) {
-            this.S[i] = i;
-        }
+        super(N);
     }
 
     /**
