@@ -1,14 +1,34 @@
-from sys import argv
+import matplotlib.pyplot as plt
+import json
+import sys
 
+def plot(graph_path, x, y, x_label, y_label):
+    x = json.loads(x)
+    y = json.loads(y)
+    plt.plot(x, y)
+    # Add labels and title
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.title('Line Graph')
 
-def main(arg1, arg2):
-    # Do something with arg1 and arg2
-    print(arg1)
-    print(arg2)
-    print(arg3)
+    # Show the graph
+    plt.savefig(graph_path)
 
 if __name__ == "__main__":
-    arg1 = argv[1]
-    arg2 = argv[2]
-    arg3 = argv[3]
-    main(arg1, arg2, arg3)
+    argsl = len(sys.argv)
+    # Check for correct args
+    if not (argsl == 4 or argsl == 6):
+        exit()
+    
+    x_label = "Elements"
+    y_label = "Time"
+    graph_path = sys.argv[1]
+    x = sys.argv[2]
+    y = sys.argv[3]
+
+    if argsl == 6:
+        x_label = sys.argv[4]
+        y_label = sys.argv[5]
+
+
+    plot(graph_path, x, y, x_label, y_label)
