@@ -74,5 +74,12 @@ public class WeightedUnion extends UnionFind{
         Arrays.fill(size, 1);
     }
 
+    public void reset() {
+        for (int i = 0; i < sz; i++) {
+            this.S[i] = i;
+        }
+         Arrays.fill(size, 1);
+    }
+
 
 }

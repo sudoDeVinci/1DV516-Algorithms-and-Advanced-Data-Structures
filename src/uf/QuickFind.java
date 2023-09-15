@@ -42,6 +42,12 @@ public class QuickFind extends UnionFind{
         }
     }   
 
+    public void reset() {
+        for (int i = 0; i < sz; i++) {
+            this.S[i] = i;
+        }
+    }
+
     @Override
     public void reset(int N) {
         this.S = new int[N];

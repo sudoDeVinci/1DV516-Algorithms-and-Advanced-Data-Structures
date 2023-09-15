@@ -15,17 +15,13 @@ public abstract class UnionFind {
     public abstract void union(int a, int b);
 
     public void Run(Integer[][] pairs) {
-        for(int i=0;i<sz;i++){
+        int length = pairs.length;
+        for(int i=0;i<length;i++){
             union(pairs[i][0],pairs[i][1]);
         }
     }
 
-    public void reset(int N) {
-        this.S = new int[N];
-        // Each element points to itself as root initially.
-        for (int i = 0; i < N; i++) {
-            this.S[i] = i;
-        }
-    }
+    public abstract void reset();
+    public abstract void reset(int N);
 
 }
