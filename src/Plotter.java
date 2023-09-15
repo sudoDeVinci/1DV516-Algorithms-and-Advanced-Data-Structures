@@ -24,12 +24,12 @@ public class Plotter {
         this.graphPath += path;
     }
     public Plotter(String path, String x_label, String y_label) {
-        this.graphPath = path;
+        this.graphPath += path;
         this.x_label = x_label;
         this.y_label = y_label;
     }
     public Plotter(String path, String x_label, String y_label, String title) {
-        this.graphPath = path;
+        this.graphPath += path;
         this.x_label = x_label;
         this.y_label = y_label;
         this.title = title;
@@ -64,12 +64,12 @@ public class Plotter {
      */
     public <T,R> void plot(T[] x, R[] y) {
         String keyword = "python";
-        String scriptPath = "scripts/plotter.py";
+        String scriptPath = "src/scripts/plotter.py";
         String[] command;
 
         // Create command of the args passed
         command = new String[]{keyword, scriptPath, graphPath, Arrays.toString(x), Arrays.toString(y), x_label, y_label, title};
-        System.out.println(Arrays.toString(command));
+        // .out.println(Arrays.toString(command));
         try{
             // Create and start python process.
             ProcessBuilder processBuilder = new ProcessBuilder(command);

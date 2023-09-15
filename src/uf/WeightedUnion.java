@@ -63,6 +63,7 @@ public class WeightedUnion extends UnionFind{
 
     @Override
     public void reset(int N) {
+        this.S = new int[N];
         // Each element points to itself as root initially.
         for (int i = 0; i < N; i++) {
             this.S[i] = i;

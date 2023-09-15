@@ -1,4 +1,7 @@
 package src.uf;
+
+import java.util.Arrays;
+
 /**
  * Quick Find implementation.
  */
@@ -6,7 +9,7 @@ public class QuickFind extends UnionFind{
     // array to hold nodes.
     private int[] S;
     // hold ont array size for use later.
-    int N;
+    private int sz;
 
     public QuickFind(int N) {
         super(N);
@@ -31,13 +34,23 @@ public class QuickFind extends UnionFind{
         int idA = S[a];
         int idB = S[b];
 
-        for (int index = 0; index < N; index++) {
+        for (int index = 0; index < sz; index++) {
             int value = S[index];
             if (value == idA) {
                 S[index] = idB;
             }
         }
     }   
+
+    @Override
+    public void reset(int N) {
+        this.S = new int[N];
+        // Each element points to itself as root initially.
+        for (int i = 0; i < N; i++) {
+            this.S[i] = i;
+        }
+        this.sz = N;
+    }
 
 
 }
