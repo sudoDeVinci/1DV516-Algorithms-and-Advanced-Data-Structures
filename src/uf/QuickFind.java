@@ -1,24 +1,20 @@
 package src.uf;
 
-import java.util.Arrays;
-
 /**
- * Quick Find implementation.
+ * Simplest Quick Find implementation (no optimizations.)
  */
-public class QuickFind extends UnionFind{
-    // array to hold nodes.
+public class QuickFind extends UnionFind {
     private int[] S;
-    // hold ont array size for use later.
-    private int sz;
+    private int size;
 
-    public QuickFind(int N) {
+    public QuickFind (int N) {
         super(N);
     }
 
     /**
-     * Return whether two nodes are connected.
-     * @param a Node a
-     * @param b Node b
+     * Whether two nodes are connected.
+     * @param a
+     * @param b
      * @return
      */
     public boolean connected(int a, int b) {
@@ -33,30 +29,27 @@ public class QuickFind extends UnionFind{
     public void union(int a, int b) {
         int idA = S[a];
         int idB = S[b];
-
-        for (int index = 0; index < sz; index++) {
-            int value = S[index];
-            if (value == idA) {
+        for (int index = 0; index < size; index++) {
+            if (S[index] == idA) {
                 S[index] = idB;
             }
         }
-    }   
-
-    public void reset() {
-        for (int i = 0; i < sz; i++) {
-            this.S[i] = i;
-        }
     }
 
-    @Override
+    /**
+     * Reset the object but keep the size of the current Set.
+     */
+    public void reset(){
+        for (int i = 0; i < this.size; i++) this.S[i] = i;
+    }
+
+    /**
+     * Reset the current object but resize the current set.
+     * @param N
+     */
     public void reset(int N) {
         this.S = new int[N];
-        // Each element points to itself as root initially.
-        for (int i = 0; i < N; i++) {
-            this.S[i] = i;
-        }
-        this.sz = N;
+        for (int i = 0; i < N; i++) this.S[i] = i;
+        this.size = N;
     }
-
-
 }

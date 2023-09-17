@@ -1,184 +1,94 @@
 package src;
-
 import src.uf.QuickFind;
 import src.uf.UnionFind;
-import src.uf.WeightedUnion;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import src.uf.WeightedUnionFind;
+import src.Util;
 
 public class App {
-    final int SAMPLES = 100;
-    final int UF_SIZE = 1_000_000;
+    final int SAMPLES = 1000;
+    int UF_SIZE = 2;
 
     /**
      * Plot the runs of two implementations of UnionFind.
      * For a Union Find of implementation of size N, we perform N unions.
      * @param N
      */
-    public void qfRace(){
+    public void qfRace() {
         Plotter plt;
-        Integer[] sizes = {10, 50, 100, 500, 1000, 5000, 10000};
 
+        /**
+         * Get graphs for unions on 100_000 items.
+         */
+        this.UF_SIZE = 100_000;
+        Integer[] unions = { 1000, 5000, 10000, 15000, 20000, 25000,
+                            30000, 35000, 40000, 45000, 50000, 50000,
+                            60000, 70000, 80000, 90000};
         
-        
+        WeightedUnionFind wuf = new WeightedUnionFind(UF_SIZE);
+        Double[] times = getQfTimesFixedSize(unions, wuf);
+        System.out.println("Graphing WUF FS");
+        plt = new Plotter("uf/FS100_000_WeightedUnionFind.png", "Unions", "Time (ms)","Weighted Union Find 100_000 elements");
+        plt.plot(unions, times);
+        wuf = null;
+
+        QuickFind qf = new QuickFind(UF_SIZE);
+        times = getQfTimesFixedSize(unions, qf);
+        System.out.println("Graphing QF FS");
+        plt = new Plotter("uf/FS100_000_QuickFind.png", "Unions", "Time (ms)","Quick Find 100_000 elements");
+        plt.plot(unions, times);
+        qf = null;
+
 
 
         /**
-         * Get graphs for proportional union scaling.
+         * Get graphs for unions on 1_000_000 items.
          */
-        WeightedUnion wuf = new WeightedUnion(sizes[0]);
-        Float[] wuftimes = getQfTimesProp(sizes, wuf);
-        plt = new Plotter("uf/ProportionalWeightedUnionFind.png", "Unions", "Time (ns)","Weighted Union Find");
-        plt.plot(sizes, wuftimes);
-        wuftimes = new Float[1];
+        this.UF_SIZE = 1_000_000;
+        unions = new Integer[] { 50000, 100000, 150000, 200000, 250000, 300000,
+                                350000, 400000, 450000, 500000, 550000,
+                                650000, 700000, 800000, 900000, 950000};
 
-        QuickFind qf = new QuickFind(sizes[0]);
-        Float[] qftimes = getQfTimesProp(sizes, qf);
-        plt = new Plotter("uf/ProportionalQuickFind.png", "Unions", "Time (ns)","Quick Find");
-        plt.plot(sizes, qftimes);
-        qftimes = new Float[1];
+        wuf = new WeightedUnionFind(UF_SIZE);
+        times = getQfTimesFixedSize(unions, wuf);
+        System.out.println("Graphing WUF FS");
+        plt = new Plotter("uf/FS1_000_000_WeightedUnionFind.png", "Unions", "Time (ms)","Weighted Union Find 1_000_000 elements");
+        plt.plot(unions, times);
+        wuf = null;
 
-
-        /**
-         * Get graphs for fixed-sized union scaling.
-         */
         qf = new QuickFind(UF_SIZE);
-        qftimes = getQfTimesFixedSize(sizes, qf);
-        plt = new Plotter("uf/FS1000000_QuickFind.png", "Unions", "Time (ns)","Quick Find");
-        plt.plot(sizes, qftimes);
-        qftimes = new Float[1];
-
-        wuf = new WeightedUnion(UF_SIZE);
-        wuftimes = getQfTimesFixedSize(sizes, wuf);
-        plt = new Plotter("uf/FS1000000_WeightedUnionFind.png", "Unions", "Time (ns)","Weighted Union Find");
-        plt.plot(sizes, wuftimes);
-        wuftimes = new Float[1];
-
+        times = getQfTimesFixedSize(unions, qf);
+        System.out.println("Graphing QF FS");
+        plt = new Plotter("uf/FS1_000_000_QuickFind.png", "Unions", "Time (ms)","Quick Find 1_000_000 elements");
+        plt.plot(unions, times);
+        qf = null;
     }
 
-
-    /**
-     * Get the times in nanoseconds to a number of runs on a given UnionFind algo of various sizes.
-     * @param sizes
-     * @param uf
-     * @return
-     */
-    private Float[] getQfTimesProp(Integer[] sizes, UnionFind uf) {
-        int length  = sizes.length;
-        Float[] times = new Float[length];
-        Float[] samples = new Float[SAMPLES];
-
-        //Init timer
-        Timeit timer;
-
+    private Double[] getQfTimesFixedSize(Integer[] unions, UnionFind uf) {
+        int length = unions.length;
+        Double[] times = new Double[length];
+        
         for (int i = 0; i < length; i++) {
-            uf.reset(sizes[i]);
-            Integer[][] pairs = genRandomArray(sizes[i]);
-            samples = new Float[SAMPLES];
-            for(int x = 0;x < SAMPLES; x++) {
-                // uf.reset(sizes[i]);
-                timer = new Timeit((args) -> {
-                    Integer[][] connections = (Integer[][]) args[0];
-                    uf.Run(connections);
-                });
-                samples[x] = timer.measureNanos((Object) pairs);
-            }
-            times[i] = sampleMean(samples);
+            uf.reset();
+            Integer[][] pairs = Util.genXYPairs(unions[i], UF_SIZE);
+
+            times[i] = measureExecutionTime(uf, pairs);
         }
+
         return times;
     }
 
-    private Float[] getQfTimesFixedSize(Integer[] unions, UnionFind uf) {
-        int length  = unions.length;
-        Float[] times = new Float[length];
-        Float[] samples = new Float[SAMPLES];
-
-        //Init timer
+    private double measureExecutionTime(UnionFind uf, Integer[][] pairs) {
+        double[] samples = new double[SAMPLES];
         Timeit timer;
 
-        for(int i = 0; i < length; i++) {
-            uf.reset(UF_SIZE);
-            Integer[][] pairs = genRandomArray(unions[i], UF_SIZE);
-            samples = new Float[SAMPLES];
-            for(int x = 0;x < SAMPLES; x++) {
-                // uf.reset(UF_SIZE);
-                timer = new Timeit((args) -> {
-                    Integer[][] connections = (Integer[][]) args[0];
-                    uf.Run(connections);
-                });
-                samples[x] = timer.measureNanos((Object) pairs);
-            }
-            times[i] = sampleMean(samples);
+        for (int x = 0; x < SAMPLES; x++) {
+            timer = new Timeit((args) -> {
+                Integer[][] connections = (Integer[][]) args[0];
+                uf.run_connected(connections);
+            });
+            samples[x] = timer.measureMilis((Object) pairs);
         }
-        return times;
-    }   
-
-    /**
-     * Find the IQR, remove outliers, then find the average.
-     * @param samples
-     * @return
-     */
-    private float sampleMean(Float[] samples) {
-        Arrays.sort(samples);
-        float q1 = Quartile(samples, 25);
-        float q3 = Quartile(samples, 75);
-        float iqr = q3 - q1;
-
-        double ub =  q3 + 1.5*iqr;
-        double lb =  q1 - 1.5*iqr;
-
-        List<Float> cleaned = new ArrayList<>();
-
-        for (Float value : samples) {
-            if (value >= lb && value <= ub) {
-                cleaned.add(value);
-            }
-        }
-
-        float sum = 0;
-        for (Float value : cleaned) {
-            sum += value;
-        }
-        return sum / cleaned.size();
-    }
-
-    private static <T> T Quartile(T[] data, int percentile) {
-        int index = (int) Math.ceil((percentile / 100.0) * data.length) - 1;
-        return data[index];
-    }
-
-    /**
-     * Generate a random N array of integer pairs.
-     */
-    private Integer[][] genRandomArray(int N) {
-        Random rand = new Random();
-        Integer[][] pairs = new Integer[N][2];
-
-        for (int i = 0; i < N; i++) {
-            int rand1 = rand.nextInt(N);
-            int rand2 = rand.nextInt(N);
-
-            pairs[i][0] = rand1;
-            pairs[i][1] = rand2;
-        }
-        return pairs;
-    }
-    
-    private Integer[][] genRandomArray(int N, int bound) {
-        Random rand = new Random();
-        Integer[][] pairs = new Integer[N][2];
-
-        for (int i = 0; i < N; i++) {
-            int rand1 = rand.nextInt(bound);
-            int rand2 = rand.nextInt(bound);
-
-            pairs[i][0] = rand1;
-            pairs[i][1] = rand2;
-        }
-        return pairs;
+        return Util.sampleMean(samples);
     }
 
     public static void main(String[] args) {
