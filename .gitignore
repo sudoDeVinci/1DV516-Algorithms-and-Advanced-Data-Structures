@@ -1,0 +1,6 @@
+*.cfg
+*.csh
+share/*
+lib/*
+bin/*
+lib64

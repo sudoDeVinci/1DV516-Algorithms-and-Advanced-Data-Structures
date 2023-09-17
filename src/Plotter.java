@@ -10,11 +10,28 @@ import java.util.Arrays;
  * It also takes in and can change the x label, y label and title.
  */
 public class Plotter {
+
+    public static enum Type {
+        LINEAR("Linear"),
+        EXPONENTIAL("Exponential"),
+        NONE("None");
+
+        private final String type;
+
+        private Type(String type) {
+            this.type = type;
+        }
+
+        public String toString() {
+            return type;
+        }
+    }
     
     private String graphPath = "graphs/";
     private String x_label = "_";
     private String y_label = "_";
     private String title = "_";
+    private Type type = Type.NONE;
 
     private final String KEYWORD = "python";
     private final String SCRIPT_PATH = "src/scripts/plotter.py";
@@ -40,14 +57,31 @@ public class Plotter {
         this.y_label = y_label;
     }
 
+
+    /**
+     * Plot type addition.
+     * @param path
+     * @param x_label
+     * @param y_label
+     * @param type
+     */
+    public Plotter(String path, String x_label, String y_label, Plotter.Type type) {
+        this.type = type;
+        this.graphPath += path;
+        this.x_label = x_label;
+        this.y_label = y_label;
+    }
+
     /**
      * x & y labels, and title additions.
      * @param path
      * @param x_label
      * @param y_label
+     * @param type
      * @param title
      */
-    public Plotter(String path, String x_label, String y_label, String title) {
+    public Plotter(String path, String x_label, String y_label, Plotter.Type type, String title) {
+        this.type = type;
         this.graphPath += path;
         this.x_label = x_label;
         this.y_label = y_label;
@@ -92,6 +126,14 @@ public class Plotter {
     }
 
     /**
+     * Change the plot type.
+     * @param type
+     */
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    /**
      * Plotter to take in generic arrays of numerical data.
      * These arrays cannot  be primitive types, but can be things such as Integer[] or Float[].
      * @param x
@@ -103,7 +145,7 @@ public class Plotter {
         /**
          * Assemble command to be run.
          */
-        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, Arrays.toString(x), Arrays.toString(y), x_label, y_label, title};
+        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, Arrays.toString(x), Arrays.toString(y), x_label, y_label, title, this.type.toString()};
         // System.out.println(Arrays.toString(command));
         try {
             Process p = new ProcessBuilder(command).start();

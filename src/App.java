@@ -26,15 +26,15 @@ public class App {
         
         WeightedUnionFind wuf = new WeightedUnionFind(UF_SIZE);
         Double[] times = getQfTimesFixedSize(unions, wuf);
-        System.out.println("Graphing WUF FS");
-        plt = new Plotter("uf/FS100_000_WeightedUnionFind.png", "Unions", "Time (ms)","Weighted Union Find 100_000 elements");
+        System.out.println("Graphing WUF FS 100_00");
+        plt = new Plotter("uf/FS100_000_WeightedUnionFind.png", "Unions", "Time (ms)", Plotter.Type.LINEAR,"Weighted Union Find 100_000 elements");
         plt.plot(unions, times);
         wuf = null;
 
         QuickFind qf = new QuickFind(UF_SIZE);
         times = getQfTimesFixedSize(unions, qf);
-        System.out.println("Graphing QF FS");
-        plt = new Plotter("uf/FS100_000_QuickFind.png", "Unions", "Time (ms)","Quick Find 100_000 elements");
+        System.out.println("Graphing QF FS 100_00");
+        plt = new Plotter("uf/FS100_000_QuickFind.png", "Unions", "Time (ms)", Plotter.Type.LINEAR,"Quick Find 100_000 elements");
         plt.plot(unions, times);
         qf = null;
 
@@ -50,15 +50,15 @@ public class App {
 
         wuf = new WeightedUnionFind(UF_SIZE);
         times = getQfTimesFixedSize(unions, wuf);
-        System.out.println("Graphing WUF FS");
-        plt = new Plotter("uf/FS1_000_000_WeightedUnionFind.png", "Unions", "Time (ms)","Weighted Union Find 1_000_000 elements");
+        System.out.println("Graphing WUF FS 1_000_000");
+        plt = new Plotter("uf/FS1_000_000_WeightedUnionFind.png", "Unions", "Time (ms)", Plotter.Type.LINEAR,"Weighted Union Find 1_000_000 elements");
         plt.plot(unions, times);
         wuf = null;
 
         qf = new QuickFind(UF_SIZE);
         times = getQfTimesFixedSize(unions, qf);
-        System.out.println("Graphing QF FS");
-        plt = new Plotter("uf/FS1_000_000_QuickFind.png", "Unions", "Time (ms)","Quick Find 1_000_000 elements");
+        System.out.println("Graphing QF FS 1_000_000");
+        plt = new Plotter("uf/FS1_000_000_QuickFind.png", "Unions", "Time (ms)", Plotter.Type.LINEAR,"Quick Find 1_000_000 elements");
         plt.plot(unions, times);
         qf = null;
     }
