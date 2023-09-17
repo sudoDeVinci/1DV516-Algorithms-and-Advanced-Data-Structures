@@ -15,15 +15,18 @@ def plot(graph_path:str, x:list[float], y:list[float], x_label:str, y_label:str,
     # Get the 
     if plot_type == "Linear":
         slope, intercept, r_value = linear_regression(x, y)
-        equation = f'Linear Fit (y={slope:.2f}x + {intercept:.2f})'
+        equation = f'Linear Fit (y={slope:.3f}x + {intercept:.3f})'
+
     elif plot_type == "Exponential":
         slope, intercept, r_value = power_law(x, y)
-        equation = f'Exponential Fit (y={intercept:.2f} * x^{slope:.2f})'
+        equation = f'Exponential Fit (y={intercept:.3f} * x^{slope:.3f})'
+
     elif plot_type == "None":
         equation = None
         slope = None
         intercept = None
         r_value = None
+        
     else:
         raise ValueError("Invalid plot_type. Use 'Linear', 'Exponential', or 'None'.")
 

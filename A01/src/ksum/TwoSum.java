@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 2-Sum implementation with caching to allow for linear rather than 
+ * Quadratic growth.
+ */
 public class TwoSum {
     public List<int[]> twoSum (Integer[] nums, Integer target, Integer start) {
         List<int[]> result = new ArrayList<>();

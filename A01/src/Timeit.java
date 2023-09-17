@@ -41,6 +41,16 @@ public class Timeit {
     }
 
     /**
+     * Measure the execution of the given method in microseconds.
+     * @param args
+     * @return
+     */
+    public double measureMicros(Object...args) {
+        double elapsed =  measureNanos(args);
+        return elapsed/1e3;
+    }
+
+    /**
      * Measure the execution of the given method in miliseconds.
      * @param args
      * @return
