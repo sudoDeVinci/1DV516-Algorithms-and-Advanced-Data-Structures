@@ -12,18 +12,13 @@ def plot(graph_path:str, x:list[float], y:list[float], x_label:str, y_label:str,
     Simple plot for list of x and y values.
     """
 
-    # Convert data to float arrays.
-    x = json.loads(x)
-    y = json.loads(y)
-
-
     # Get the 
     if plot_type == "Linear":
         slope, intercept, r_value = linear_regression(x, y)
         equation = f'Linear Fit (y={slope:.2f}x + {intercept:.2f})'
     elif plot_type == "Exponential":
         slope, intercept, r_value = power_law(x, y)
-        equation = f'Exponential Fit (y={a:.2f} * exp({b:.2f}x))'
+        equation = f'Exponential Fit (y={intercept:.2f} * x^{slope:.2f})'
     elif plot_type == "None":
         equation = None
         slope = None
@@ -35,7 +30,7 @@ def plot(graph_path:str, x:list[float], y:list[float], x_label:str, y_label:str,
     # Generate expected values
     expected_data = generate_expected_data(slope, intercept, x, plot_type)
 
-
+    print(equation)
 
     plt.figure(figsize=(8, 6))
     plt.scatter(x, y, label='Actual Data')
@@ -60,9 +55,9 @@ def generate_expected_data(slope: float, intercept:float,x: list[float], plot_ty
     accordintg the the type of plot, either linear or exponential.
     """
     if plot_type == "Linear":
-        return tuple([(slope*x_val)+intercept for x_val in x])
+        return [(slope*x_val)+intercept for x_val in x]
     elif plot_type == "Exponential":
-        return tuple([intercept*(x_val**slope) for x_val in x])
+        return [intercept*(x_val**slope) for x_val in x]
     else:
         return None
 
@@ -89,7 +84,7 @@ def power_law(x: list[float], y: list[float]) -> tuple[float, float, float]:
     a = 2**intercept  # 2 raised to the power of intercept
     b = slope
 
-    return tuple(b, a, coefficient)
+    return b, a, coefficient
 
 
 def dual_plot(graph_path, x1, y1,x2, y2, x_label, y_label, title) -> None:
@@ -99,8 +94,12 @@ def dual_plot(graph_path, x1, y1,x2, y2, x_label, y_label, title) -> None:
 def scatterplot(graph_path, x, y, x_label, y_label, title) -> None:
     pass
 
+def copiable_printout():
+    print()
+
 
 if __name__ == "__main__":
+
     argsl = len(sys.argv)
     graph_path = sys.argv[1]
     x = sys.argv[2]
@@ -110,6 +109,17 @@ if __name__ == "__main__":
     title = sys.argv[6]
     plot_type = sys.argv[7] 
 
-    print(f"{sys.argv} \n")
+    # Convert data to float arrays.
+    x = json.loads(x)
+    y = json.loads(y)
 
+    # print(f"{sys.argv} \n")
+    print("\n________________________________________________")
+    print(f"Creating plot for {x_label} versus {y_label}")
+    print("________________________________________________")
+    for xv, yv in zip(x, y):
+        print(f"X: {xv:.3f}\tY: {yv:.3f}")
+    print("________________________________________________")
+    print(f"Graph type: {plot_type}")
     plot(graph_path, x, y, x_label, y_label, title, plot_type)
+    print("________________________________________________")

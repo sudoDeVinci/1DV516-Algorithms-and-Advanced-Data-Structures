@@ -81,4 +81,20 @@ public class Util {
     
         return pairs;
     }
+
+    public static Integer[] genIntArray(int N) {
+        if (N < 0) {
+            throw new IllegalArgumentException("N and bound must be non-negative");
+        }
+    
+        Random rand = new Random(42); // Seed for reproducibility
+        Integer[] arr = new Integer[N];
+        for (int i = 0; i < N; i++) {
+            int x = rand.nextInt();
+    
+            arr[i] = x;
+        }
+    
+        return arr;
+    }
 }
