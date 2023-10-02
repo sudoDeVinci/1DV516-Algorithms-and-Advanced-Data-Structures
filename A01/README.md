@@ -162,3 +162,16 @@ Brute force 3-Sum 1500 Max | Cached 3-Sum 1500 Max
 ![Graph](graphs/ksum/brute_force_1500.png)| ![Graph](graphs/ksum/cached_1500.png).
 
 A few things are immediately clear. The cached 3-sum variant takes much less time. Looking at the power law equations, we can see the slope of the brute-force variant is practically 3, and the cached variant has a slope of practically 2, meaning they are cubic and quadratic respectively.
+
+
+
+# Test statment
+
+python3 src/scripts/plotter.py graphs/uf/FS1_000_000_QuickFind.png [100000,125000,150000,175000] [578595.1,523364.3929,455945.3793,565627.0] 'Unions' 'Time(ns)' 'Quick Find_1_000_000 elements' Linear
+
+
+python3 /src/scripts/plotter.py, graphs/uf/FS100_000_WeightedUnionFind.png, [10000,12500,15000,17500,20000,22500,25000,27500,30000,32500,35000,37500,40000,42500,45000,47500,50000,52500,55000,57500,60000,62500,65000,67500,70000,72500,75000,77500,80000,82500,85000,87500,90000,92500,95000] [143624.3478,174342.0,182967.087,57200.58333,71538.46154,70770.21429,79270.41667,87055.88462,97626.57143,105820.5714,110116.1304,120068.12,128116.08,148786.2692,274629.5333,154488.7407,343263.0,173517.76,177791.5,193440.4074,206483.0769,218260.9259,224430.6667,313657.931,241384.0417,256746.3077,255862.8462,283402.8621,299108.0,324205.25,343993.6786,340167.069,394024.4643,392675.6923,402881.28], Unions, Time (ns), Weighted Union Find 100_000 elements, Linear
+
+
+
+python3 src/scripts/plotter.py graphs/uf/test.png [1,2,3,4,5] [2,4,6,8,10] TEST 'TEST Y' 'TEST SPACE' Linear

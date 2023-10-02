@@ -1,4 +1,6 @@
 package src;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -54,6 +56,16 @@ public class Util {
                 count++;
             }
         }
+
+        /**
+         * Round the answer to 4 decimal places arbitrarily.
+         
+        double avg = sum / count;
+        BigDecimal bd = new BigDecimal(avg);
+        bd = bd.round(new MathContext(10));
+        double rounded_avg = bd.doubleValue();
+        */
+
         return count > 0 ? sum / count : 0;
     }
 

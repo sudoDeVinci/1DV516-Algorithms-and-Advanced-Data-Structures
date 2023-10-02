@@ -6,7 +6,6 @@ from scipy.stats import linregress
 
 
 
-
 def plot(graph_path:str, x:list[float], y:list[float], x_label:str, y_label:str, title:str, plot_type: str) -> None:
     """
     Simple plot for list of x and y values.
@@ -69,10 +68,14 @@ def linear_regression(x: list[float], y: list[float]) -> tuple[float, float, flo
     """
     Calculate and return the slope, intercept and linear regression coefficient
     from the x and y values passed in.
+    
+    
     """
+    
+    
     slope, intercept, r_value, _, _ = linregress(x, y)
+    
     return slope, intercept, r_value
-
 
 def power_law(x: list[float], y: list[float]) -> tuple[float, float, float]:
     """

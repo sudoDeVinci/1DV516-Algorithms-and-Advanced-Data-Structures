@@ -33,7 +33,7 @@ public class Plotter {
     private String title = "_";
     private Type type = Type.NONE;
 
-    private final String KEYWORD = "python";
+    private final String KEYWORD = "python3";
     private final String SCRIPT_PATH = "src/scripts/plotter.py";
 
     /**
@@ -145,7 +145,7 @@ public class Plotter {
         /**
          * Assemble command to be run.
          */
-        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, Arrays.toString(x), Arrays.toString(y), x_label, y_label, title, this.type.toString()};
+        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, Arrays.toString(x).replaceAll("\\s+",""), Arrays.toString(y).replaceAll("\\s+",""), x_label, y_label, title, this.type.toString()};
         // System.out.println(Arrays.toString(command));
         try {
             Process p = new ProcessBuilder(command).start();

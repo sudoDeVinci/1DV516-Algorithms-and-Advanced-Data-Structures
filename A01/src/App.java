@@ -7,7 +7,7 @@ import src.ksum.ThreeSum;
 import src.ksum.ThreeSumCached;
 
 public class App {
-    final int SAMPLES = 30;
+    final int SAMPLES = 100;
     int UF_SIZE = 2;
 
     /**
@@ -22,10 +22,10 @@ public class App {
          * Get graphs for unions on 100_000 items.
          */
         this.UF_SIZE = 100_000;
-        Integer[] unions = { 10000, 15000, 20000, 25000, 30000,
-                             35000, 40000, 45000, 50000, 55000,
-                             60000, 65000, 70000, 75000, 80000,
-                             85000, 90000};
+        Integer[] unions = { 10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500,
+                             35000, 37500, 40000, 42500, 45000, 47500, 50000, 52500, 55000, 57500,
+                             60000, 62500, 65000, 67500, 70000, 72500, 75000, 77500, 80000, 82500,
+                             85000, 87500, 90000, 92500, 95000 };
         
         WeightedUnionFind wuf = new WeightedUnionFind(UF_SIZE);
         Double[] times = getQfTimesFixedSize(unions, wuf);
@@ -47,11 +47,10 @@ public class App {
          * Get graphs for unions on 1_000_000 items.
          */
         this.UF_SIZE = 1_000_000;
-        unions = new Integer[] { 100000, 125000, 150000, 175000, 200000, 225000, 250000, 275000, 
-                                 300000, 325000, 350000, 375000, 400000, 425000, 450000, 475000,
-                                 500000, 525000, 550000, 575000, 600000, 625000, 650000, 675000,
-                                 700000, 725000, 750000, 775000, 800000, 825000, 850000, 875000,
-                                 900000, 925000, 950000};
+        unions = new Integer[] { 100000, 125000, 150000, 175000, 200000, 225000, 250000, 275000, 300000, 325000,
+                                 350000, 375000, 400000, 425000, 450000, 475000, 500000, 525000, 550000, 575000,
+                                 600000, 625000, 650000, 675000, 700000, 725000, 750000, 775000, 800000, 825000,
+                                 850000, 875000, 900000, 925000, 950000};
 
         wuf = new WeightedUnionFind(UF_SIZE);
         times = getQfTimesFixedSize(unions, wuf);
@@ -166,6 +165,6 @@ public class App {
     public static void main(String[] args) {
         App app = new App();
         app.qfRace();
-        app.kSumRace();
+        //app.kSumRace();
     }
 }
