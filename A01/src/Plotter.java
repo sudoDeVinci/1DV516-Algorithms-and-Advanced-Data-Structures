@@ -33,7 +33,7 @@ public class Plotter {
     private String title = "_";
     private Type type = Type.NONE;
 
-    private final String KEYWORD = "python3";
+    private final String KEYWORD = "python";
     private final String SCRIPT_PATH = "src/scripts/plotter.py";
 
     /**

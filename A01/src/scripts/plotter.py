@@ -68,12 +68,29 @@ def linear_regression(x: list[float], y: list[float]) -> tuple[float, float, flo
     """
     Calculate and return the slope, intercept and linear regression coefficient
     from the x and y values passed in.
-    
-    
-    """
-    
-    
+
     slope, intercept, r_value, _, _ = linregress(x, y)
+    """
+    n = len(x)
+    
+    x_bar = sum(x)/n
+    y_bar = sum(y)/n
+
+    slope = sum((xi - x_bar) * (yi - y_bar) for xi, yi in zip(x,y)) / sum((xi - x_bar)**2 for xi in x)
+
+    intercept = y_bar - slope*x_bar
+
+
+    sum_xy = sum(xi*yi for xi, yi in zip(x,y))
+    sum_x = sum(x)
+    sum_y = sum(y)
+    sum_x_sq = sum(xi**2 for xi in x)
+    sum_y_sq = sum(yi**2 for yi in y)
+
+    r_numer = n*sum_xy - sum_x*sum_y
+    r_denom = ((n*sum_x_sq - sum_x**2) * (n*sum_y_sq - sum_y**2))**0.5
+    r_value = r_numer/r_denom
+    
     
     return slope, intercept, r_value
 
