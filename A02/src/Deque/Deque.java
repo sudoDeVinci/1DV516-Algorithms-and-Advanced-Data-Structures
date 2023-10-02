@@ -154,10 +154,12 @@ class Deque<T> implements Iterable<T> {
     private class DequeIterator implements Iterator <T> {
         private Node current = first;
 
+        @Override
         public boolean hasNext() {
             return current != null;
         }
 
+        @Override
         public T next() {
             if (!hasNext()) {
                 throw new NoSuchElementException("No more items in queue");
@@ -172,6 +174,7 @@ class Deque<T> implements Iterable<T> {
     /**
      * Iterator object to return publicly.
      */
+    @Override
     public Iterator<T> iterator() {
         return new DequeIterator();
     }
