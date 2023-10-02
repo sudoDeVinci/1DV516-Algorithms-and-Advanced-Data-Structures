@@ -111,7 +111,7 @@ class Deque<T> implements Iterable<T> {
     }
 
     /**
-     * Remove the first item from the list.
+     * Remove the first item from the list and return it.
      * @return
      */
     public T removeFirst() {
@@ -130,7 +130,7 @@ class Deque<T> implements Iterable<T> {
     }
 
     /**
-     * Remove the last item from the queue.
+     * Remove the last item from the queue and return it.
      * @return
      */
     public T removeLast() {
@@ -175,6 +175,5 @@ class Deque<T> implements Iterable<T> {
     public Iterator<T> iterator() {
         return new DequeIterator();
     }
-
 
 }
