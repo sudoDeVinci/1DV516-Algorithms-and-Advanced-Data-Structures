@@ -1,9 +1,10 @@
-package src;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class calls a matplotlib script and plots a set of two arrays passed in.
@@ -14,6 +15,9 @@ public class Plotter {
     public static enum Type {
         LINEAR("Linear"),
         EXPONENTIAL("Exponential"),
+        SCATTER("Scatter"),
+        HISTOGRAM("Histogram"),
+        BAR("Bar"),
         NONE("None");
 
         private final String type;
@@ -31,10 +35,10 @@ public class Plotter {
     private String x_label = "_";
     private String y_label = "_";
     private String title = "_";
-    private Type type = Type.NONE;
+    private List<Type> types;
 
     private final String KEYWORD = "python3";
-    private final String SCRIPT_PATH = "src/scripts/plotter.py";
+    private final String SCRIPT_PATH = "scripts/plotter.py";
 
     /**
      * Overloaded constructors so the labels and title are optional.
@@ -66,7 +70,23 @@ public class Plotter {
      * @param type
      */
     public Plotter(String path, String x_label, String y_label, Plotter.Type type) {
-        this.type = type;
+        this.types.add(type);
+        this.graphPath += path;
+        this.x_label = x_label;
+        this.y_label = y_label;
+    }
+
+    /**
+     * Plot type addition.
+     * @param path
+     * @param x_label
+     * @param y_label
+     * @param type
+     */
+    public Plotter(String path, String x_label, String y_label, Plotter.Type[] type) {
+        for(Plotter.Type tp: type) {
+            types.add(tp);
+        }
         this.graphPath += path;
         this.x_label = x_label;
         this.y_label = y_label;
@@ -81,7 +101,25 @@ public class Plotter {
      * @param title
      */
     public Plotter(String path, String x_label, String y_label, Plotter.Type type, String title) {
-        this.type = type;
+        this.types.add(type);
+        this.graphPath += path;
+        this.x_label = x_label;
+        this.y_label = y_label;
+        this.title = title;
+    }
+
+    /**
+     * x & y labels, and title additions.
+     * @param path
+     * @param x_label
+     * @param y_label
+     * @param type
+     * @param title
+     */
+    public Plotter(String path, String x_label, String y_label, Plotter.Type[] type, String title) {
+        for(Plotter.Type tp: type) {
+            types.add(tp);
+        }
         this.graphPath += path;
         this.x_label = x_label;
         this.y_label = y_label;
@@ -129,8 +167,18 @@ public class Plotter {
      * Change the plot type.
      * @param type
      */
+    public void setType(Type[] type) {
+        for(Plotter.Type tp: type) {
+            types.add(tp);
+        }
+    }
+
+    /**
+     * Change the plot type.
+     * @param type
+     */
     public void setType(Type type) {
-        this.type = type;
+        this.types.add(type);
     }
 
     /**
@@ -141,11 +189,16 @@ public class Plotter {
      */
     public <T,R> void plot(T[] x, R[] y) {
         String[] command;
+        // Convert the list of enums to a list of strings
+        List<String> typeList = new ArrayList<>();
+        for (Type type : this.types) {
+            typeList.add(type.toString());
+        }
 
         /**
          * Assemble command to be run.
          */
-        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, Arrays.toString(x).replaceAll("\\s+",""), Arrays.toString(y).replaceAll("\\s+",""), x_label, y_label, title, this.type.toString()};
+        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, Arrays.toString(x).replaceAll("\\s+",""), Arrays.toString(y).replaceAll("\\s+",""), x_label, y_label, title, "'"+typeList.toString()+"'"};
         // System.out.println(Arrays.toString(command));
         try {
             Process p = new ProcessBuilder(command).start();

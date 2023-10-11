@@ -2,7 +2,6 @@ package src;
 import src.uf.QuickFind;
 import src.uf.UnionFind;
 import src.uf.WeightedUnionFind;
-import src.Util;
 import src.ksum.ThreeSum;
 import src.ksum.ThreeSumCached;
 

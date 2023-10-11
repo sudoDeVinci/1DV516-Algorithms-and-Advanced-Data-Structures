@@ -1,4 +1,3 @@
-package src;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +33,7 @@ public class Plotter {
     private Type type = Type.NONE;
 
     private final String KEYWORD = "python3";
-    private final String SCRIPT_PATH = "src/scripts/plotter.py";
+    private final String SCRIPT_PATH = "scripts/plotter.py";
 
     /**
      * Overloaded constructors so the labels and title are optional.
