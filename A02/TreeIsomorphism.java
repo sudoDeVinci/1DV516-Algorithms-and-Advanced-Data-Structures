@@ -1,5 +1,9 @@
 import java.util.Random;
 
+import src.Plotter;
+import src.Timeit;
+import src.Util;
+
 /**
  * Class deedicated to checking tree isomorphism
  */

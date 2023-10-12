@@ -109,7 +109,6 @@ def single_line(graph_path:str, x: List[float], y: List[float], x_label:str, y_l
         plt.plot(x, expected_data, label=equation)
         plt.text(0.05, 0.85, f'Correlation coef. : {r_value:.3f}', transform=plt.gca().transAxes, fontsize=12)
 
-
     # Add labels and title
     plt.xlabel(x_label)
     plt.ylabel(y_label)
