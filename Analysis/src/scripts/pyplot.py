@@ -76,11 +76,11 @@ def __generate_expected_data(slope: float, intercept:float,x: list[float], plot_
 def __get_graph_data(x_coords: List[float], y_coords: List[float], type: str) -> tuple[str, List[float]]:
     if type == "Linear":
         slope, intercept, r_value = __linear_regression(x_coords, y_coords)
-        equation = f'Linear Fit (y={slope:.3f}x + {intercept:.3f})\nCorrelation coef: {r_value:.3f}'
+        equation = fr'Linear Fit $y={slope:.3f} \cdot x + {intercept:.3f}$' + '\n' + f'r: {r_value:.3f}'
 
     elif type == "Exponential":
         slope, intercept, r_value = __power_law(x_coords, y_coords)
-        equation = f'Exponential Fit (y={intercept:.3f} * x^{slope:.3f})\nCorrelation coef: {r_value:.3f}'
+        equation = fr'Exponential Fit $y={intercept:.3f} \cdot x^{{ {slope:.3f} }}$' + '\n' + f'r: {r_value:.3f}'
 
     elif type == "None" or "Bar" or "Histogram" or "Scatter":
         equation = None
