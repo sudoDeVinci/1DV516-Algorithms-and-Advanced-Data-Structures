@@ -67,6 +67,18 @@ public class Util {
         return count > 0 ? sum / count : 0;
     }
 
+    public static Double[] sampleMean(double[][] samples) {
+        Double [] times = new Double[samples[0].length];
+        double[] sampleArr = new double[samples.length];
+
+        for(int i = 0; i < samples[0].length; i++) {
+            for (int j=0; j < samples.length; j++) sampleArr[j] = samples[j][i];     
+            times[i] = sampleMean(sampleArr);
+        }
+
+        return times;
+    }
+
     /**
      * Generate an N-long array of bounded x-y coords.
      * @param N
@@ -77,13 +89,32 @@ public class Util {
         if (N < 0 || bound < 0) {
             throw new IllegalArgumentException("N and bound must be non-negative");
         }
-    
+        
         Random rand = new Random(42); // Seed for reproducibility
         Integer[][] pairs = new Integer[N][2];
     
         for (int i = 0; i < N; i++) {
             int xCoordinate = rand.nextInt(bound);
             int yCoordinate = rand.nextInt(bound);
+    
+            pairs[i][0] = xCoordinate;
+            pairs[i][1] = yCoordinate;
+        }
+    
+        return pairs;
+    }
+
+    public static Integer[][] genXYPairs(int N) {
+        if (N < 0) {
+            throw new IllegalArgumentException("N must be non-negative");
+        }
+        
+        Random rand = new Random(42); // Seed for reproducibility
+        Integer[][] pairs = new Integer[N][2];
+    
+        for (int i = 0; i < N; i++) {
+            int xCoordinate = rand.nextInt();
+            int yCoordinate = rand.nextInt();
     
             pairs[i][0] = xCoordinate;
             pairs[i][1] = yCoordinate;

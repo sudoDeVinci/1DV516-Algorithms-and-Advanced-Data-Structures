@@ -10,6 +10,7 @@ import java.util.Map;
  * Quadratic growth.
  */
 public class TwoSum {
+
     public List<int[]> twoSum (Integer[] nums, Integer target, Integer start) {
         List<int[]> result = new ArrayList<>();
         Map<Integer, Integer> seen = new HashMap<>();

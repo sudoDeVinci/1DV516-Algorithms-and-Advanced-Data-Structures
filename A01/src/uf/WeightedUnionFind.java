@@ -1,18 +1,14 @@
 package src.uf;
-import java.util.Arrays;
 
 /**
  * Weighted Union find implementation with path compression.
  */
 public class WeightedUnionFind extends UnionFind{
-    private int size;
     private int[] S;
     private int[] heights;
 
     public WeightedUnionFind(int N) {
-        super(N);
-        this.heights = new int[N];
-        Arrays.fill(heights, 1);
+        reset(N);
     }
 
     /**
@@ -32,6 +28,7 @@ public class WeightedUnionFind extends UnionFind{
      */
     private int find(int a) {
         while (a != S[a]) {
+            S[a] = S[S[a]];
             a = S[a];
         }
         return a;
@@ -53,11 +50,10 @@ public class WeightedUnionFind extends UnionFind{
 
         if (heights[rootA] < heights[rootB]) {
             S[rootA] = rootB;
-        } else if (heights[rootA] > heights[rootB]) {
-            S[rootB] = rootA;
+            heights[b] += heights[a];
         } else {
             S[rootB] = rootA;
-            heights[rootA]++;
+            heights[rootA] += heights[rootB];
         }
     }
 
@@ -68,23 +64,22 @@ public class WeightedUnionFind extends UnionFind{
     @Override
     public void reset(int N) {
         this.S = new int[N];
-        this.size = N;
+        this.heights = new int[N];
         for (int i = 0; i < N; i++) {
             this.S[i] = i;
+            this.heights[i] = 1;
         }
-
-        this.heights = new int[N];
-        Arrays.fill(this.heights, 1);
+        
     }
 
     /**
      * Reset the object but keep the size of the current Set.
      */
     public void reset() {
-        for (int i = 0; i < this.size; i++) {
+        for (int i = 0; i < this.S.length; i++) {
             this.S[i] = i;
+            this.heights[i] = 1;
         }
-         Arrays.fill(this.heights, 1);
     }
 
 }

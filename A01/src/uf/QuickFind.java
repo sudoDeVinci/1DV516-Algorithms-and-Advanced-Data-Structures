@@ -8,7 +8,7 @@ public class QuickFind extends UnionFind {
     private int size;
 
     public QuickFind (int N) {
-        super(N);
+        reset(N);
     }
 
     /**
@@ -30,7 +30,7 @@ public class QuickFind extends UnionFind {
         int idA = S[a];
         int idB = S[b];
         
-        if(idA == idB){return;}
+        if(idA == idB) return;
 
         for (int index = 0; index < size; index++) {
             if (S[index] == idA) {
@@ -51,8 +51,9 @@ public class QuickFind extends UnionFind {
      * @param N
      */
     public void reset(int N) {
+        this.size = N;
         this.S = new int[N];
         for (int i = 0; i < N; i++) this.S[i] = i;
-        this.size = N;
+        
     }
 }

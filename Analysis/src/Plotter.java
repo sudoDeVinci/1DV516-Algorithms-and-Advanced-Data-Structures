@@ -38,6 +38,7 @@ public class Plotter<T, R> {
     private List<Type> types = new ArrayList<>();
     private List<T[]> x= new ArrayList<>();
     private List<R[]> y= new ArrayList<>();
+    private List<String> labels = new ArrayList<>();
 
     private final String BASE_DIR = "Analysis/src";
     private final String KEYWORD = "python3";
@@ -171,31 +172,54 @@ public class Plotter<T, R> {
      * Change the plot type.
      * @param type
      */
-    public void setType(Type[] type) {
-        for(Plotter.Type tp: type) {
-            types.add(tp);
-        }
-    }
-
-    /**
-     * Change the plot type.
-     * @param type
-     */
     public void setType(Type type) {
         this.types.add(type);
     }
 
-    public void plot(T[] x_coords, R[] y_coords) {
+    /**
+     * Change the points to plot.
+     * @param x_coords
+     * @param y_coords
+     */
+    public void add(T[] x_coords, R[] y_coords) {
         if(types.isEmpty()) throw new IllegalStateException("Cannot plot without specifiying Plot type.");
         x.add(x_coords);
         y.add(y_coords);
         if (x.size() > types.size()) types.add(types.get(types.size()-1));
+        labels.add("None");
     }
 
-    public void plot(T[] x_coords, R[] y_coords, Type t) {
-        x.add(x_coords);
-        y.add(y_coords);
+    /**
+     * Change the points to plot but specify plot type.
+     * @param x_coords
+     * @param y_coords
+     * @param t
+     */
+    public void add(T[] x_coords, R[] y_coords, Type t) {
+        add(x_coords, y_coords);
         types.add(t);
+    }
+
+    /**
+     * Change the points to plot but specify label
+     * @param x_coords
+     * @param y_coords
+     * @param label
+     */
+    public void add(T[] x_coords, R[] y_coords, String label) {
+        add(x_coords, y_coords);
+        labels.set(labels.size()-1, label);
+    }
+
+    /**
+     * Change the points to plot but specify label and type
+     * @param x_coords
+     * @param y_coords
+     * @param label
+     */
+    public void add(T[] x_coords, R[] y_coords, Type t, String label) {
+        add(x_coords, y_coords, t);
+        labels.set(labels.size()-1, label);
     }
 
     /**
@@ -205,12 +229,14 @@ public class Plotter<T, R> {
      * @param y
      */
     public void plot() {
+
         String[] command;
         // Convert the list of enums to a list of strings
         List<String> typeList = new ArrayList<>();
-        for (Type type : this.types) {
-            typeList.add('"'+type.toString()+'"');
-        }
+        for (Type type : this.types) typeList.add('"'+type.toString()+'"');
+
+        List<String> labelList = new ArrayList<>();
+        for(String l: labels) labelList.add('"'+l+'"');
 
         List<String> xList = new ArrayList<>();
         List<String> yList = new ArrayList<>();
@@ -222,8 +248,8 @@ public class Plotter<T, R> {
         /**
          * Assemble command to be run.
          */
-        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, xList.toString(), yList.toString(), x_label, y_label, title, typeList.toString()};
-        System.out.println(Arrays.toString(command));
+        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, xList.toString(), yList.toString(), x_label, y_label, title, typeList.toString(), labelList.toString()};
+        // System.out.println(Arrays.toString(command));
         try {
             Process p = new ProcessBuilder(command).start();
 
