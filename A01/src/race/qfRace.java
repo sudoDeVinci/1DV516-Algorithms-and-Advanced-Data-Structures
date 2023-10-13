@@ -33,7 +33,7 @@ public class qfRace {
         System.out.println("\nGraphing WUF vs QF vs QU with a Max of " + max + " elements");
         
         
-        Plotter<Integer, Double> plt = new Plotter<>("uf/WUFvsQFvsQU_"+max+".png", "Unions", "Time (ns)", Plotter.Type.LINEAR,"WUF vs QF vs QU with a Max of "+ max +" elements");
+        Plotter<Integer, Double> plt = new Plotter<>("uf/WUFvsQFvsQU_"+max+".png", "Unions", "Time (ms)", Plotter.Type.LINEAR,"WUF vs QF vs QU with a Max of "+ max +" elements");
         
         
         WeightedUnionFind wuf = new WeightedUnionFind(UF_SIZE);
@@ -59,8 +59,8 @@ public class qfRace {
         Double[] times = new Double[length];
         
         for (int i = 0; i < length; i++) {
-            uf.reset(unions[i]*10);
-            Integer[][] pairs = Util.genXYPairs(unions[i], unions[i]*10);
+            uf.reset(unions[i]);
+            Integer[][] pairs = Util.genXYPairs(unions[i], unions[i]);
 
             times[i] = measureUfExecTime(uf, pairs);
         }
@@ -76,7 +76,7 @@ public class qfRace {
                 uf.run_union(connections);
             });
         for (int x = 0; x < SAMPLES; x++) {
-            samples[x] = timer.measureNanos((Object) pairs);
+            samples[x] = timer.measureMilis((Object) pairs);
         }
         return Util.sampleMean(samples);
     }

@@ -5,7 +5,6 @@ package src.uf;
  */
 public class QuickFind extends UnionFind {
     private int[] S;
-    private int size;
 
     public QuickFind (int N) {
         reset(N);
@@ -32,7 +31,7 @@ public class QuickFind extends UnionFind {
         
         if(idA == idB) return;
 
-        for (int index = 0; index < size; index++) {
+        for (int index = 0; index < S.length; index++) {
             if (S[index] == idA) {
                 S[index] = idB;
             }
@@ -43,7 +42,7 @@ public class QuickFind extends UnionFind {
      * Reset the object but keep the size of the current Set.
      */
     public void reset(){
-        for (int i = 0; i < this.size; i++) this.S[i] = i;
+        for (int i = 0; i < this.S.length; i++) this.S[i] = i;
     }
 
     /**
@@ -51,7 +50,6 @@ public class QuickFind extends UnionFind {
      * @param N
      */
     public void reset(int N) {
-        this.size = N;
         this.S = new int[N];
         for (int i = 0; i < N; i++) this.S[i] = i;
         

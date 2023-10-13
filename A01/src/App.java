@@ -11,10 +11,10 @@ public class App {
     //kSumRace ksum = new kSumRace();
     //ksum.start();
     
-    //qfFixedRace qf = new qfFixedRace();
-    //qf.start();
+    qfFixedRace qf = new qfFixedRace();
+    qf.start();
 
-    qfRace qr = new qfRace();
-    qr.start();
+    //qfRace qr = new qfRace();
+    //qr.start();
     }
 }

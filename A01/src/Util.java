@@ -96,6 +96,7 @@ public class Util {
         for (int i = 0; i < N; i++) {
             int xCoordinate = rand.nextInt(bound);
             int yCoordinate = rand.nextInt(bound);
+            while(yCoordinate == xCoordinate) yCoordinate = rand.nextInt(bound);
     
             pairs[i][0] = xCoordinate;
             pairs[i][1] = yCoordinate;
@@ -115,6 +116,7 @@ public class Util {
         for (int i = 0; i < N; i++) {
             int xCoordinate = rand.nextInt();
             int yCoordinate = rand.nextInt();
+            while(yCoordinate == xCoordinate) yCoordinate = rand.nextInt();
     
             pairs[i][0] = xCoordinate;
             pairs[i][1] = yCoordinate;

@@ -4,6 +4,7 @@ import src.Plotter;
 import src.Timeit;
 import src.Util;
 import src.uf.QuickFind;
+import src.uf.QuickUnion;
 import src.uf.UnionFind;
 import src.uf.WeightedUnionFind;
 
@@ -35,6 +36,11 @@ public class qfFixedRace {
         times = getUfTimes(unions, qf);
         plt.add(unions, times, "QF");
         qf = null;
+
+        QuickUnion qu = new QuickUnion(UF_SIZE);
+        times = getUfTimes(unions, qu);
+        plt.add(unions, times, "QU");
+        qu = null;
 
         plt.plot();
     }
