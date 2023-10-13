@@ -34,7 +34,6 @@ public class qfFixedRace {
         QuickFind qf = new QuickFind(UF_SIZE);
         times = getUfTimes(unions, qf);
         plt.add(unions, times, "QF");
-        plt.plot();
         qf = null;
 
         plt.plot();

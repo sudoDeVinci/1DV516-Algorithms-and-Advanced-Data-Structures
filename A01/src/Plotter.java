@@ -40,7 +40,7 @@ public class Plotter<T, R> {
     private List<R[]> y= new ArrayList<>();
     private List<String> labels = new ArrayList<>();
 
-    private final String BASE_DIR = "Analysis/src";
+    private final String BASE_DIR = "src";
     private final String KEYWORD = "python";
     private final String SCRIPT_PATH = BASE_DIR+"/scripts/pyplot.py";
     private String graphPath = BASE_DIR + "/graphs/";

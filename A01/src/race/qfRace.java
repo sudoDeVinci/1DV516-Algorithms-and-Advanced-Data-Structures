@@ -1,4 +1,5 @@
 package src.race;
+
 import src.Plotter;
 import src.Timeit;
 import src.Util;
@@ -31,22 +32,23 @@ public class qfRace {
 
         System.out.println("\nGraphing WUF vs QF vs QU with a Max of " + max + " elements");
         
+        
+        Plotter<Integer, Double> plt = new Plotter<>("uf/WUFvsQFvsQU_"+max+".png", "Unions", "Time (ns)", Plotter.Type.LINEAR,"WUF vs QF vs QU with a Max of "+ max +" elements");
+        
+        
         WeightedUnionFind wuf = new WeightedUnionFind(UF_SIZE);
         Double[] times = getUfTimes(unions, wuf);
-        Plotter<Integer, Double> plt = new Plotter<>("uf/WUFvsQFvsQU_"+max+".png", "Unions", "Time (ns)", Plotter.Type.LINEAR,"WUF vs QF vs QU with a Max of "+ max +" elements");
         plt.add(unions, times, "WUF");
         wuf = null;
 
         QuickFind qf = new QuickFind(UF_SIZE);
         times = getUfTimes(unions, qf);
         plt.add(unions, times, "QF");
-        plt.plot();
         qf = null;
 
         QuickUnion qu = new QuickUnion(UF_SIZE);
         times = getUfTimes(unions, qu);
         plt.add(unions, times, "QU");
-        plt.plot();
         qu = null;
 
         plt.plot();
