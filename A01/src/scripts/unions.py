@@ -5,6 +5,8 @@ class UF:
         pass
 
 class QU(UF):
+    name: str = "QU"
+
     def __init__(self, N:int) -> None:
         self.d = list(range(N))
 
@@ -22,6 +24,8 @@ class QU(UF):
         self.d[ra] = rb
 
 class QF(UF):
+    name: str  = "QF"
+
     def __init__(self, N:int) -> None:
         self.d = list(range(N))
 
@@ -42,7 +46,7 @@ def __quartile(data: list[float], percentile: int) -> float:
     index: int = int((percentile*len(data) + 99) / 100 - 1)
     return data[index]
 
-def samepleMean(samples: list[float]) -> float:
+def sampleMean(samples: list[float]) -> float:
     samples.sort()
     q1: float = __quartile(samples, 25)
     q3: float = __quartile(samples, 75)
@@ -54,22 +58,27 @@ def samepleMean(samples: list[float]) -> float:
     total: float = sum(valid)
 
     return total/len(valid) if len(valid)>0 else 0
+    
 
 
 def measure(uf:UF):
+    global unions
     measured: List[float] = []
     for union_number in unions:
-        pairs = gen_ints(union_number)
+        pairs = gen_ints(STEPS)
         samples = []
-        for _ in range(SAMPLES):
+        for _ in range(union_number):
             start: float = time.time()
             for pair in pairs:
                 uf.union(pair[0],pair[1])
             stop: float = time.time()
-            samples.append(start-stop)
-        measured.append(samepleMean(samples))
+            samples.append(stop-start)
+        measured.append(sampleMean(samples))
         samples = []
-    print(measured)
+    return measured
+
+def gen_ints(n) :
+        return [[random.randint(0,SIZE-1),random.randint(0,SIZE-1)] for _ in range(n)]
 
 
 import random
@@ -78,27 +87,41 @@ from typing import List
 from datetime import datetime
 from concurrent.futures import ProcessPoolExecutor
 
-SIZE: int = 1000
-STEPS: int  = 100
-SAMPLES: int = 100
+from pyplot import graph
+
+SIZE: int = 10000
+STEPS: int = 1000
+START: int = 1000
+SAMPLES: int = 5
 
 start = datetime.now()
 
-unions = list(range(100, SIZE, STEPS))
-times = []
+unions = list(range(START, SIZE, STEPS))
 
-def gen_ints(n) :
-    return [[random.randint(0,SIZE-1),random.randint(0,SIZE-1)] for _ in range(n)]
 
-qf: QF = QF(SIZE)
-qu: QU = QU(SIZE)
 
-algos = (qf, qu)
+def main():
+    times = []
 
- # create a process pool
-with ProcessPoolExecutor(max_workers=2) as executor:
-    _ = executor.map(measure, algos)
+    qf: QF = QF(SIZE)
+    qu: QU = QU(SIZE)
 
-end = datetime.now()
-runtime = end-start
-print(f'\n> Runtime : {runtime} \n')
+    graph_path = f"src/graphs/reference/discrete_{SIZE}.png"
+
+    algos = (qf, qu)
+
+    with ProcessPoolExecutor(max_workers=len(algos)) as executor:
+        results = executor.map(measure, algos)
+    
+    print(results)
+
+    
+    graph(graph_path, [unions, unions], list(results), "Unions", "Time(s)", f"QF vs QU fixed size @ {SIZE} elements", ["Linear","Linear"], list(algo.name for algo in algos))
+
+
+    end = datetime.now()
+    runtime = end-start
+    print(f'\n> Runtime : {runtime} \n')
+
+if __name__ == '__main__':
+    main()
