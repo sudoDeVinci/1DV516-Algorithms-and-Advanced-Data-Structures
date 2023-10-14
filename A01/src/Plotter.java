@@ -165,7 +165,7 @@ public class Plotter<T, R> {
      * @param path
      */
     public void setGraphPath(String path) {
-        this.graphPath += path;
+        this.graphPath = BASE_DIR + path;
     }
 
     /**
