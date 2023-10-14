@@ -150,9 +150,9 @@ def graph(graph_path:str, x:  List[List[float]], y: List[List[float]], x_label:s
             case "Histogram":
                 pass
             case "Scatter":
-                pass
+                scatter(ax, x_coords, y_coords, markers, count, label)
             case "None":
-                pass
+                scatter(ax, x_coords, y_coords, markers, count, label)
             case _:
                 pass
                 
@@ -170,11 +170,13 @@ def graph(graph_path:str, x:  List[List[float]], y: List[List[float]], x_label:s
     plt.savefig(graph_path)
 
 
+def scatter(ax: Axes,x_coords: List[float], y_coords: List[float], markers: tuple[str, str], count:int, label_str: str) -> None:
+    l:str = f"{label_str}" if label_str != "None" else f"Plot {str(count).zfill(3)} data"
+    ax.scatter(x_coords, y_coords,c = markers[0], alpha = 0.8, marker = markers[1], label = l)
 
 def line_graph(ax: Axes,x_coords: List[float], y_coords: List[float],type: str, markers: tuple[str, str], count:int, label_str: str) -> None:
     equation, expected_data = __get_graph_data(x_coords, y_coords, type)
-    l:str = f"{label_str}" if label_str != "None" else f"Plot {str(count).zfill(3)} data"
-    ax.scatter(x_coords, y_coords,c = markers[0], alpha = 0.8, marker = markers[1], label = l)
+    scatter(ax, x_coords, y_coords, markers, count, label_str)
     if expected_data is not None:
         l:str = f"{label_str} approx. to {equation}" if label_str != "None" else f"Plot {str(count).zfill(3)} data approx. to {equation}"
         ax.plot(x_coords, expected_data, label = l)

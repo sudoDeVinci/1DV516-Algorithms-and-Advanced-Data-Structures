@@ -3,6 +3,8 @@ class UF:
         self.d = list(range(N))
     def connected(self, a: int, b: int) -> bool:
         pass
+    def union(self, a:int, b:int) -> None:
+        pass
 
 class QU(UF):
     name: str = "QU"
@@ -64,20 +66,28 @@ def sampleMean(samples: list[float]) -> float:
 def measure(uf:UF):
     global unions
     measured: List[float] = []
+
+    # For each union number in the list of union points
     for union_number in unions:
-        pairs = gen_ints(STEPS)
-        samples = []
-        for _ in range(union_number):
+        pairs: List[ List[int,int]] = gen_ints(union_number)
+        samples: List[float] = []
+
+        # Take a number of samples
+        for _ in range(SAMPLES):
             start: float = time.time()
+            
+            # Do the number of unions
             for pair in pairs:
                 uf.union(pair[0],pair[1])
+    
             stop: float = time.time()
             samples.append(stop-start)
+    
         measured.append(sampleMean(samples))
         samples = []
     return measured
 
-def gen_ints(n) :
+def gen_ints(n) -> List[ List[int,int]]:
         return [[random.randint(0,SIZE-1),random.randint(0,SIZE-1)] for _ in range(n)]
 
 
@@ -125,3 +135,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+

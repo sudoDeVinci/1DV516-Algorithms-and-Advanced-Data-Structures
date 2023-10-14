@@ -1,7 +1,6 @@
 package src.race;
 
 import src.Plotter;
-import src.Timeit;
 import src.Util;
 import src.uf.QuickFind;
 import src.uf.QuickUnion;
@@ -10,60 +9,66 @@ import src.uf.WeightedUnionFind;
 
 public class qfFixedRace {
 
-    final int UF_SIZE = 100_000;
-    final int SAMPLES = 100;
+    final int SIZE = 100_000;
+    final int STEPS = 1000;
+    final int START = 1000;
+    final int SAMPLES = 50;
     /**
      * 
      * Get graphs for unions on 10_000_000 items.
      */
     public void start() {
-        Integer[] unions = { 10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500,
-                            35000, 37500, 40000, 42500, 45000, 47500, 50000, 52500, 55000, 57500,
-                            60000, 62500, 65000, 67500, 70000, 72500, 75000, 77500, 80000, 82500,
-                            85000, 87500, 90000, 92500, 95000 };
+        int arraySize = (SIZE - START) / STEPS; // Calculate the size of the array, rounding down
+        Integer[] unions = new Integer[arraySize];
+
+        for (int i = 0; i < arraySize; i++) {
+            unions[i] = START + i * STEPS;
+        }
     
         String max = unions[unions.length-1].toString();
 
-        System.out.println("\nGraphing Weighted Union Find versus Quick Find at fixed sized "+UF_SIZE+" for varying numbers of Unions");
+        System.out.println("\nGraphing Weighted Union Find versus Quick Find at fixed sized "+SIZE+" for varying numbers of Unions");
         
-        WeightedUnionFind wuf = new WeightedUnionFind(UF_SIZE);
+        WeightedUnionFind wuf = new WeightedUnionFind(SIZE);
         Double[] times = getUfTimes(unions, wuf);
-        Plotter<Integer, Double> plt = new Plotter<>("uf/WUFvsQF_fixed_"+UF_SIZE+"_"+max+"elements.png", "Unions", "Time (ns)", Plotter.Type.LINEAR,"Weighted UnionFind v.s QuickFind @ fixed "+UF_SIZE+" for varying Unions");
-        plt.add(unions, times, "WUF");
+        Plotter<Integer, Double> plt = new Plotter<>("uf/simple_WUFvsQF_fixed_"+SIZE+"_"+max+"elements.png", "Unions", "Time (ns)", Plotter.Type.SCATTER,"Weighted UnionFind v.s QuickFind @ fixed "+SIZE+" for varying Unions");
+        plt.add(unions, times, wuf.name);
         wuf = null;
 
-        QuickFind qf = new QuickFind(UF_SIZE);
+        QuickFind qf = new QuickFind(SIZE);
         times = getUfTimes(unions, qf);
-        plt.add(unions, times, "QF");
+        plt.add(unions, times, qf.name);
         qf = null;
 
-        QuickUnion qu = new QuickUnion(UF_SIZE);
+        QuickUnion qu = new QuickUnion(SIZE);
         times = getUfTimes(unions, qu);
-        plt.add(unions, times, "QU");
+        plt.add(unions, times, qu.name);
         qu = null;
 
         plt.plot();
     }
 
-    private Double[] getUfTimes(Integer[] unions, UnionFind uf) {
-        double[][] samples = new double[SAMPLES][unions.length];
-        for (int i=0; i<SAMPLES; i++) samples[i] = getUfTimeSample(unions, uf);
-        return Util.sampleMean(samples);
-    }
+    public Double[] getUfTimes(Integer[] unions, UnionFind uf) {
+        Double[] measured = new Double[unions.length];
+        double[] samples = new double[SAMPLES];
 
-    private double[] getUfTimeSample(Integer[] unions, UnionFind uf) {
-        int length = unions.length;
-        double[] times = new double[length];
+        for(int j = 0; j < measured.length; j++) {
+            Integer[][] pairs = Util.genXYPairs(unions[j], SIZE);
+            
+            for(int i = 0; i< SAMPLES; i++) {
+                long start = System.nanoTime();
 
-        Timeit timer = new Timeit((args) -> {
-                Integer[][] connections = (Integer[][]) args[0];
-                uf.run_union(connections);
-            });
-        
-        for (int i = 0; i < length; i++) {
-            Integer[][] pairs = Util.genXYPairs(unions[i], UF_SIZE);
-            times[i] = timer.measureNanos((Object) pairs);
+                for (Integer[] pair: pairs) {
+                    uf.union(pair[0], pair[1]);
+                }
+
+                long stop = System.nanoTime();
+                samples[i] = stop-start;
+            }
+
+            measured[j] = Util.sampleMean(samples);
+            samples = new double[SAMPLES];
         }
-        return times;
+        return measured;
     }
 }

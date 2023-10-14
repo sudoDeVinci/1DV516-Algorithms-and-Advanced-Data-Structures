@@ -6,9 +6,15 @@ package src.uf;
 public class WeightedUnionFind extends UnionFind{
     private int[] S;
     private int[] heights;
-
+    public String name = "WUF";
+    
     public WeightedUnionFind(int N) {
-        reset(N);
+        this.S = new int[N];
+        this.heights = new int[N];
+        for(int i = 0; i<N; i++) {
+            this.heights[i] = 1;
+            this.S[i] = i;
+        }
     }
 
     /**
@@ -22,7 +28,7 @@ public class WeightedUnionFind extends UnionFind{
     }
 
     /**
-     * Find the root of a given element.
+     * Find the root of a given element with path compression.
      * @param a Node to find root of
      * @return
      */
@@ -56,30 +62,4 @@ public class WeightedUnionFind extends UnionFind{
             heights[rootA] += heights[rootB];
         }
     }
-
-    /**
-     * Reset the current object but resize the current set to S = int[N].
-     * @param N
-     */
-    @Override
-    public void reset(int N) {
-        this.S = new int[N];
-        this.heights = new int[N];
-        for (int i = 0; i < N; i++) {
-            this.S[i] = i;
-            this.heights[i] = 1;
-        }
-        
-    }
-
-    /**
-     * Reset the object but keep the size of the current Set.
-     */
-    public void reset() {
-        for (int i = 0; i < this.S.length; i++) {
-            this.S[i] = i;
-            this.heights[i] = 1;
-        }
-    }
-
 }
