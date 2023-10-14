@@ -48,6 +48,33 @@ public class qfFixedRace {
         plt.plot();
     }
 
+
+    public void runWFvQF(int SIZE, int STEPS, int START, Plotter<Integer,Double> plt) {
+        this.START = START;
+        this.STEPS = STEPS;
+        this.SIZE = SIZE;
+
+        int arraySize = (SIZE - START) / STEPS; // Calculate the size of the array, rounding down
+        Integer[] unions = new Integer[arraySize];
+
+        for (int i = 0; i < arraySize; i++) {
+            unions[i] = START + i * STEPS;
+        }
+
+        System.out.println("\nGraphing Weighted Union Find versus Quick Find at fixed sized "+SIZE+" for varying numbers of Unions");
+        
+        
+        Plotter<Integer, Double> pltWF = new Plotter<>("uf/WUF_"+SIZE+".png", "Unions", "Time (ns)", Plotter.Type.SCATTER,"Weighted Union Find @ fixed "+SIZE+" nodes");
+        Double[] times = runWF(SIZE, STEPS, START, unions,pltWF);
+        plt.add(unions, times, "WF");
+
+        Plotter<Integer, Double> pltQF = new Plotter<>("uf/QF_"+SIZE+".png", "Unions", "Time (ns)", Plotter.Type.LINEAR,"Quick Find @ fixed "+SIZE+" nodes");
+        times = runQF(SIZE, STEPS, START, unions,pltQF);
+        plt.add(unions, times, "QF");
+
+        plt.plot();
+    }
+
     private Double[] runWF(int SIZE, int STEPS, int START, Integer[] unions, Plotter<Integer,Double> plt) {
 
         System.out.println("\nGraphing Weighted Union Find at fixed sized "+SIZE+" for varying numbers of Unions");
