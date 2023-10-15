@@ -176,6 +176,10 @@ public class Plotter<T, R> {
         this.types.add(type);
     }
 
+    public Plotter.Type getType() {
+        return this.types.get(types.size()-1);
+    }
+
     /**
      * Change the points to plot.
      * @param x_coords
