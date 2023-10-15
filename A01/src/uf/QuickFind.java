@@ -31,8 +31,6 @@ public class QuickFind extends UnionFind {
     public void union(int a, int b) {
         int idA = S[a];
         int idB = S[b];
-        
-        if(idA == idB) return;
 
         for (int index = 0; index < S.length; index++) {
             if (S[index] == idA) {

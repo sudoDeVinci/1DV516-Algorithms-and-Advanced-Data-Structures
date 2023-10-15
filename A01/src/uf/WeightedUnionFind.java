@@ -24,20 +24,20 @@ public class WeightedUnionFind extends UnionFind{
      * @return
      */
     public boolean connected(int a, int b) {
-        return find(a) == find(b);
+        return root(a) == root(b);
     }
 
     /**
-     * Find the root of a given element with path compression.
+     * Find the root of a given element.
      * @param a Node to find root of
      * @return
      */
-    private int find(int a) {
-        while (a != S[a]) {
+    private int root(int a) {
+        while (a != this.S[a]) {
             S[a] = S[S[a]];
-            a = S[a];
+            a = this.S[a];
         }
-        return a;
+        return this.S[a];
     }
 
     /**
@@ -48,11 +48,8 @@ public class WeightedUnionFind extends UnionFind{
      * @param b Node b
      */
     public void union(int a, int b) {
-
-        int rootA = find(a);
-        int rootB = find(b);
-
-        if (rootA == rootB) {return;}
+        int rootA = root(a);
+        int rootB = root(b);
 
         if (heights[rootA] < heights[rootB]) {
             S[rootA] = rootB;
