@@ -60,14 +60,50 @@ public class App {
                            "Weighted UnionFind vs Quick Find  @ fixed 5_000 nodes");
 
         race.runWFvQF(5000, 100, 500, plt);
-        */
+        
+
+        plt = new Plotter<>("uf/WUFvsQFvsQU_5000_max.png",
+                            "Unions",
+                            "Time (ms)",
+                            Plotter.Type.SCATTER,
+                            "Weighted UnionFind vs QuickFind vs Quick Union @ fixed 5,000 nodes");
+        race.runAll(5000, 100, 200, plt);
+
+        plt = new Plotter<>("uf/WUFvsQFvsQU_10_000_max.png",
+                            "Unions",
+                            "Time (ms)",
+                            Plotter.Type.SCATTER,
+                            "Weighted UnionFind vs QuickFind vs Quick Union @ fixed 10,000 nodes");
+        race.runAll(10000, 100, 1000, plt);
+
+        plt = new Plotter<>("uf/WUFvsQFvsQU_20_000_max.png",
+                             "Unions", "Time (ms)",
+                            Plotter.Type.SCATTER, 
+                            "Weighted UnionFind vs QuickFind vs Quick Union @ fixed 20,000 nodes");
+        race.runAll(20000, 200, 1000, plt);
 
         
         plt = new Plotter<>("uf/WUFvsQF_5_000_max.png",
                                                         "Unions",
                                                         "Time (ms)",
-                                                        Plotter.Type.NONE,
-                                                        "Weighted Union @ fixed 5_000 nodes");
+                                                        Plotter.Type.SCATTER,
+                                                        "Weighted Union @ fixed 5,000 nodes");
         race.runWFvQF(5000, 100, 500, plt);
+        */
+
+        plt = new Plotter<>("uf/WUFvsQF_10_000_max.png",
+                                                        "Unions",
+                                                        "Time (ms)",
+                                                        Plotter.Type.SCATTER,
+                                                        "Weighted Union @ fixed 10,000 nodes");
+        race.runWFvQF(10000, 100, 500, plt);
+        
+
+        plt = new Plotter<>("uf/WUFvsQF_20_000_max.png",
+                                                        "Unions",
+                                                        "Time (ms)",
+                                                        Plotter.Type.SCATTER,
+                                                        "Weighted Union @ fixed 20,000 nodes");
+        race.runWFvQF(20000, 1000, 1000, plt);
     }
 }

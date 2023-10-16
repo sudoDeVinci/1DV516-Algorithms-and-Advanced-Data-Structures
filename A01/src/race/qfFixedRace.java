@@ -68,7 +68,7 @@ public class qfFixedRace {
         Double[] times = runWF(SIZE, unions, pltWF);
         plt.add(unions, times, "WF");
 
-        Plotter<Integer, Double> pltQF = new Plotter<>("uf/QF_"+SIZE+".png", "Unions", "Time (ms)", Plotter.Type.NONE,"Quick Find @ fixed "+SIZE+" nodes");
+        Plotter<Integer, Double> pltQF = new Plotter<>("uf/QF_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Quick Find @ fixed "+SIZE+" nodes");
         times = runQF(SIZE, unions, pltQF);
         plt.add(unions, times, "QF");
 
