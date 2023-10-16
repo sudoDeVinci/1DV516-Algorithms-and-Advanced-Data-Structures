@@ -50,6 +50,14 @@ def __power_law(x: list[float], y: list[float]) -> tuple[float, float, float]:
     
     return b, a, coefficient
 
+def __log(x: list[float], y: list[float]) -> tuple[float, float, float]:
+    log_y = log2(y)
+    log_x = log2(x)
+    slope, intercept, coefficient = __linear_regression(log_x, log_y)
+    a = 2**intercept  # 2 raised to the power of intercept
+    b = slope
+
+    return b, a, coefficient
 
 def __linear_regression(x: list[float], y: list[float]) -> tuple[float, float, float]:
     """
@@ -89,6 +97,8 @@ def __generate_expected_data(slope: float, intercept:float,x: list[float], plot_
         return [(slope*x_val)+intercept for x_val in x]
     elif plot_type == "Exponential":
         return [intercept*(x_val**slope) for x_val in x]
+    elif plot_type == "Logarithmic":
+        return [intercept*log2(x_val*slope) for x_val in x]
     else:
         return None
 
@@ -101,6 +111,10 @@ def __get_graph_data(x_coords: List[float], y_coords: List[float], type: str) ->
     elif type == "Exponential":
         slope, intercept, r_value = __power_law(x_coords, y_coords)
         equation = fr'$y={intercept:.6f} \cdot x^{{ {slope:.6f} }}$' + '\n' + f'r: {r_value:.3f}'
+
+    elif type == "Logarithmic":
+        slope, intercept, r_value = __power_law(x_coords,y_coords)
+        equation = fr'$y={intercept:.6f} \cdot \log_2({slope:.6f} \cdot x)$' + '\n' + f'r: {r_value}'
 
     elif type == "None" or "Bar" or "Histogram" or "Scatter":
         equation = None
@@ -149,6 +163,8 @@ def graph(graph_path:str, x:  List[List[float]], y: List[List[float]], x_label:s
                 line_graph(ax, x_coords, y_coords, type, markers, count, label)
             case "Histogram":
                 pass
+            case "Logarithmic":
+                line_graph(ax, x_coords, y_coords, type, markers, count, label)
             case "Scatter":
                 scatter(ax, x_coords, y_coords, markers, count, label)
             case "None":

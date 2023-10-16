@@ -55,15 +55,6 @@ public class Util {
             }
         }
 
-        /**
-         * Round the answer to 4 decimal places arbitrarily.
-         
-        double avg = sum / count;
-        BigDecimal bd = new BigDecimal(avg);
-        bd = bd.round(new MathContext(10));
-        double rounded_avg = bd.doubleValue();
-        */
-
         return count > 0 ? sum / count : 0;
     }
 

@@ -19,15 +19,6 @@ public class Timeit {
     }
 
     /**
-     * Change the target method to run/time.
-     * This means not requiring reallocation for new method timing.
-     * @param m
-     */
-    public void setTargetmethod(Consumer<Object[]> m) {
-        this.timedMethod = m;
-    }
-
-    /**
      * Measure the execution of the given method in nanoseconds.
      * @param args
      * @return

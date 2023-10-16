@@ -19,6 +19,7 @@ public class Plotter<T, R> {
         EXPONENTIAL("Exponential"),
         SCATTER("Scatter"),
         HISTOGRAM("Histogram"),
+        LOGARITHMIC("Logarithmic"),
         NONE("None");
 
         private final String type;

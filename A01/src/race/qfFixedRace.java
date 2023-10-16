@@ -34,15 +34,15 @@ public class qfFixedRace {
         
         
         Plotter<Integer, Double> pltWF = new Plotter<>("uf/WUF_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Weighted Union Find @ fixed "+SIZE+" nodes");
-        Double[] times = runWF(SIZE, STEPS, START, unions,pltWF);
+        Double[] times = runWF(SIZE, unions, pltWF);
         plt.add(unions, times, "WF");
 
         Plotter<Integer, Double> pltQF = new Plotter<>("uf/QF_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Quick Find @ fixed "+SIZE+" nodes");
-        times = runQF(SIZE, STEPS, START, unions, pltQF);
+        times = runQF(SIZE, unions, pltQF);
         plt.add(unions, times, "QF");
 
         Plotter<Integer, Double> pltQU = new Plotter<>("uf/QU_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Quick Union @ fixed "+SIZE+" nodes");
-        times = runQU(SIZE, STEPS, START, unions, pltQU);
+        times = runQU(SIZE,unions, pltQU);
         plt.add(unions, times, "QU");
 
         plt.plot();
@@ -64,12 +64,12 @@ public class qfFixedRace {
         System.out.println("\nGraphing Weighted Union Find versus Quick Find at fixed sized "+SIZE+" for varying numbers of Unions");
         
         
-        Plotter<Integer, Double> pltWF = new Plotter<>("uf/WUF_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Weighted Union Find @ fixed "+SIZE+" nodes");
-        Double[] times = runWF(SIZE, STEPS, START, unions,pltWF);
+        Plotter<Integer, Double> pltWF = new Plotter<>("uf/WUF_"+SIZE+".png", "Unions", "Time (ms)", Plotter.Type.LINEAR,"Weighted Union Find @ fixed "+SIZE+" nodes");
+        Double[] times = runWF(SIZE, unions, pltWF);
         plt.add(unions, times, "WF");
 
-        Plotter<Integer, Double> pltQF = new Plotter<>("uf/QF_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Quick Find @ fixed "+SIZE+" nodes");
-        times = runQF(SIZE, STEPS, START, unions,pltQF);
+        Plotter<Integer, Double> pltQF = new Plotter<>("uf/QF_"+SIZE+".png", "Unions", "Time (ms)", Plotter.Type.NONE,"Quick Find @ fixed "+SIZE+" nodes");
+        times = runQF(SIZE, unions, pltQF);
         plt.add(unions, times, "QF");
 
         plt.plot();
@@ -90,12 +90,12 @@ public class qfFixedRace {
         System.out.println("\nGraphing Weighted Union Find versus Quick Find at fixed sized "+SIZE+" for varying numbers of Unions");
         
         
-        Plotter<Integer, Double> pltQU = new Plotter<>("uf/QU_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Quick Union @ fixed "+SIZE+" nodes");
-        Double[] times = runQU(SIZE, STEPS, START, unions,pltQU);
+        Plotter<Integer, Double> pltQU = new Plotter<>("uf/QU_"+SIZE+".png", "Unions", "Time (ms)", Plotter.Type.NONE,"Quick Union @ fixed "+SIZE+" nodes");
+        Double[] times = runQU(SIZE, unions, pltQU);
         plt.add(unions, times, "QU");
 
-        Plotter<Integer, Double> pltQF = new Plotter<>("uf/QF_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Quick Find @ fixed "+SIZE+" nodes");
-        times = runQF(SIZE, STEPS, START, unions,pltQF);
+        Plotter<Integer, Double> pltQF = new Plotter<>("uf/QF_"+SIZE+".png", "Unions", "Time (ms)", Plotter.Type.NONE,"Quick Find @ fixed "+SIZE+" nodes");
+        times = runQF(SIZE, unions, pltQF);
         plt.add(unions, times, "QF");
 
         plt.plot();
@@ -117,17 +117,17 @@ public class qfFixedRace {
         
         
         Plotter<Integer, Double> pltQU = new Plotter<>("uf/QU_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Quick Union @ fixed "+SIZE+" nodes");
-        Double[] times = runQU(SIZE, STEPS, START, unions,pltQU);
+        Double[] times = runQU(SIZE, unions, pltQU);
         plt.add(unions, times, "QU");
 
         Plotter<Integer, Double> pltWF = new Plotter<>("uf/WUF_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Weighted Union Find @ fixed "+SIZE+" nodes");
-        times = runWF(SIZE, STEPS, START, unions,pltWF);
+        times = runWF(SIZE, unions,pltWF);
         plt.add(unions, times, "WF");
 
         plt.plot();
     }
 
-    private Double[] runWF(int SIZE, int STEPS, int START, Integer[] unions, Plotter<Integer,Double> plt) {
+    private Double[] runWF(int SIZE, Integer[] unions, Plotter<Integer,Double> plt) {
 
         System.out.println("\nGraphing Weighted Union Find at fixed sized "+SIZE+" for varying numbers of Unions");
         
@@ -141,7 +141,7 @@ public class qfFixedRace {
         return times;
     }
 
-    private Double[] runQF(int SIZE, int STEPS, int START, Integer[] unions, Plotter<Integer,Double> plt) {
+    private Double[] runQF(int SIZE, Integer[] unions, Plotter<Integer,Double> plt) {
 
         System.out.println("\nGraphing Quick Find at fixed sized "+SIZE+" for varying numbers of Unions");
         
@@ -155,24 +155,31 @@ public class qfFixedRace {
         return times;
     }
 
-    private Double[] runQU(int SIZE, int STEPS, int START, Integer[] unions, Plotter<Integer,Double> plt) {
+    public Double[] runQUSubplot(int SIZE, int STEPS, int START, Plotter<Integer,Double> plt) {
+        this.START = START;
+        this.STEPS = STEPS;
+        this.SIZE = SIZE;
+        
+        int arraySize = (SIZE - START) / STEPS; // Calculate the size of the array, rounding down
+        Integer[] unions = new Integer[arraySize];
+
+        for (int i = 0; i < arraySize; i++) {
+            unions[i] = START + i * STEPS;
+        }
+
+        Double[] times = runQU(SIZE, unions, plt);
+        return times;   
+    }
+
+    private Double[] runQU(int SIZE, Integer[] unions, Plotter<Integer,Double> plt) {
 
         System.out.println("\nGraphing Quick Union at fixed sized "+SIZE+" for varying numbers of Unions");
         
         QuickUnion qu = new QuickUnion(SIZE);
-        Double[] times = getUfTimes(unions, qu);
+
+        for(Integer u: unions) System.out.println((u));
         
-        /**
-         
-        Plotter<Integer, Double> QUsubplot = new Plotter<>("uf/QU_subplot_"+SIZE+".png", "Unions", "Time (ms)", plt.getType(),"Quick Union @ fixed "+SIZE+" nodes");
-        int SUBSIZE = ((SIZE - START) / (2*STEPS));
-        Double[] subtimes = new Double[SUBSIZE];
-        Integer[] subunions = new Integer[SUBSIZE];
-        System.arraycopy(times, (SIZE-SUBSIZE), subtimes, 0, SUBSIZE);
-        System.arraycopy(unions, (SIZE-SUBSIZE), subunions, 0, SUBSIZE);
-        QUsubplot.add(subunions, subtimes, "QU");
-        QUsubplot.plot(); 
-         */
+        Double[] times = getUfTimes(unions, qu);
         
         plt.add(unions, times, qu.name);
         qu = null;
