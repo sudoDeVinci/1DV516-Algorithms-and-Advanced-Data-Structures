@@ -91,19 +91,13 @@ public class App {
         race.runWFvQF(5000, 100, 500, plt);
         */
 
-        plt = new Plotter<>("uf/WUFvsQF_10_000_max.png",
-                                                        "Unions",
-                                                        "Time (ms)",
-                                                        Plotter.Type.SCATTER,
-                                                        "Weighted Union @ fixed 10,000 nodes");
-        race.runWFvQF(10000, 100, 500, plt);
-        
-
-        plt = new Plotter<>("uf/WUFvsQF_20_000_max.png",
-                                                        "Unions",
-                                                        "Time (ms)",
-                                                        Plotter.Type.SCATTER,
-                                                        "Weighted Union @ fixed 20,000 nodes");
-        race.runWFvQF(20000, 1000, 1000, plt);
+        plt = new Plotter<>("test/x2.png",
+                                                        "X TEST",
+                                                        "Y TEST",
+                                                        Plotter.Type.LINEAR,
+                                                        "TEST PLOT",
+                                                        true);
+        plt.add(new Integer[]{1,2,3,4,5,6,7,8,9,10},new Double[]{2.0,8.0,18.0,32.0,50.0,72.0,98.0,128.0,162.0,200.0});
+        plt.plot();
     }
 }

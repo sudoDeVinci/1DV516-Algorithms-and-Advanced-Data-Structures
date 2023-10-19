@@ -36,6 +36,7 @@ public class Plotter<T, R> {
     private String x_label = "_";
     private String y_label = "_";
     private String title = "_";
+    private Boolean analyze = false;
     private List<Type> types = new ArrayList<>();
     private List<T[]> x= new ArrayList<>();
     private List<R[]> y= new ArrayList<>();
@@ -89,6 +90,21 @@ public class Plotter<T, R> {
      * @param y_label
      * @param type
      */
+    public Plotter(String path, String x_label, String y_label, Plotter.Type type, Boolean analyze) {
+        this.types.add(type);
+        this.graphPath += path;
+        this.x_label = x_label;
+        this.y_label = y_label;
+        this.analyze = analyze;
+    }
+
+    /**
+     * Plot type addition.
+     * @param path
+     * @param x_label
+     * @param y_label
+     * @param type
+     */
     public Plotter(String path, String x_label, String y_label, Plotter.Type[] type) {
         for(Plotter.Type tp: type) {
             types.add(tp);
@@ -112,6 +128,23 @@ public class Plotter<T, R> {
         this.x_label = x_label;
         this.y_label = y_label;
         this.title = title;
+    }
+
+    /**
+     * x & y labels, and title additions.
+     * @param path
+     * @param x_label
+     * @param y_label
+     * @param type
+     * @param title
+     */
+    public Plotter(String path, String x_label, String y_label, Plotter.Type type, String title, Boolean analyze) {
+        this.types.add(type);
+        this.graphPath += path;
+        this.x_label = x_label;
+        this.y_label = y_label;
+        this.title = title;
+        this.analyze = analyze;
     }
 
     /**
@@ -253,7 +286,7 @@ public class Plotter<T, R> {
         /**
          * Assemble command to be run.
          */
-        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, xList.toString(), yList.toString(), x_label, y_label, title, typeList.toString(), labelList.toString()};
+        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, xList.toString(), yList.toString(), x_label, y_label, title, typeList.toString(), labelList.toString(), '"'+analyze.toString()+'"'};
         System.out.println(Arrays.toString(command));
         try {
             Process p = new ProcessBuilder(command).start();
