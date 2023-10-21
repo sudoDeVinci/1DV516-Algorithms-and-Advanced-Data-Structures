@@ -200,7 +200,6 @@ public class Plotter<T, R> implements Serializable{
         y.add(y_coords);
         if (x.size() > types.size()) types.add(types.get(types.size()-1));
         labels.add("None");
-
     }
 
 
@@ -211,8 +210,8 @@ public class Plotter<T, R> implements Serializable{
      * @param t
      */
     public void add(T[] x_coords, R[] y_coords, Type t) {
-        add(x_coords, y_coords);
         types.add(t);
+        add(x_coords, y_coords);
     }
 
     /**

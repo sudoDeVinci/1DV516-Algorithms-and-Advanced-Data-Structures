@@ -22,7 +22,7 @@ def get_graph_data(x_coords: List[float], y_coords: List[float], type: str) -> t
 
         case "Logarithmic":
             slope, intercept, r_value = power_law(x_coords,y_coords)
-            equation = fr'$y={intercept:.6f} \cdot \log_2({slope:.6f} \cdot x)$' + '\n' + f'r: {r_value}'
+            equation = fr'$y={intercept:.6f} \cdot \log_2({slope:.6f} \cdot x)$' + '\n' + f'r: {r_value:.3f}'
 
         case _:
             equation = None
