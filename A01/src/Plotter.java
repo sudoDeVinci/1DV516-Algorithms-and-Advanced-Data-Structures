@@ -291,6 +291,7 @@ public class Plotter<T, R> implements Serializable{
                 System.out.println("Python script exited with code: " + exitCode);
             }
         
+        save();
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -312,6 +313,7 @@ public class Plotter<T, R> implements Serializable{
     }
 
     public void save() {
+        
         try {
             String saveName = rmFileExtension();
             String serializedName = saveName + "_plotter.ser";
