@@ -35,7 +35,7 @@ COLOUR_MARKERS:List[tuple[str,str]] = [
 """
 List of all graph types supported
 """
-TYPES: List[str] = ["Linear","Exponential","Histogram","Scatter","None"]
+TYPES: List[str] = ["Line","Linear","Exponential","Histogram","Scatter","None"]
 
 
 def graph(graph_path:str, x:  List[List[float]], y: List[List[float]], x_label:str, y_label:str, title:str, plot_type: List[str], labels: List[str]) -> None:
@@ -64,15 +64,17 @@ def graph(graph_path:str, x:  List[List[float]], y: List[List[float]], x_label:s
     for x_coords, y_coords, type, markers, label in zip (x, y, plot_type, COLOUR_MARKERS, labels):
         match type:
             case "Linear":
-                line_graph(ax, x_coords, y_coords, type, markers, count, label)
+                approximated(ax, x_coords, y_coords, type, markers, count, label)
             case "Exponential":
-                line_graph(ax, x_coords, y_coords, type, markers, count, label)
+                approximated(ax, x_coords, y_coords, type, markers, count, label)
             case "Histogram":
                 pass
             case "Logarithmic":
-                line_graph(ax, x_coords, y_coords, type, markers, count, label)
+                approximated(ax, x_coords, y_coords, type, markers, count, label)
             case "Scatter":
                 scatter(ax, x_coords, y_coords, markers, count, label)
+            case "Line":
+                line(ax, x_coords, y_coords, count, label)
             case "None":
                 scatter(ax, x_coords, y_coords, markers, count, label)
             case _:
@@ -91,31 +93,6 @@ def graph(graph_path:str, x:  List[List[float]], y: List[List[float]], x_label:s
     __resolve_path(graph_path)
     plt.savefig(graph_path)
 
-
-def scatter(ax: Axes,x_coords: List[float], y_coords: List[float],
-             markers: tuple[str, str], count:int, label_str: str) -> None:
-    
-    l:str = f"{label_str}" if label_str != "None" else f"Plot {str(count).zfill(3)} data"
-    ax.scatter(x_coords, y_coords,c = markers[0], alpha = 0.8, marker = markers[1], label = l)
-
-
-
-def line_graph(ax: Axes,x_coords: List[float], y_coords: List[float],
-                type: str, markers: tuple[str, str], count:int,
-                label_str: str) -> None:
-    
-    equation, expected_data = get_graph_data(x_coords, y_coords, type)
-    scatter(ax, x_coords, y_coords, markers, count, label_str)
-    if expected_data is not None:
-        l:str = f"{label_str} approx. to {equation}" if label_str != "None" else f"Plot {str(count).zfill(3)} data approx. to {equation}"
-        ax.plot(x_coords, expected_data, label = l)
-
-
-
-def line_graph(ax: Axes,x_coords: List[float], y_coords: List[float],
-                type: str, markers: tuple[str, str], count:int,
-                label_str: str, analyze: bool) -> None:
-    pass
 
 
 def __resolve_path(image_path:str) -> None:
@@ -167,7 +144,7 @@ if __name__ == "__main__":
         parser.add_argument('plot_type', type=str, help='List of strings')
         parser.add_argument('labels', type=str, help='List of strings')
     
-    parser.add_argument('analyze', type=bool, help='Boolean')
+    #parser.add_argument('analyze', type=bool, help='Boolean')
 
     # Parse
     args = parser.parse_args()
@@ -180,7 +157,7 @@ if __name__ == "__main__":
     x_label: str = args.x_label
     y_label: str = args.y_label
     title: str = args.title
-    analyze: bool = args.analyze
+    #analyze: bool = args.analyze
 
     if system == "Linux": 
         plot_type: List[str] = args.plot_type 
@@ -202,6 +179,6 @@ if __name__ == "__main__":
     print(f"Types: {plot_type} - {len(plot_type)}")
     print(f"Types: {labels} - {len(labels)}")
     print(f"Constructing {len(plot_type)} graphs")
-    print(f"Analysis: {analyze}")
+    #print(f"Analysis: {analyze}")
     
-    graph(graph_path, x, y, x_label, y_label, title, plot_type, labels, analyze)
+    graph(graph_path, x, y, x_label, y_label, title, plot_type, labels)

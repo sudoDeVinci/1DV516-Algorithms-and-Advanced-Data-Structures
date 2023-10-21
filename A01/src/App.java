@@ -91,13 +91,16 @@ public class App {
         race.runWFvQF(5000, 100, 500, plt);
         */
 
-        plt = new Plotter<>("test/x2.png",
-                                                        "X TEST",
-                                                        "Y TEST",
-                                                        Plotter.Type.LINEAR,
-                                                        "TEST PLOT",
-                                                        true);
-        plt.add(new Integer[]{1,2,3,4,5,6,7,8,9,10},new Double[]{2.0,8.0,18.0,32.0,50.0,72.0,98.0,128.0,162.0,200.0});
-        plt.plot();
+        plt = new Plotter<>("test/x2.png","X TEST","Y TEST", Plotter.Type.LINE,"TEST PLOT");
+        plt.add(new Integer[]{1,2,3,4,5,6,7,8,9,10}, new Double[]{2.0,8.0,18.0,32.0,50.0,72.0,98.0,128.0,162.0,200.0}, "Test Plot booyah!");
+        plt.add(new Integer[]{1,2,3,4,5,6,7,8,9,10}, new Double[]{-3.0,3.0,13.0,27.0,45.0,67.0,93.0,123.0,157.0,195.0}, "test plot -5 lololo");
+        plt.save();
+        
+        Plotter<Integer, Double> pltNew = Plotter.LoadPlotter("src/graphs/test/x2_plotter.ser");
+        pltNew.plot();
+        /**
+         python src/scripts/pyplot.py src/graphs/test/x2.png [[1,2,3,4,5,6,7,8,9,10]] [[2.0,8.0,18.0,32.0,50.0,72.0,98.0,128.0,162.0,200.0]] X TEST Y TEST TEST PLOT ["Line"] ["test Plot label yeah"] 
+         
+         */
     }
 }

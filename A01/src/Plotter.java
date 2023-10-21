@@ -1,8 +1,6 @@
 package src;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +10,7 @@ import java.util.List;
  * This class calls a matplotlib script and plots a set of two arrays passed in.
  * It also takes in and can change the x label, y label and title - (ANALYSIS).
  */
-public class Plotter<T, R> {
+public class Plotter<T, R> implements Serializable{
 
     public static enum Type {
         LINEAR("Linear"),
@@ -20,6 +18,7 @@ public class Plotter<T, R> {
         SCATTER("Scatter"),
         HISTOGRAM("Histogram"),
         LOGARITHMIC("Logarithmic"),
+        LINE("Line"),
         NONE("None");
 
         private final String type;
@@ -36,7 +35,6 @@ public class Plotter<T, R> {
     private String x_label = "_";
     private String y_label = "_";
     private String title = "_";
-    private Boolean analyze = false;
     private List<Type> types = new ArrayList<>();
     private List<T[]> x= new ArrayList<>();
     private List<R[]> y= new ArrayList<>();
@@ -47,14 +45,22 @@ public class Plotter<T, R> {
     private final String SCRIPT_PATH = BASE_DIR+"/scripts/pyplot.py";
     private String graphPath = BASE_DIR + "/graphs/";
 
+
     /**
-     * Overloaded constructors so the labels and title are optional.
-     * Path is mandatory.
-     * @param path
+     * Load a plotter from an already serialized object.
      */
-    public Plotter(String path){
-        this.graphPath += path;
+    @SuppressWarnings("unchecked")
+    public static Plotter<Integer, Double> LoadPlotter(String fileName) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            Plotter plotter = (Plotter) in.readObject();
+            System.out.println("Plotter state loaded from " + fileName);
+            return plotter;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
     /**
      * x and y labels additions
@@ -83,20 +89,6 @@ public class Plotter<T, R> {
         this.y_label = y_label;
     }
 
-    /**
-     * Plot type addition.
-     * @param path
-     * @param x_label
-     * @param y_label
-     * @param type
-     */
-    public Plotter(String path, String x_label, String y_label, Plotter.Type type, Boolean analyze) {
-        this.types.add(type);
-        this.graphPath += path;
-        this.x_label = x_label;
-        this.y_label = y_label;
-        this.analyze = analyze;
-    }
 
     /**
      * Plot type addition.
@@ -128,23 +120,6 @@ public class Plotter<T, R> {
         this.x_label = x_label;
         this.y_label = y_label;
         this.title = title;
-    }
-
-    /**
-     * x & y labels, and title additions.
-     * @param path
-     * @param x_label
-     * @param y_label
-     * @param type
-     * @param title
-     */
-    public Plotter(String path, String x_label, String y_label, Plotter.Type type, String title, Boolean analyze) {
-        this.types.add(type);
-        this.graphPath += path;
-        this.x_label = x_label;
-        this.y_label = y_label;
-        this.title = title;
-        this.analyze = analyze;
     }
 
     /**
@@ -225,7 +200,9 @@ public class Plotter<T, R> {
         y.add(y_coords);
         if (x.size() > types.size()) types.add(types.get(types.size()-1));
         labels.add("None");
+
     }
+
 
     /**
      * Change the points to plot but specify plot type.
@@ -249,6 +226,7 @@ public class Plotter<T, R> {
         labels.set(labels.size()-1, label);
     }
 
+
     /**
      * Change the points to plot but specify label and type
      * @param x_coords
@@ -271,10 +249,15 @@ public class Plotter<T, R> {
         String[] command;
         // Convert the list of enums to a list of strings
         List<String> typeList = new ArrayList<>();
-        for (Type type : this.types) typeList.add('"'+type.toString()+'"');
+        for (Type type : this.types) typeList.add(type.toString());
 
         List<String> labelList = new ArrayList<>();
-        for(String l: labels) labelList.add('"'+l+'"');
+        for(String l: labels) labelList.add(l);
+
+        /*
+        List<String> analysisList = new ArrayList<>();
+        for(Boolean a: this.analyze) analysisList.add('"'+a.toString()+'"');
+        */
 
         List<String> xList = new ArrayList<>();
         List<String> yList = new ArrayList<>();
@@ -283,13 +266,17 @@ public class Plotter<T, R> {
             yList.add(i, Arrays.toString(y.get(i)).replaceAll("\\s+",""));
         }
 
+        
+
         /**
          * Assemble command to be run.
          */
-        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, xList.toString(), yList.toString(), x_label, y_label, title, typeList.toString(), labelList.toString(), '"'+analyze.toString()+'"'};
+        command = new String[]{KEYWORD, SCRIPT_PATH, graphPath, xList.toString(), yList.toString(), x_label.replaceAll("\\s+","_"), y_label.replaceAll("\\s+","_"), title.replaceAll("\\s+","_"), typeList.toString(), labelList.toString()};
         System.out.println(Arrays.toString(command));
         try {
-            Process p = new ProcessBuilder(command).start();
+            ProcessBuilder pBuilder = new ProcessBuilder(command);
+            pBuilder.redirectErrorStream(true);
+            Process p = pBuilder.start();
 
             try(BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))){
                 String line;
@@ -312,6 +299,29 @@ public class Plotter<T, R> {
             System.err.println("Waiting for process interrupted: " + e.getMessage());
         }
 
+    }
+
+    private String rmFileExtension()  {
+        File file  = new File(this.graphPath);
+        String neutralPath = file.getPath();
+        int dot = neutralPath.lastIndexOf('.');
+        if(dot != -1) {
+            return neutralPath.substring(0, dot);
+        } 
+        return neutralPath;
+    }
+
+    public void save() {
+        try {
+            String saveName = rmFileExtension();
+            String serializedName = saveName + "_plotter.ser";
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(serializedName))) {
+                out.writeObject(this);
+                System.out.println("Plotter state saved to " + serializedName);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
