@@ -39,7 +39,7 @@ def line(ax: Axes,x_coords: List[float], y_coords: List[float], count:int, label
     """
     Plot a line and give it a label.
     """
-    l:str = f"{label_str}" if label_str != "None" else f"Plot {str(count).zfill(3)} data"
+    l:str = fr"${label_str}$" if label_str != "None" else f"Plot {str(count).zfill(3)} data"
     ax.plot(x_coords, y_coords, label = l)
 
 
@@ -49,7 +49,7 @@ def scatter(ax: Axes,x_coords: List[float], y_coords: List[float], markers: tupl
     Plot a scatter plot and give it a label.
     """
     
-    l:str = f"{label_str}" if label_str != "None" else f"Plot {str(count).zfill(3)} data"
+    l:str = f"${label_str}$" if label_str != "None" else f"Plot {str(count).zfill(3)} data"
     ax.scatter(x_coords, y_coords,c = markers[0], alpha = 0.8, marker = markers[1], label = l)
 
 

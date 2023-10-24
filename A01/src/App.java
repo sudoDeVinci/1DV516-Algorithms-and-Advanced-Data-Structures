@@ -1,22 +1,31 @@
 package src;
-import java.lang.Math;
-
-import src.race.qfFixedRace;
 
 public class App {
     public static void main(String[] args) {
-        qfFixedRace race = new qfFixedRace();
+
+        int START = 500;
+        int STEPS = 100;
+        int SIZE = 5000;
+
+        int arraySize = (SIZE - START) / STEPS;
+        Integer[] x = new Integer[arraySize];
+
+        for (int i = 0; i < arraySize; i++) {
+            x[i] = START + i * STEPS;
+        }
 
 
-        Plotter<Integer, Double> plt = new Plotter<>("uf/WUFvsQF_100_000_max.png",
-                         "Unions", "Time (ms)",
-                                 Plotter.Type.LINEAR,
-                            "Weighted UnionFind vs Quick Find @ fixed 100_000 nodes");
-        race.runWFvQF(100_000, 10_000, 10_000, plt);
-
+        Plotter<Integer, Double> plt = Plotter.LoadPlotter("src/graphs/uf/WUF_5000_plotter.ser");
+        
+        
+        Double[] wuf_ub = new Double[x.length];
+        for(int i = 0; i < x.length; i++) wuf_ub[i] = Math.pow(10, -6) * x[i];
+        plt.add(x, wuf_ub, Plotter.Type.LINE, "f(N) = 10^{-6} \\cdot N");
+        plt.setGraphPath("/graphs/ksum/TS_UB_5000.png");
+        plt.plot();
+        
         /**
-         * 
-         * Integer[] x = new Integer[]{0,1,2,3,4,5,6,7,8,9,10};
+        Integer[] x = new Integer[]{0,1,2,3,4,5,6,7,8,9,10};
         Double[] y1 = new Double[x.length];
         Double[] y2 = new Double[x.length];
         Double[] y3 = new Double[x.length];
