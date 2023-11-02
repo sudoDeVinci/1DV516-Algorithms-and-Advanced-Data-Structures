@@ -34,7 +34,7 @@ python src/scripts/pyplot.py Graph path.extension [x1, x2, ... xn] [y1, y2, ... 
 - The keyword used is OS dependant. I tried to accomodate this but I'm unsure if it works across all platforms. If the keyword is incorrect, you can change the Plotter.KEYWORD attribute.
 ```
 
-# Test statment
+## Test statment
 
 python3 src/scripts/plotter.py graphs/uf/FS1_000_000_QuickFind.png [100000,125000,150000,175000] [578595.1,523364.3929,455945.3793,565627.0] 'Unions' 'Time(ns)' 'Quick Find_1_000_000 elements' Linear
 
