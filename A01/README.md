@@ -31,7 +31,7 @@ The plotter script can be run independently by passing args in the form:
 ```
 python src/scripts/pyplot.py Graph path.extension [x1, x2, ... xn] [y1, y2, ... yn] "X-Label" "Y-label" "Title" [Plot Type 1, ... Plot Type n] [Label 1, ... Label n]
 
-- The keyword used is OS dependant. I tried to accomodate this but I'm unsure if it works across all platforms.
+- The keyword used is OS dependant. I tried to accomodate this but I'm unsure if it works across all platforms. If the keyword is incorrect, you can change the Plotter.KEYWORD attribute.
 ```
 
 # Test statment
