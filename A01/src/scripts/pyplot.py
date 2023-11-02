@@ -135,11 +135,12 @@ if __name__ == "__main__":
     parser.add_argument('y_label', type=str, help='Label for data2')
     parser.add_argument('title', type=str, help='Title of the plot')
     
+    
 
 
     if system == "Linux": 
-        parser.add_argument('plot_type', type=parse_list, help='List of strings')
-        parser.add_argument('labels', type=parse_list, help='List of strings')
+        parser.add_argument('plot_type', type=str, help='List of strings')
+        parser.add_argument('labels', type=str, help='List of strings')
     else:
         parser.add_argument('plot_type', type=str, help='List of strings')
         parser.add_argument('labels', type=str, help='List of strings')
@@ -159,16 +160,12 @@ if __name__ == "__main__":
     title: str = args.title
     #analyze: bool = args.analyze
 
-    if system == "Linux": 
-        plot_type: List[str] = args.plot_type 
-        labels: List[str] = args.labels
-
-    if system == "Windows":
-        plot_type = sys.argv[7].split(",")
-        plot_type =  [l.replace("[",'').replace("]",'').strip() for l in plot_type]
-        labels = sys.argv[8].split(",")
-        labels = [l.replace("[",'').replace("]",'').strip() for l in labels]
-        
+    
+    plot_type = sys.argv[7].split(",")
+    plot_type =  [l.replace("[",'').replace("]",'').strip() for l in plot_type]
+    labels = sys.argv[8].split(",")
+    labels = [l.replace("[",'').replace("]",'').strip() for l in labels]
+    
     
     print(f"Image Path: {graph_path}")
     print(f"X: {x} - {len(x)}: \n{type(x)} of {type(x[0])} of {type(x[0][0])}")

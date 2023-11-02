@@ -1,4 +1,9 @@
 package src;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -28,6 +33,22 @@ public class Util {
     public static double Quartile(double[] data, int percentile) {
         int index = (percentile * data.length + 99) / 100 - 1;
         return data[index];
+    }
+
+    public static double mean(double[] samples)   {
+        double sum = 0;
+        for(double i: samples) sum+=i; 
+        return sum/samples.length;
+    }
+
+    public static double stdDev(double[] samples) {
+        int n = samples.length;
+        double sum = 0.0;
+        double mean = mean(samples);
+
+        for (double num: samples) sum += Math.pow(num-mean, 2);
+
+        return Math.sqrt(sum/(n-1));
     }
 
     /**
@@ -130,5 +151,42 @@ public class Util {
         }
     
         return arr;
+    }
+
+
+    /**
+     * Ensure a folder exists.
+     * @param path Path to folder
+     */
+    public void ensureFolderExists(String path) {
+        Path folder = Paths.get(path);
+        if (Files.exists(folder) && Files.isDirectory(folder)) {
+           return;
+        }
+
+        try {
+            Files.createDirectories(folder);
+        } catch (IOException e) {
+            System.out.println(e.getStackTrace());
+        }
+    }
+
+    public static void writeCSV(String path, String[] headers, String[][] content) {
+        try (FileWriter writer = new FileWriter(path)) {
+            
+            String joined = String.join("\t", headers);
+            writer.append(joined); 
+            writer.append('\n');
+
+            for (int row =1; row<content.length;row++) {
+                joined = String.join("\t", content[row]);
+                writer.append(joined);
+                writer.append('\n'); 
+            }
+
+        } catch (IOException e) { 
+            e.printStackTrace();
+        }
+        
     }
 }

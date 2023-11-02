@@ -41,7 +41,7 @@ public class Plotter<T, R> implements Serializable{
     private List<String> labels = new ArrayList<>();
 
     private final String BASE_DIR = "src";
-    private final String KEYWORD = "python";
+    private final String KEYWORD = "python3";
     private final String SCRIPT_PATH = BASE_DIR+"/scripts/pyplot.py";
     private String graphPath = BASE_DIR + "/graphs/";
 
@@ -290,7 +290,7 @@ public class Plotter<T, R> implements Serializable{
                 System.out.println("Python script exited with code: " + exitCode);
             }
         
-        save();
+        // save();
         } catch (IOException e) {
             e.printStackTrace();
 

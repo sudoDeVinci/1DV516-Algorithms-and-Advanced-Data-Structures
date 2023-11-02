@@ -1,5 +1,5 @@
 from numpy import log2
-from scipy.stats import linregress
+# from scipy.stats import linregress
 
 
 
@@ -8,6 +8,9 @@ def linear_regression(x: list[float], y: list[float]) -> tuple[float, float, flo
     Calculate and return the slope, intercept and linear regression coefficient
     from the x and y values passed in.
 
+   slope, intercept, r_value, _, _ = linregress(x, y)
+    """
+    
     n = len(x)
     
     x_bar = sum(x)/n
@@ -26,8 +29,6 @@ def linear_regression(x: list[float], y: list[float]) -> tuple[float, float, flo
     r_numer = n*sum_xy - sum_x*sum_y
     r_denom = ((n*sum_x_sq - sum_x**2) * (n*sum_y_sq - sum_y**2))**0.5
     r_value = r_numer/r_denom if r_denom>0 else 0
-    """
-    slope, intercept, r_value, _, _ = linregress(x, y)
     
     
     return slope, intercept, r_value

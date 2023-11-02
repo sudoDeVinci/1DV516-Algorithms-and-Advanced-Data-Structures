@@ -11,7 +11,7 @@ public class kSumRace {
     private int SIZE;
     private int START;
     private int STEPS;
-    private final int SAMPLES = 100;
+    private final int SAMPLES = 300;
 
     public void run(int SIZE, int STEPS, int START, Plotter<Integer,Double> plt) {
 
