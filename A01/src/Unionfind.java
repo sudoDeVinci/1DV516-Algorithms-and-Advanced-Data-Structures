@@ -1,10 +1,9 @@
-package src.race;
+package src;
 
-import src.Plotter;
+import src.race.qfFixedRace;
 
-public class UfRace {
-
-    public static void main(String[] args) {
+public class Unionfind {
+     public static void main(String[] args) {
 
         Plotter<Integer, Double> plt;
         qfFixedRace race;
@@ -26,6 +25,8 @@ public class UfRace {
         plt = new Plotter<>("uf/WUFvsQFvsQU_"+SIZE+".png", "Length", "Time (ms)", Plotter.Type.SCATTER, "Weighted UnionFind vs QuickFind vs Quick Union @ fixed "+SIZE+" nodes");
         race = new qfFixedRace();
         race.runAll(SIZE, 200, 2000, plt);
+
+
 
     }
 }

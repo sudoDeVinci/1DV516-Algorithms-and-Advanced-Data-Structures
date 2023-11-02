@@ -31,21 +31,22 @@ public class kSumRace {
         System.out.println("\nBrute-Force versus Cached 3-Sum "+SIZE+" Max Elements.");
                 
         
-        Plotter<Integer, Double>pltTS = new Plotter<>("ksum/TS_"+SIZE+".png", "Length", "Time (ms)", Plotter.Type.EXPONENTIAL,"Brute-Force 3-Sum @ "+SIZE+" Max Elements.");
-        Double[] times = runTS(SIZE, STEPS, START, sizes, targets, pltTS);
+        
+        Double[] times = runTS(SIZE, STEPS, START, sizes, targets);
         plt.add(sizes, times, "Brute-force");
 
-        Plotter<Integer, Double>pltTSC = new Plotter<>("ksum/TSC_"+SIZE+".png", "Length", "Time (ms)", Plotter.Type.EXPONENTIAL,"Cached 3-Sum @ "+SIZE+" Max Elements.");
-        times = runTSC(SIZE, STEPS, START, sizes, targets, pltTSC);
+        
+        times = runTSC(SIZE, STEPS, START, sizes, targets);
         plt.add(sizes, times, "Cached");
         
         plt.plot();
     }
 
-    private Double[] runTSC(int SIZE, int STEPS, int START, Integer[] sizes_threesum,Integer [] targets, Plotter<Integer,Double> plt) {
+    private Double[] runTSC(int SIZE, int STEPS, int START, Integer[] sizes_threesum,Integer [] targets) {
 
         System.out.println("\nGraphing Cached Threesum @ "+SIZE+" elements");
-        
+
+        Plotter<Integer, Double> plt = new Plotter<>("ksum/TSC_"+SIZE+".png", "Length", "Time (ms)", Plotter.Type.EXPONENTIAL,"Cached 3-Sum @ "+SIZE+" Max Elements.");
         ThreeSumCached tsc = new ThreeSumCached();
         Double[] times = getksumTimes(sizes_threesum, tsc, targets);
         plt.add(sizes_threesum, times, "Cached");
@@ -54,10 +55,10 @@ public class kSumRace {
         return times;
     }
 
-    private Double[] runTS(int SIZE, int STEPS, int START, Integer[] sizes_threesum,Integer [] targets, Plotter<Integer,Double> plt) {
+    private Double[] runTS(int SIZE, int STEPS, int START, Integer[] sizes_threesum,Integer [] targets) {
 
         System.out.println("\nGraphing Cached Threesum @ "+SIZE+" elements");
-        
+        Plotter<Integer, Double> plt = new Plotter<>("ksum/TS_"+SIZE+".png", "Length", "Time (ms)", Plotter.Type.EXPONENTIAL,"Brute-Force 3-Sum @ "+SIZE+" Max Elements.");
         ThreeSum ts = new ThreeSum();
         Double[]times = getksumTimes(sizes_threesum, ts, targets);
         plt.add(sizes_threesum, times, "Cached");

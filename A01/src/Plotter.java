@@ -41,7 +41,7 @@ public class Plotter<T, R> implements Serializable{
     private List<String> labels = new ArrayList<>();
 
     private final String BASE_DIR = "src";
-    private final String KEYWORD = "python3";
+    private String KEYWORD = "python3";
     private final String SCRIPT_PATH = BASE_DIR+"/scripts/pyplot.py";
     private String graphPath = BASE_DIR + "/graphs/";
 
@@ -61,6 +61,17 @@ public class Plotter<T, R> implements Serializable{
         }
     }
 
+
+    private void getKeyword() {
+        String osName = System.getProperty("os.name").toLowerCase();
+
+        this.KEYWORD = 
+            osName.contains("windows") ? "python" :
+            osName.contains("mac") ? "python3" :
+            osName.contains("nix") || osName.contains("nux") ? "python3" :
+            "python";
+        
+    }
 
     /**
      * x and y labels additions
@@ -244,6 +255,7 @@ public class Plotter<T, R> implements Serializable{
      * @param y
      */
     public void plot() {
+        getKeyword();
 
         String[] command;
         // Convert the list of enums to a list of strings
