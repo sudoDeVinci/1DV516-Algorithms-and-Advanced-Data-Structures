@@ -50,9 +50,10 @@ public class Plotter<T, R> implements Serializable{
      * Load a plotter from an already serialized object.
      */
     @SuppressWarnings("unchecked")
-    public static Plotter<Integer, Double> LoadPlotter(String fileName) {
+
+    public static <X, Y> Plotter<X, Y> LoadPlotter(String fileName) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
-            Plotter plotter = (Plotter) in.readObject();
+            Plotter<X, Y> plotter = (Plotter<X, Y>) in.readObject();
             System.out.println("Plotter state loaded from " + fileName);
             return plotter;
         } catch (IOException | ClassNotFoundException e) {

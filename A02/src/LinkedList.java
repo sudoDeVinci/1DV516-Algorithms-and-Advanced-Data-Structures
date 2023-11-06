@@ -1,3 +1,5 @@
+package src;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -90,7 +92,7 @@ public class LinkedList<T> implements Iterable<T> {
     } else {
       previous.setNext(current.getNext());
     }
-  }
+  } 
 
   public T removeFirst() {
     if (first == null) {
