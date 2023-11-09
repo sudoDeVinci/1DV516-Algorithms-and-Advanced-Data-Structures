@@ -1,0 +1,8 @@
+*.pyc
+lib/
+lib64/
+share/
+*.cfg
+bin/
+*lib64
+*.class
