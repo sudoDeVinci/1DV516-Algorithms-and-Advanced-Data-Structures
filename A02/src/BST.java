@@ -2,6 +2,7 @@ package src;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import src.BSTNode;
 
 public class BST<T extends Comparable<T>> implements Iterable<T>{
     private BSTNode<T> root;
@@ -303,5 +304,107 @@ public class BST<T extends Comparable<T>> implements Iterable<T>{
         }
         
         return iter;
+    }
+
+    public void removeKthLargest(int k) {
+        if (k <= 0 || k > size)
+          throw new NoSuchElementException();
+    
+        T value = findKthLargest(k);
+        remove(value);
+      }
+    
+
+    private T findKthLargest(int k) {
+    Iterator<T> iter = new ReverseInOrderIterator();
+    T value = null;
+    while (k-- > 0 && iter.hasNext()) {
+        value = iter.next();
+    }
+    if (k > 0)
+        throw new NoSuchElementException();
+    return value;
+    }
+
+    public void printTree() {
+        printTree(root, "");
+    }
+    
+    private void printTree(BSTNode<T> node, String prefix) {
+        if (node == null) return;
+
+        if (node.right != null || node.left != null) {
+            System.out.println(prefix + "├─ " + node.value);
+        } else {
+            System.out.println(prefix + "└─ " + node.value);
+        }
+
+        if (node.left != null) {
+            printTree(node.left, prefix + "   ");
+        }
+        if (node.right != null) {
+            printTree(node.right, prefix + "   ");
+        }
+    }
+
+    public static void main(String[] args) {
+        BST<Integer> bst = new BST<>();
+
+        // Add elements to the BST
+        bst.add(5);
+        bst.add(3);
+        bst.add(7);
+        bst.add(2);
+        bst.add(4);
+        bst.add(6);
+        bst.add(8);
+        bst.printTree();
+
+        /*
+         *            5
+         *        /       \
+         *       3         7
+         *     /   \     /   \
+         *    2     4   6     8
+         */
+
+        // Test height
+        System.out.println("Height: " + bst.height());
+
+        // Test size
+        System.out.println("Size: " + bst.size());
+
+        // Test contains
+        System.out.println("Contains 4: " + bst.contains(4)); // Should be true
+        System.out.println("Contains 9: " + bst.contains(9)); // Should be false
+
+        // Set the traversal type (optional)
+        bst.setIterType(BST.IterType.INORDER);
+
+        // Iterate over the elements
+        System.out.println("In-Order Traversal:");
+        for (Integer value : bst) {
+            System.out.print(value + " ");
+        }
+        System.out.println();
+
+        // Remove 2nd largest value (7)
+        bst.removeKthLargest(2);
+        
+
+        // Test removal of kth largest element
+        System.out.println("In-Order Traversal after removing 2nd largest:");
+        for (Integer value : bst) {
+            System.out.print(value + " ");
+        }
+        System.out.println();
+
+        // Try removing a non-existent kth largest element
+        System.out.println("Attempting to remove 10th largest: ");
+        try {
+            bst.removeKthLargest(10); // This will throw an exception
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception caught: " + e.getMessage());
+        }
     }
 }
