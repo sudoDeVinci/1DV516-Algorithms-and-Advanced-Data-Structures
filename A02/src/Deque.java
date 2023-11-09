@@ -1,5 +1,9 @@
 package src;
 
+/**
+ * generic deque (double-ended queue). In a deque you can add and remove from either
+ * end so that it can work either as a stack or a queue. 
+ */
 public class Deque<T> {
   private LinkedList<T> list;
 
