@@ -8,11 +8,11 @@ public class AVLTree <T extends Comparable<T>>{
 
     public int height() {
         return height(root);
-      }
+    }
 
     private int height(AVLNode<T> node) {
         return node == null ? -1 : node.height;
-      }
+    }
 
     private int max (int a, int b) {
         return a > b ? a : b;
@@ -128,20 +128,14 @@ public class AVLTree <T extends Comparable<T>>{
     }
 
     private AVLNode<T> delete(AVLNode<T> node, T value) {
-        if (node == null) {
-            return null; // Value not found
-        }
+        if (node == null) return null; // Value not found
 
-        if (value.compareTo(node.value) < 0) {
-            node.left = delete(node.left, value);
-        } else if (value.compareTo(node.value) > 0) {
-            node.right = delete(node.right, value);
-        } else {
+        if (value.compareTo(node.value) < 0) node.left = delete(node.left, value);
+        else if (value.compareTo(node.value) > 0) node.right = delete(node.right, value);
+        else {
             // Node to be deleted found
-            if (node.left == null || node.right == null) {
-                // Case 1: Node with one child or no child
-                node = (node.left != null) ? node.left : node.right;
-            } else {
+            if (node.left == null || node.right == null) node = (node.left != null) ? node.left : node.right;
+            else {
                 // Case 2: Node with two children
                 AVLNode<T> successor = findMin(node.right);
                 node.value = successor.value;
@@ -174,9 +168,7 @@ public class AVLTree <T extends Comparable<T>>{
     public AVLNode<T> randomizeTree(int size) {
         AVLNode<T> root = new AVLNode<T>(getValue(size));
 
-        for (int i = 1; i<size; i++) {
-            insert(getValue(size));
-        }
+        for (int i = 1; i<size; i++) insert(getValue(size));
         return root;
     }
 }

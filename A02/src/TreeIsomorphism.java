@@ -3,17 +3,11 @@ package src;
 import java.util.Random;
 
 /**
- * Class deedicated to checking tree isomorphism
+ * Class dedicated to checking tree isomorphism
  */
 public class TreeIsomorphism <T extends Comparable<T>> {
 
-    private static int SAMPLES = 500;
-
-    private Timeit timer = new Timeit((args) -> {
-                BSTNode<T> a = (BSTNode<T>) args[0];
-                BSTNode<T> b = (BSTNode<T>) args[1];
-                TreeIsomorphism.isIsomorphic(a,b);
-            });
+    private static int SAMPLES = 100;
 
     /**
      * Get a random bounded integer.
@@ -33,24 +27,44 @@ public class TreeIsomorphism <T extends Comparable<T>> {
      * @param parent
      * @param value
      */
-    private static <T extends Comparable<T>> void addNode(BSTNode<T> parent, T value) {
+    private static <T extends Comparable<T>> BSTNode<T> addNode(BSTNode<T> parent, T value) {
+        if (parent == null) return new BSTNode<T>(value);
+    
         int cmp = value.compareTo(parent.value);
-        if (cmp < 0) {
-                if (parent.left == null) {
-                    parent.left = new BSTNode<>(value);
-                } else {
-                    addNode(parent.left, value);
-                }
-        } else if (cmp > 0) {
-            if (parent.right == null) {
-                parent.right = new BSTNode<>(value);
-            } else {
-                addNode(parent.right, value);
-            }
-        } else {
-            return;
-        }
+    
+        if (cmp < 0) parent.left = addNode(parent.left, value);
+        else parent.right = addNode(parent.right, value);
+    
+        return parent;
     } 
+
+    /**
+     * Get the height recursively of a subtree.
+     * @param node
+     * @return
+     */
+    private static <T extends Comparable<T>> int height(BSTNode<T> node) {
+        if (node == null)
+            return -1;
+        return 1 + Math.max(height(node.left), height(node.right));
+    }
+
+    /**
+     * Check if a subtree contains a value.
+     * @param node
+     * @param value
+     * @return
+     */
+    private static <T extends Comparable<T>> boolean contains(BSTNode<T> node, T value) {
+        if (node == null) return false;
+
+        int cmp = value.compareTo(node.value);
+
+        if (cmp < 0) return contains(node.left, value);
+        if (cmp > 0) return contains(node.right, value);
+        
+        return true;
+    }
 
     /**
      * Construct randomly made trees of integers.
@@ -60,9 +74,16 @@ public class TreeIsomorphism <T extends Comparable<T>> {
     public static <T extends Comparable<T>> BSTNode<T> constructRandomBST(int size) {
         Random random = new Random();
         BSTNode<T> root = new BSTNode<T>(getValue(random, size));
+        T value;
 
         for (int i = 1; i<size; i++) {
-            addNode(root, getValue(random, size));
+            value = getValue(random, size);
+
+            while (contains(root, value)) {
+                value = getValue(random, size);
+            }
+            
+            addNode(root, value);
         }
         return root;
     }
@@ -91,7 +112,7 @@ public class TreeIsomorphism <T extends Comparable<T>> {
         /**
          * If the values are not the same, return false.
          */
-        if (root1.value != root2.value) {
+        if (!root1.value.equals(root2.value)) {
             return false;
         }
 
@@ -144,18 +165,23 @@ public class TreeIsomorphism <T extends Comparable<T>> {
     }
 
     
+    /**
+     * Return a sampled mean of the time taken to check for Isomorphism between two random trees of specified size.
+     * @param <T>
+     * @param size
+     * @param timer
+     * @return
+     */
     private static <T extends Comparable<T>> double execute(int size, Timeit timer) {
         double[] samples = new double[SAMPLES];
 
         BSTNode<T> A = new BSTNode<T>(null);
         BSTNode<T> B  =new BSTNode<T>(null);
-        
+        A = constructRandomBST(size);
+        B = A;
 
         for (int x = 0; x < SAMPLES; x++) {
-            
-            A = constructRandomBST(size);
-            B = constructRandomBST(size);
-            samples[x] = timer.measureNanos(A, B);
+            samples[x] = timer.measureMicros(A, B);
         }
 
         return Util.sampleMean(samples);
@@ -179,11 +205,11 @@ public class TreeIsomorphism <T extends Comparable<T>> {
         return times;
     }
 
-    public static void testComplexity() {
+    public static void graphComplexity() {
         Plotter<Integer, Double> plt;
-        int SIZE = 10_000;
-        int STEPS = 5_00;
-        int START = 5_00;
+        int SIZE = 15_000;
+        int STEPS = 100;
+        int START = 2;
 
         int arraySize = (SIZE - START) / STEPS; // Calculate the size of the array, rounding down
         Integer[] sizes = new Integer[arraySize];
@@ -195,14 +221,15 @@ public class TreeIsomorphism <T extends Comparable<T>> {
         System.out.println("\nGraphing Isomorphic testing up to "+ sizes[sizes.length-1] +" elements");
 
         Double[] times = getTimes(sizes);
-        plt = new Plotter<>("Isomorphic_Integer_"+sizes[sizes.length-1]+".png", "Tree Size", "Time(ns)", Plotter.Type.LINE, "Time for Isomorphic Testing versus Tree Size");
+        plt = new Plotter<>("Isomorphic_Integer_"+sizes[sizes.length-1]+".png", "Tree Size", "Time(micro s)", Plotter.Type.LINE, "Time for Isomorphic Testing versus Tree Size");
         plt.add(sizes, times, "ISO");
         plt.plot();
+        plt.save();
         plt = null;
     }
 
     public static void main(String[] args) {
         TreeIsomorphism.testIsIsomorphic();
-        TreeIsomorphism.testComplexity();
+        //TreeIsomorphism.graphComplexity();
     }
 }

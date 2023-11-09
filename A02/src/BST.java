@@ -2,7 +2,6 @@ package src;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import src.BSTNode;
 
 public class BST<T extends Comparable<T>> implements Iterable<T>{
     private BSTNode<T> root;
