@@ -78,9 +78,10 @@ public class AVLTree <T extends Comparable<T>>{
      * Rebalance AVL trees based on their heaviness.
      * BF(N) < -1 && BF(L) ≤ 0	RR(N)
      * BF(N) < -1 && BF(L) > 0	LR(L) then RR(N)
-     * BF(N) > 1 && BF(R) ≥ 0 	LR(N)
-     * BF(N) > 1 && BF(R) < 0	RR(R) then LR(N)
-     * 
+     * BF(N) > +1 && BF(R) ≥ 0 	LR(N)
+     * BF(N) > +1 && BF(R) < 0	RR(R) then LR(N)
+     * @param node
+     * @return New root of tree.
      */
     private AVLNode<T> balance(AVLNode<T> node) {
         int bf = BF(node);
@@ -102,14 +103,23 @@ public class AVLTree <T extends Comparable<T>>{
         return node;
     }
 
-    /*
-     * Insert into the tree
+    /**
+     * Insert a value into the tree.
+     * Return boolean of insertion operation success.
+     * @param value
+     * @return Boolean inserted
      */
     public boolean insert(T value) {
         root = insert(value, root);
         return root == null ? false : true;
-      }
-      
+    }
+    
+    /**
+     * Insert a value into the tree and return the new root after rebalanacing.
+     * @param value
+     * @param node
+     * @return The node 
+     */
     private AVLNode<T> insert(T value, AVLNode<T> node) {
         if (node == null) return new AVLNode<T>(value);
 
@@ -123,6 +133,10 @@ public class AVLTree <T extends Comparable<T>>{
         return balance(node);
     }
 
+    /**
+     * Delete a value from the tree.
+     * @param value
+     */
     public void delete(T value) {
         root = delete(root, value);
     }
@@ -161,7 +175,7 @@ public class AVLTree <T extends Comparable<T>>{
     }
 
     /**
-     * Construct randomly made trees of integers.
+     * Construct randomly made trees of integers and return the root.
      * @param size
      * @return
      */

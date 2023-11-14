@@ -40,3 +40,7 @@ python3 src/scripts/plotter.py graphs/uf/FS1_000_000_QuickFind.png [100000,12500
 
 
 python src/scripts/plotter.py graphs/uf/test.png [1,2,3,4,5] [2,4,6,8,10] TEST 'TEST Y' 'TEST SPACE' Linear
+
+## Report
+
+<embed src="report.pdf" type="application/pdf">
