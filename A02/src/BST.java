@@ -330,19 +330,19 @@ public class BST<T extends Comparable<T>> implements Iterable<T>{
     }
     
     private void printTree(BSTNode<T> node, String prefix) {
-        if (node == null) return;
+        if (node == null) System.err.println("- empty");
 
-        if (node.right != null || node.left != null) {
-            System.out.println(prefix + "├─ " + node.value);
-        } else {
-            System.out.println(prefix + "└─ " + node.value);
-        }
+        if (node.equals(root)) System.out.println(prefix + "   " + node.value);
+
+        else if (node.right != null || node.left != null) System.out.println(prefix + "├─ " + node.value);
+        
+        else System.out.println(prefix + "└─ " + node.value);
 
         if (node.left != null) {
-            printTree(node.left, prefix + "   ");
+          printTree(node.left, prefix + "   ");
         }
         if (node.right != null) {
-            printTree(node.right, prefix + "   ");
+          printTree(node.right, prefix + "   ");
         }
     }
 
@@ -357,6 +357,7 @@ public class BST<T extends Comparable<T>> implements Iterable<T>{
         bst.add(4);
         bst.add(6);
         bst.add(8);
+        bst.add(9);
         bst.printTree();
 
         /*
@@ -365,6 +366,8 @@ public class BST<T extends Comparable<T>> implements Iterable<T>{
          *       3         7
          *     /   \     /   \
          *    2     4   6     8
+         *                      \
+         *                       9
          */
 
         // Test height
@@ -373,15 +376,42 @@ public class BST<T extends Comparable<T>> implements Iterable<T>{
         // Test size
         System.out.println("Size: " + bst.size());
 
+        // test removes
+        int val = 8; 
+        boolean removed = bst.remove(val);
+        System.out.println(removed ? "Succesfully removed value "+val+"!" : "Remove of value " + val + " unsuccessful!");
+
+        bst.printTree();
+
         // Test contains
         System.out.println("Contains 4: " + bst.contains(4)); // Should be true
-        System.out.println("Contains 9: " + bst.contains(9)); // Should be false
+        System.out.println("Contains 11: " + bst.contains(11)); // Should be false
 
         // Set the traversal type (optional)
         bst.setIterType(BST.IterType.INORDER);
 
         // Iterate over the elements
         System.out.println("In-Order Traversal:");
+        for (Integer value : bst) {
+            System.out.print(value + " ");
+        }
+        System.out.println();
+
+        // Set the traversal type (optional)
+        bst.setIterType(BST.IterType.PREORDER);
+
+        // Iterate over the elements
+        System.out.println("Pre-Order Traversal:");
+        for (Integer value : bst) {
+            System.out.print(value + " ");
+        }
+        System.out.println();
+
+        // Set the traversal type (optional)
+        bst.setIterType(BST.IterType.POSTORDER);
+
+        // Iterate over the elements
+        System.out.println("Post-Order Traversal:");
         for (Integer value : bst) {
             System.out.print(value + " ");
         }
@@ -399,7 +429,7 @@ public class BST<T extends Comparable<T>> implements Iterable<T>{
         System.out.println();
 
         // Try removing a non-existent kth largest element
-        System.out.println("Attempting to remove 10th largest: ");
+        System.out.println("Attempting to remove 10th largest (Should throw error): ");
         try {
             bst.removeKthLargest(10); // This will throw an exception
         } catch (IllegalArgumentException e) {

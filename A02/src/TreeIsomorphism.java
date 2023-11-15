@@ -36,17 +36,6 @@ public class TreeIsomorphism <T extends Comparable<T>> {
         else parent.right = addNode(parent.right, value);
     
         return parent;
-    } 
-
-    /**
-     * Get the height recursively of a subtree.
-     * @param node
-     * @return
-     */
-    private static <T extends Comparable<T>> int height(BSTNode<T> node) {
-        if (node == null)
-            return -1;
-        return 1 + Math.max(height(node.left), height(node.right));
     }
 
     /**
@@ -86,6 +75,25 @@ public class TreeIsomorphism <T extends Comparable<T>> {
             addNode(root, value);
         }
         return root;
+    }
+
+    public static <T extends Comparable<T>> void print(BSTNode<T> node) {
+        printTree(node, "");
+    }
+
+    private static <T extends Comparable<T>> void printTree(BSTNode<T> node, String prefix) {
+        if (node == null) System.err.println("- empty");
+
+        else if (node.right != null || node.left != null) System.out.println(prefix + "├─ " + node.value);
+        
+        else System.out.println(prefix + "└─ " + node.value);
+
+        if (node.left != null) {
+          printTree(node.left, prefix + "   ");
+        }
+        if (node.right != null) {
+          printTree(node.right, prefix + "   ");
+        }
     }
 
 
@@ -229,6 +237,10 @@ public class TreeIsomorphism <T extends Comparable<T>> {
     }
 
     public static void main(String[] args) {
+        /**
+         * Rather than a full BST implementation, all methods use Tree Nodes as inputs.
+         * 
+         */
         TreeIsomorphism.testIsIsomorphic();
         //TreeIsomorphism.graphComplexity();
     }

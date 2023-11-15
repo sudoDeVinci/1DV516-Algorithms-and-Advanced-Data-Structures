@@ -11,10 +11,16 @@ The randomized queue is defined in [DequeRand](src/DequeRand.java).
 The LCRS directory tree is defined in [Tree LCRS](src/TreeLCRS.java).
 Left or right slashes ("/" or "\") can be used for paths, but please stick to one convention.
 
-## Problem 04
 ```shell
 javac src/TreeLCRS.java
 java src/TreeLCRS
+```
+
+## Problem 04
+The BST implementation is defined in [BST](src/BST.java).
+```shell
+javac src/BST.java
+java src/BST
 ```
 
 ## Problem 05
