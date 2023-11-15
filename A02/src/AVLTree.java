@@ -6,101 +6,90 @@ public class AVLTree <T extends Comparable<T>>{
 
     private AVLNode<T> root;
 
-    public int height() {
-        return height(root);
+    private int height(AVLNode<T> n) {
+        return (n == null) ? -1 : n.height;
     }
 
-    private int height(AVLNode<T> node) {
-        return node == null ? -1 : node.height;
+    public void add(T key) {
+        root = add(root, key);
+    }
+
+    private AVLNode<T> add(AVLNode<T> n, T key) {
+        if (n == null) return new AVLNode<T>(key);
+
+        int cmp = key.compareTo(n.value);
+
+        // if key < n.value
+        if (cmp < 0) n.left = add(n.left, key); 
+
+        // if key > n.value
+        if (cmp > 0) n.right = add(n.right, key);
+
+        return balance(n);
     }
 
     private int max (int a, int b) {
-        return a > b ? a : b;
+        return (a > b) ? a : b;
     }
 
-    /**
-     * Update a height of a node.
-     * Used after a rotation.
-     * @param <T>
-     * @param node
-     */
     private void updateHeight(AVLNode<T> node) {
-        int leftChildHeight = height(node.left);
-        int rightChildHeight = height(node.right);
-        node.height = max(leftChildHeight, rightChildHeight) + 1;
+        node.height = max(height(node.left), height(node.right)) + 1;
     }
 
-    /**
-     * Calculate the balance factor of the AVL tree at a given node.
-     * @param <T>
-     * @param node
-     * @return
-     */
-    private int BF(AVLNode<T> node) {
-        return height(node.right) - height(node.left);
-    }
-
-    /** Perform a right rotation of an AVL tree and return the new root at that node.
-     * 
-     * @param <T>
-     * @param node
-     * @return
-     */
-    private AVLNode<T> RR(AVLNode<T> node) {
+    private AVLNode<T> RL(AVLNode<T> node) {
         AVLNode<T> leftChild = node.left;
         node.left = leftChild.right;
         leftChild.right = node;
-
         updateHeight(node);
         updateHeight(leftChild);
-
         return leftChild;
     }
 
-    /** Perform a right rotation of an AVL tree and return the new root at that node.
-     * 
-     * @param <T>
-     * @param node
-     * @return
-     */
-    private AVLNode<T> LR(AVLNode<T> node) {
+    private AVLNode<T> RLL(AVLNode<T> node) {
+        node.left = RR(node.left);
+        return RL(node); 
+    }
+
+    private AVLNode<T> RR(AVLNode<T> node) {
         AVLNode<T> rightChild = node.right;
         node.right = rightChild.left;
         rightChild.left = node;
-
         updateHeight(node);
         updateHeight(rightChild);
-
         return rightChild;
     }
 
-    /**
-     * Rebalance AVL trees based on their heaviness.
-     * BF(N) < -1 && BF(L) ≤ 0	RR(N)
-     * BF(N) < -1 && BF(L) > 0	LR(L) then RR(N)
-     * BF(N) > +1 && BF(R) ≥ 0 	LR(N)
-     * BF(N) > +1 && BF(R) < 0	RR(R) then LR(N)
-     * @param node
-     * @return New root of tree.
-     */
-    private AVLNode<T> balance(AVLNode<T> node) {
-        int bf = BF(node);
-        /**
-         * Check for left-heavy tree
-         */
-        if (bf < -1 && BF(node.left) <= 0) return RR(node);
-        if (bf < -1 && BF(node.left) > 0) {node.left = LR(node.left); return RR(node);}
-        /**
-         * Check for right-heavy tree
-         */
-        if (bf > 1 && BF(node.right) >= 0) return LR(node);
-        if (bf > 1 && BF(node.right) < 0) {node.right = RR(node.right); return LR(node);};
-        return null;
+    private AVLNode<T> RRR(AVLNode<T> node) {
+        node.right = RL(node.right);
+        return RR(node);
     }
 
-    private AVLNode<T> findMin(AVLNode<T> node) {
-        while (node.left != null) node = node.left;
-        return node;
+    private AVLNode<T> balance(AVLNode<T> n) {
+        if(n == null) return n;
+
+        if ( (height(n.left) - height(n.right)) > 1) {
+            if ( height(n.left.left) >= height(n.left.right) ) {
+                n = RL(n);
+            } else {
+                n = RLL(n);
+            }
+        } else if ( (height(n.right) - height(n.left) > 1) ) {
+            if ( (height(n.right.right) >= height(n.right.left)) ) {
+                n = RR(n);
+            } else {
+                n = RRR(n);
+            }
+        }
+
+        updateHeight(n);
+        return n;
+    }
+
+    
+
+    private T findMin(AVLNode<T> node) {
+        if(node.left == null) return node.value;
+        else return findMin(node.left);
     }
 
     /**
@@ -127,9 +116,7 @@ public class AVLTree <T extends Comparable<T>>{
         
         if (cmp < 0) node.left = insert( value, node.left);
         else if (cmp > 0) node.right = insert(value, node.right);
-        else return node;
 
-        updateHeight(node);
         return balance(node);
     }
 
@@ -144,27 +131,20 @@ public class AVLTree <T extends Comparable<T>>{
     private AVLNode<T> delete(AVLNode<T> node, T value) {
         if (node == null) return null; // Value not found
 
-        if (value.compareTo(node.value) < 0) node.left = delete(node.left, value);
-        else if (value.compareTo(node.value) > 0) node.right = delete(node.right, value);
+        int cmp = value.compareTo(node.value);
+
+        if (cmp < 0) node.left = delete(node.left, value);
+        else if (cmp > 0) node.right = delete(node.right, value);
         else {
             // Node to be deleted found
-            if (node.left == null || node.right == null) node = (node.left != null) ? node.left : node.right;
-            else {
-                // Case 2: Node with two children
-                AVLNode<T> successor = findMin(node.right);
-                node.value = successor.value;
-                node.right = delete(node.right, successor.value);
-            }
+            if (node.right == null) return node.left;
+            if (node.left == null) return node.right;
+
+            node.value = findMin(node.right);
+            node.right = delete(node.right, node.value);
         }
 
-        if (node != null) {
-            // Update height of current node
-            updateHeight(node);
-            // Rebalance the node
-            return balance(node);
-        }
-
-        return null;
+        return balance(node);
 
     }
 
@@ -184,5 +164,38 @@ public class AVLTree <T extends Comparable<T>>{
 
         for (int i = 1; i<size; i++) insert(getValue(size));
         return root;
+    }
+
+    public void printTree() {
+        printTree("", root, true);
+    }
+
+    private void printTree(String prefix, AVLNode<T> node, boolean isTail) {
+        T nodeName = node.value;
+        String nodeConnection = isTail ? "└── " : "├── ";
+        System.out.println(prefix + nodeConnection + nodeName);
+    
+        AVLNode<T>[] children = getChildren(node);
+        if (children!=null) {
+            for (int i = 0; i < children.length; i++) {
+                String newPrefix = prefix + (isTail ? "    " : "│   ");
+                printTree(newPrefix, children[i], i == children.length - 1);
+            }
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private AVLNode<T>[] getChildren(AVLNode<T> node) {
+
+        if (node.left != null && node.right != null) {
+            return new AVLNode[]{node.left, node.right};
+        }
+
+        if(node.left != null || node.right != null) {
+            AVLNode<T> outNode = node.left == null ? node.right:node.left;
+            return new AVLNode[]{outNode};
+        }
+
+        else return null;
     }
 }

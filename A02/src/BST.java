@@ -325,26 +325,38 @@ public class BST<T extends Comparable<T>> implements Iterable<T>{
     return value;
     }
 
-    public void printTree() {
-        printTree(root, "");
-    }
-    
-    private void printTree(BSTNode<T> node, String prefix) {
-        if (node == null) System.err.println("- empty");
+    private void printTree(String prefix, BSTNode<T> node, boolean isTail) {
+      T nodeName = node.value;
+      String nodeConnection = isTail ? "└── " : "├── ";
+      System.out.println(prefix + nodeConnection + nodeName);
+  
+      BSTNode<T>[] children = getChildren(node);
+      if (children!=null) {
+          for (int i = 0; i < children.length; i++) {
+              String newPrefix = prefix + (isTail ? "    " : "│   ");
+              printTree(newPrefix, children[i], i == children.length - 1);
+          }
+      }
+  }
 
-        if (node.equals(root)) System.out.println(prefix + "   " + node.value);
+  public void printTree() {
+    printTree("", root, true);
+}
+  
+  @SuppressWarnings("unchecked")
+  private BSTNode<T>[] getChildren(BSTNode<T> node) {
 
-        else if (node.right != null || node.left != null) System.out.println(prefix + "├─ " + node.value);
-        
-        else System.out.println(prefix + "└─ " + node.value);
+      if (node.left != null && node.right != null) {
+          return new BSTNode[]{node.left, node.right};
+      }
 
-        if (node.left != null) {
-          printTree(node.left, prefix + "   ");
-        }
-        if (node.right != null) {
-          printTree(node.right, prefix + "   ");
-        }
-    }
+      if(node.left != null || node.right != null) {
+          BSTNode<T> outNode = node.left == null ? node.right:node.left;
+          return new BSTNode[]{outNode};
+      }
+
+      else return null;
+  }
 
     public static void main(String[] args) {
         BST<Integer> bst = new BST<>();
