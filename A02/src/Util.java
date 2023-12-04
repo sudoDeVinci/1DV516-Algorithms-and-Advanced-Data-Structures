@@ -91,6 +91,18 @@ public class Util {
         return times;
     }
 
+    public static Double[] mean(double[][] samples) {
+        Double [] times = new Double[samples[0].length];
+        double[] sampleArr = new double[samples.length];
+
+        for(int i = 0; i < samples[0].length; i++) {
+            for (int j=0; j < samples.length; j++) sampleArr[j] = samples[j][i];     
+            times[i] = mean(sampleArr);
+        }
+
+        return times;
+    }
+
     /**
      * Generate an N-long array of bounded x-y coords.
      * @param N
@@ -152,6 +164,7 @@ public class Util {
     
         return arr;
     }
+
 
 
     /**

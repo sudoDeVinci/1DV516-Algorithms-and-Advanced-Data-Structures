@@ -2,9 +2,13 @@ package src;
 
 import java.util.Random;
 
-public class AVLTree <T extends Comparable<T>>{
+public class AVLTree<T extends Comparable<T>> extends BST<T, AVLNode<T>>{
 
     private AVLNode<T> root;
+
+    public int height() {
+        return height(root);
+    }
 
     private int height(AVLNode<T> n) {
         return (n == null) ? -1 : n.height;
@@ -93,55 +97,27 @@ public class AVLTree <T extends Comparable<T>>{
     }
 
     /**
-     * Insert a value into the tree.
-     * Return boolean of insertion operation success.
-     * @param value
-     * @return Boolean inserted
-     */
-    public boolean insert(T value) {
-        root = insert(value, root);
-        return root == null ? false : true;
-    }
-    
-    /**
-     * Insert a value into the tree and return the new root after rebalanacing.
-     * @param value
-     * @param node
-     * @return The node 
-     */
-    private AVLNode<T> insert(T value, AVLNode<T> node) {
-        if (node == null) return new AVLNode<T>(value);
-
-        int cmp = value.compareTo(node.value);
-        
-        if (cmp < 0) node.left = insert( value, node.left);
-        else if (cmp > 0) node.right = insert(value, node.right);
-
-        return balance(node);
-    }
-
-    /**
-     * Delete a value from the tree.
+     * remove a value from the tree.
      * @param value
      */
-    public void delete(T value) {
-        root = delete(root, value);
+    public void remove(T value) {
+        root = remove(root, value);
     }
 
-    private AVLNode<T> delete(AVLNode<T> node, T value) {
+    private AVLNode<T> remove(AVLNode<T> node, T value) {
         if (node == null) return null; // Value not found
 
         int cmp = value.compareTo(node.value);
 
-        if (cmp < 0) node.left = delete(node.left, value);
-        else if (cmp > 0) node.right = delete(node.right, value);
+        if (cmp < 0) node.left = remove(node.left, value);
+        else if (cmp > 0) node.right = remove(node.right, value);
         else {
-            // Node to be deleted found
+            // Node to be removed found
             if (node.right == null) return node.left;
             if (node.left == null) return node.right;
 
             node.value = findMin(node.right);
-            node.right = delete(node.right, node.value);
+            node.right = remove(node.right, node.value);
         }
 
         return balance(node);
@@ -162,12 +138,8 @@ public class AVLTree <T extends Comparable<T>>{
     public AVLNode<T> randomizeTree(int size) {
         AVLNode<T> root = new AVLNode<T>(getValue(size));
 
-        for (int i = 1; i<size; i++) insert(getValue(size));
+        for (int i = 1; i<size; i++) add(getValue(size));
         return root;
-    }
-
-    public void printTree() {
-        printTree("", root, true);
     }
 
     private void printTree(String prefix, AVLNode<T> node, boolean isTail) {
@@ -182,20 +154,35 @@ public class AVLTree <T extends Comparable<T>>{
                 printTree(newPrefix, children[i], i == children.length - 1);
             }
         }
-    }
+      }
+  
+      public void printTree(AVLNode<T> n) {
+        printTree("", n, true);
+      }
+  
+      public void printTree() {
+        printTree("", root, true);
+      }
     
     @SuppressWarnings("unchecked")
     private AVLNode<T>[] getChildren(AVLNode<T> node) {
-
+  
         if (node.left != null && node.right != null) {
             return new AVLNode[]{node.left, node.right};
         }
-
+  
         if(node.left != null || node.right != null) {
             AVLNode<T> outNode = node.left == null ? node.right:node.left;
             return new AVLNode[]{outNode};
         }
-
+  
         else return null;
+    }
+
+
+    public static void main(String[] args) {
+        AVLTree<Integer> tree = new AVLTree<>();
+        for(int i = 0; i < 11; i++) tree.add(i);
+        tree.printTree();
     }
 }

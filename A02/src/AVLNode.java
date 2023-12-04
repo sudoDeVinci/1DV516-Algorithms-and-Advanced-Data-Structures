@@ -1,15 +1,12 @@
 package src;
 
-public class AVLNode<T extends Comparable<T>>{
-    public T value;
-    public AVLNode<T> left;
-    public AVLNode<T> right;
-
-    public int height = 0;
+public class AVLNode<T extends Comparable<T>> extends LRNode<T,AVLNode<T>>{
+    public int height;
 
     public AVLNode(T data) {
+        this.height = 0;
         this.value = data;
-        left = null;
-        right  = null;
+        this.left = null;
+        this.right = null;
     }
 }

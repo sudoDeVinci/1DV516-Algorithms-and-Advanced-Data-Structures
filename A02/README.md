@@ -29,4 +29,6 @@ Time Complexity: Time complexity is O(min(m,n)*2) or O(min(m,n)) where m and n a
 help from [GeeksforGeeks](https://www.geeksforgeeks.org/tree-isomorphism-problem/)
 
 ## Problem 06
-THE AVL Tree is defined in [AVLTree](src/AVLTree.java).
+The AVL Tree is defined in [AVLTree](src/AVLTree.java).
+
+## Problem 07
