@@ -89,7 +89,31 @@ public class AVLTree<T extends Comparable<T>> extends BST<T, AVLNode<T>>{
         return n;
     }
 
-    
+    /**
+     * Check if a subtree contains a value.
+     * @param node
+     * @param value
+     * @return
+     */
+    private boolean contains(AVLNode<T> node, T value) {
+        if (node == null) return false;
+
+        int cmp = value.compareTo(node.value);
+
+        if (cmp < 0) return contains(node.left, value);
+        if (cmp > 0) return contains(node.right, value);
+        
+        return true;
+    }
+
+    /**
+     * Check if the entire tree contains a given value.
+     * @param value
+     * @return
+     */
+    public boolean contains(T value) {
+        return contains(this.root, value);
+    }
 
     private T findMin(AVLNode<T> node) {
         if(node.left == null) return node.value;
