@@ -1,10 +1,13 @@
 package src;
 
+import java.util.Iterator;
+
 /**
  * generic deque (double-ended queue). In a deque you can add and remove from either
  * end so that it can work either as a stack or a queue. 
  */
-public class Deque<T> {
+public class Deque<T> implements Iterable<T>{
+
   private LinkedList<T> list;
 
   public Deque() {
@@ -33,5 +36,10 @@ public class Deque<T> {
 
   public T removeLast() {
     return list.removeLast();
+  }
+
+  @Override
+  public Iterator<T> iterator() {
+    return list.iterator();
   }
 }

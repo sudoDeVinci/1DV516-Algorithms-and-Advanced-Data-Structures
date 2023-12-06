@@ -200,6 +200,45 @@ public class TreeComp <T extends Comparable<T>>{
         return new Double[][] {timesA, timesB, hA, hB};
     }
 
+    /**
+     * 
+     * @param <T>
+     * @param specs [no. of added values, number of intervals]
+     * @return
+     */
+    private static <T extends Comparable<T>> Double[][] runDel(Integer amt) {
+
+        double[][] runsA = new double[SAMPLES][amt];
+        double[][] runsB = new double[SAMPLES][amt];
+        T[] values;
+
+        AVLTree<T> a = new AVLTree<>();
+        BSTTree<T> b = new BSTTree<>();
+        Randomize(a, b, 2*amt);
+
+        for (int i = 0; i < SAMPLES; i++) {
+            values = getGenericArray(amt);
+
+
+            for(int j = 0; j<amt; j++) {
+                runsA[i][j] = delTimerA().measureMicros(values[j], a);
+                runsB[i][j] = delTimerB().measureMicros(values[j], b);
+            }
+        }
+
+        a = null;
+        b = null;
+        values = null;
+
+        Double[] timesA = Util.sampleMean(runsA);
+        runsA = null;
+        Double[] timesB = Util.sampleMean(runsB);
+        runsB = null;
+
+        return new Double[][] {timesA, timesB};
+    }
+
+
     private static Integer[] xAxis(int SIZE) {
         Integer[] x = new Integer[SIZE];
 
@@ -223,13 +262,14 @@ public class TreeComp <T extends Comparable<T>>{
      public static void main(String[] args) {
         int SIZE = 5_000;
         Plotter<Integer, Double> plt;
+        Double[][] stats;
 
         Integer[] x = xAxis(SIZE);
 
         /**
          * {timesA, timesB, heightsA, heightsB}
-         */
-        Double[][] stats = runAdd(SIZE);
+         * 
+         *  stats = runAdd(SIZE);
 
         plt = new Plotter<>("bst/AVL_ADD_" + SIZE*2 + ".png", "Tree Size",  "Time (ms)", Plotter.Type.LINE, "AVL Tree add operation time");
         plt.add(x, stats[0], "AVL Tree");
@@ -263,6 +303,27 @@ public class TreeComp <T extends Comparable<T>>{
         plt.add(x, stats[3], "BST Tree");
         plt.save();
         plt.plot();
+
+        stats = runDel(SIZE);
+
+        plt = new Plotter<>("bst/BST_DEL_" + SIZE*2 + ".png", "Tree Size",  "Time (ms)", Plotter.Type.LINE, "BST Tree delete operation time");
+        plt.add(x, stats[1], "BST Tree");
+        plt.save();
+        plt.plot();
+
+        plt = new Plotter<>("bst/AVL_DEL_" + SIZE*2 + ".png", "Tree Size",  "Time (ms)", Plotter.Type.LINE, "AVL Tree delete operation time");
+        plt.add(x, stats[0], "AVL Tree");
+        plt.save();
+        plt.plot();
+        */
+
+        plt = Plotter.LoadPlotter("src/graphs/bst/BST_DEL_10000_plotter.ser");
+        plt.plot();
+
+        plt = Plotter.LoadPlotter("src/graphs/bst/AVL_DEL_10000_plotter.ser");
+        plt.plot();
+
+
 
         System.out.println("Done!");
     }    
