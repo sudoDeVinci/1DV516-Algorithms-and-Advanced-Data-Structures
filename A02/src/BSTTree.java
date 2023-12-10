@@ -14,6 +14,10 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
       POSTORDER
     }
 
+    public BSTNode<T> getRoot() {
+      return this.root;
+    }
+
     public void setIterType(IterType type) {
         this.iterType = type;
     }

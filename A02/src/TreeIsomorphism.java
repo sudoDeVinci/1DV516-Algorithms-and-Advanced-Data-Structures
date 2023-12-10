@@ -125,7 +125,7 @@ public class TreeIsomorphism <T extends Comparable<T>> {
         }
 
         /**
-         * Check all combinations of left and right nodes for the two input nodes.
+         * Check all combinations of left and right nodes for the wo input nodes.
          * We don't need to explicitly return True because that will happen when a leaf is reached.
          * Either the nodes are exactly the same, or they are swapped.
          */

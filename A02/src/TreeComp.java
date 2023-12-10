@@ -4,14 +4,13 @@ import java.util.Random;
 
 public class TreeComp <T extends Comparable<T>>{
 
-    private static int SAMPLES = 100;
+    private static int SAMPLES = 50;
 
     private static <T extends Comparable<T>> Timeit delTimerA() {
         @SuppressWarnings("unchecked")
         Timeit __ =  new Timeit((args) -> {
-                    T value = (T) args[0];
                     AVLTree<T> a = (AVLTree<T>) args[1];
-                    execDel(value, a);
+                    a.remove((T) args[0]);
         });
 
         return __;
@@ -20,9 +19,8 @@ public class TreeComp <T extends Comparable<T>>{
     private static <T extends Comparable<T>> Timeit delTimerB() {
         @SuppressWarnings("unchecked")
         Timeit __ =  new Timeit((args) -> {
-                    T value = (T) args[0];
-                    BSTTree<T> a = (BSTTree<T>) args[1];
-                    execDel(value, a);
+                    BSTTree<T> b = (BSTTree<T>) args[1];
+                    b.remove((T) args[0]);
         });
 
         return __;
@@ -31,9 +29,8 @@ public class TreeComp <T extends Comparable<T>>{
     private static <T extends Comparable<T>> Timeit addTimerA() {
         @SuppressWarnings("unchecked")
         Timeit __ =  new Timeit((args) -> {
-                    T value = (T) args[0];
                     AVLTree<T> a = (AVLTree<T>) args[1];
-                    execAdd(value, a);
+                    a.add((T) args[0]);
         });
 
         return __;
@@ -42,9 +39,8 @@ public class TreeComp <T extends Comparable<T>>{
     private static <T extends Comparable<T>> Timeit addTimerB() {
         @SuppressWarnings("unchecked")
         Timeit __ =  new Timeit((args) -> {
-                    T value = (T) args[0];
                     BSTTree<T> b = (BSTTree<T>) args[1];
-                    execAdd(value, b);
+                    b.add((T) args[0]);
         });
 
         return __;
@@ -116,7 +112,7 @@ public class TreeComp <T extends Comparable<T>>{
 
         while (x != n) {
             T key = getValue(rand, n);
-            if (rand.nextBoolean()) {
+            if ((rand.nextInt(10) + 1) > 0.42) {
                 bst.add(key);
                 avl.add(key);
                 x+=1;
@@ -141,6 +137,20 @@ public class TreeComp <T extends Comparable<T>>{
     private static <T extends Comparable<T>, U extends LRNode<T, U>> void execAdd(T val, BST<T, U> bst) {
         bst.add(val);
     }
+
+    /**
+     * Add.
+     * @param <T>
+     * @param <U>
+     * @param val
+     * @param bst
+     */
+    private static <T extends Comparable<T>, U extends LRNode<T, U>> void execAdd(T[] vals, AVLTree<T> a, BSTTree<T> b) {
+        for(T val: vals) {
+            a.add(val);
+            b.add(val);
+        }
+    }
     
     /**
      * Delete.
@@ -157,28 +167,43 @@ public class TreeComp <T extends Comparable<T>>{
     /**
      * 
      * @param <T>
-     * @param specs [no. of added values, number of intervals]
+     * @param amt [no. of added values]
      * @return
      */
-    private static <T extends Comparable<T>> Double[][] runAdd(Integer amt) {
+    private static <T extends Comparable<T>> Double[][] runAdd(Integer amt, int spacing) {
 
-        double[][] runsA = new double[SAMPLES][amt];
-        double[][] runsB = new double[SAMPLES][amt];
-        double[][] heightsA = new double[SAMPLES][amt];
-        double[][] heightsB = new double[SAMPLES][amt];
+        int amount = (int)(amt/spacing);
+        double[][] runsA = new double[SAMPLES][amount];
+        double[][] runsB = new double[SAMPLES][amount];
+        double[][] heightsA = new double[SAMPLES][amount];
+        double[][] heightsB = new double[SAMPLES][amount];
         T[] values;
+        T[] padders;
+        T[] inits; 
+        double __;
 
         AVLTree<T> a = new AVLTree<>();
         BSTTree<T> b = new BSTTree<>();
-        Randomize(a, b, amt);
+        
 
         for (int i = 0; i < SAMPLES; i++) {
-            values = getGenericArray(amt);
+            a = new AVLTree<>();
+            b = new BSTTree<>();
+            Randomize(a, b, amt-1);
+            inits = getGenericArray(1); 
+            __ = addTimerA().measureMicros(inits[0], a);
+            __ = addTimerB().measureMicros(inits[0], b);
 
+            values = getGenericArray(amount);
 
-            for(int j = 0; j<amt; j++) {
+            for(int j = 0; j<amount; j++) {
+                System.out.println("SAMPLE: "+  i + "\t|\t" + "Point: " + j);
+                padders = getGenericArray(spacing-1);
+                execAdd(padders, a, b);
+
                 runsA[i][j] = addTimerA().measureMicros(values[j], a);
                 runsB[i][j] = addTimerB().measureMicros(values[j], b);
+
                 heightsA[i][j] = a.height();
                 heightsB[i][j] = b.height();
             }
@@ -214,9 +239,11 @@ public class TreeComp <T extends Comparable<T>>{
 
         AVLTree<T> a = new AVLTree<>();
         BSTTree<T> b = new BSTTree<>();
-        Randomize(a, b, 2*amt);
-
         for (int i = 0; i < SAMPLES; i++) {
+
+            a = new AVLTree<>();
+            b = new BSTTree<>();
+            Randomize(a, b, amt);
             values = getGenericArray(amt);
 
 
@@ -239,11 +266,13 @@ public class TreeComp <T extends Comparable<T>>{
     }
 
 
-    private static Integer[] xAxis(int SIZE) {
-        Integer[] x = new Integer[SIZE];
+    private static Integer[] xAxis(int SIZE, int spacing) {
+        int amount = (int)(SIZE/spacing);
+        Integer[] x = new Integer[amount];
+        
 
-        for(int i = 0; i<SIZE; i++) {
-            x[i] = SIZE+i+1;
+        for(int i = 0; i<amount; i++) {
+            x[i] = SIZE+(i*spacing);
         }
 
         return x;
@@ -260,28 +289,66 @@ public class TreeComp <T extends Comparable<T>>{
      */
 
      public static void main(String[] args) {
-        int SIZE = 5_000;
+        int SIZE = 50_000;
+        int SPACING = 250;
         Plotter<Integer, Double> plt;
         Double[][] stats;
 
-        Integer[] x = xAxis(SIZE);
+        Integer[] x = xAxis(SIZE, SPACING);
+        stats = runAdd(SIZE, SPACING);
+
+        plt = new Plotter<>("bst/AVL_ADD_" + SIZE*2 + ".png", "Tree Size",  "Time (micro s)", Plotter.Type.LINE, "AVL Tree add operation time");
+        plt.add(x, stats[0], "AVL Tree");
+        plt.save();
+        plt.plot();
+
+        plt = new Plotter<>("bst/BST_ADD_" + SIZE*2 + ".png", "Tree Size",  "Time (micro s)", Plotter.Type.LINE, "BST Tree add operation time");
+        plt.add(x, stats[1], "BST Tree");
+        plt.save();
+        plt.plot();
+        
+        plt = new Plotter<>("bst/AVLvsBST_ADD_" + SIZE*2 + ".png", "Tree Size",  "Time (micro s)", Plotter.Type.LINE, "AVL Tree vs BST add operation time");
+        plt.add(x, stats[0], "AVL Tree");
+        plt.add(x, stats[1], "BST Tree");
+        plt.save();
+        plt.plot();
+
+        plt = new Plotter<>("bst/AVL_HEIGHT_" + SIZE*2 + "_Inc.png", "Tree Size",  "Tree Height", Plotter.Type.LINE, "AVL Tree Height");
+        plt.add(x, stats[2], "AVL Tree");
+        plt.save();
+        plt.plot();
+
+        plt = new Plotter<>("bst/BST_HEIGHT_" + SIZE*2 + "_Inc.png", "Tree Size",  "Tree Height", Plotter.Type.LINE, "BST Tree Height");
+        plt.add(x, stats[3], "BST Tree");
+        plt.save();
+        plt.plot();
+
+        plt = new Plotter<>("bst/AVLvsBST_HEIGHT_" + SIZE*2 + "_Inc.png", "Tree Size",  "Tree Height", Plotter.Type.LINE, "AVL Tree vs BST Height");
+        plt.add(x, stats[2], "AVL Tree");
+        plt.add(x, stats[3], "BST Tree");
+        plt.save();
+        plt.plot();
+
+
+
+        System.out.println("Done!");
 
         /**
          * {timesA, timesB, heightsA, heightsB}
          * 
          *  stats = runAdd(SIZE);
 
-        plt = new Plotter<>("bst/AVL_ADD_" + SIZE*2 + ".png", "Tree Size",  "Time (ms)", Plotter.Type.LINE, "AVL Tree add operation time");
+        plt = new Plotter<>("bst/AVL_ADD_" + SIZE*2 + ".png", "Tree Size",  "Time (micro s)", Plotter.Type.LINE, "AVL Tree add operation time");
         plt.add(x, stats[0], "AVL Tree");
         plt.save();
         plt.plot();
 
-        plt = new Plotter<>("bst/BST_ADD_" + SIZE*2 + ".png", "Tree Size",  "Time (ms)", Plotter.Type.LINE, "BST Tree add operation time");
+        plt = new Plotter<>("bst/BST_ADD_" + SIZE*2 + ".png", "Tree Size",  "Time (micro s)", Plotter.Type.LINE, "BST Tree add operation time");
         plt.add(x, stats[1], "BST Tree");
         plt.save();
         plt.plot();
         
-        plt = new Plotter<>("bst/AVLvsBST_ADD_" + SIZE*2 + ".png", "Tree Size",  "Time (ms)", Plotter.Type.LINE, "AVL Tree vs BST add operation time");
+        plt = new Plotter<>("bst/AVLvsBST_ADD_" + SIZE*2 + ".png", "Tree Size",  "Time (micro s)", Plotter.Type.LINE, "AVL Tree vs BST add operation time");
         plt.add(x, stats[0], "AVL Tree");
         plt.add(x, stats[1], "BST Tree");
         plt.save();
@@ -306,25 +373,21 @@ public class TreeComp <T extends Comparable<T>>{
 
         stats = runDel(SIZE);
 
-        plt = new Plotter<>("bst/BST_DEL_" + SIZE*2 + ".png", "Tree Size",  "Time (ms)", Plotter.Type.LINE, "BST Tree delete operation time");
+        plt = new Plotter<>("bst/BST_DEL_" + SIZE*2 + ".png", "Tree Size",  "Time (micro s)", Plotter.Type.LINE, "BST Tree delete operation time");
         plt.add(x, stats[1], "BST Tree");
         plt.save();
         plt.plot();
 
-        plt = new Plotter<>("bst/AVL_DEL_" + SIZE*2 + ".png", "Tree Size",  "Time (ms)", Plotter.Type.LINE, "AVL Tree delete operation time");
+        plt = new Plotter<>("bst/AVL_DEL_" + SIZE*2 + ".png", "Tree Size",  "Time (micro s)", Plotter.Type.LINE, "AVL Tree delete operation time");
         plt.add(x, stats[0], "AVL Tree");
         plt.save();
         plt.plot();
-        */
 
         plt = Plotter.LoadPlotter("src/graphs/bst/BST_DEL_10000_plotter.ser");
         plt.plot();
 
         plt = Plotter.LoadPlotter("src/graphs/bst/AVL_DEL_10000_plotter.ser");
         plt.plot();
-
-
-
-        System.out.println("Done!");
+        */
     }    
 }
