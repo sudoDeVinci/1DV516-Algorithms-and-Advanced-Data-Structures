@@ -168,7 +168,7 @@ if __name__ == "__main__":
     
     
     print(f"Image Path: {graph_path}")
-    print(f"X: {x} - {len(x)}: \n{type(x)} of {type(x[0])}")
+    print(f"X: {x} - {len(x)}: \n{type(x)} of {type(x[0])} of {type(x[0][0])}")
     print(f"Y: {y} - {len(y)}")
     print(f"X Label : {x_label}")
     print(f"Y Label : {y_label}")

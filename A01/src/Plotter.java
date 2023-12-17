@@ -323,6 +323,9 @@ public class Plotter<T, R> implements Serializable{
         return neutralPath;
     }
 
+    /**
+     * Save the current object.
+     */
     public void save() {
         
         try {

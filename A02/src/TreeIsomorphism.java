@@ -229,7 +229,7 @@ public class TreeIsomorphism <T extends Comparable<T>> {
         System.out.println("\nGraphing Isomorphic testing up to "+ sizes[sizes.length-1] +" elements");
 
         Double[] times = getTimes(sizes);
-        plt = new Plotter<>("Isomorphic_Integer_"+sizes[sizes.length-1]+".png", "Tree Size", "Time(micro s)", Plotter.Type.LINE, "Time for Isomorphic Testing versus Tree Size");
+        plt = new Plotter<>("Isomorphic_Integer_"+sizes[sizes.length-1]+".png", "Tree Size", "Time(micro s)", Plotter.Type.LOGARITHMIC, "Time for Isomorphic Testing versus Tree Size");
         plt.add(sizes, times, "ISO");
         plt.plot();
         plt.save();
@@ -241,7 +241,7 @@ public class TreeIsomorphism <T extends Comparable<T>> {
          * Rather than a full BST implementation, all methods use Tree Nodes as inputs.
          * 
          */
-        TreeIsomorphism.testIsIsomorphic();
-        //TreeIsomorphism.graphComplexity();
+        //TreeIsomorphism.testIsIsomorphic();
+        TreeIsomorphism.graphComplexity();
     }
 }
