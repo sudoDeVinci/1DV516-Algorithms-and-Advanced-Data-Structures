@@ -11,6 +11,40 @@ import java.util.Random;
  * A Utility class made for statistical functions and useful static methods.
  */
 public class Util {
+
+    public static Double[] log2Arr(double intercept, double slope, Integer[] x_axis) {
+        // y = intercept * log2(slope * x)
+        // y = intercept * (x ^ slope)
+
+        Double[] out = new Double[x_axis.length];
+        for(int i = 0; i < x_axis.length; i++) {
+            out[i] = intercept * Math.pow(x_axis[i], slope);
+        }
+        return out;
+    } 
+
+    public static Double[] line(double intercept, double slope, Integer[] x_axis) {
+        // y = intercept * log2(slope * x)
+        // y = intercept * (x ^ slope)
+
+        Double[] out = new Double[x_axis.length];
+        for(int i = 0; i < x_axis.length; i++) {
+            out[i] = (slope * x_axis[i]) + intercept;
+        }
+        return out;
+    } 
+
+    public static Integer[] seqIntArray(int SIZE, int STEPS, int START) {
+        int arraySize = (SIZE - START) / STEPS;
+        Integer[] unions = new Integer[arraySize];
+
+        for (int i = 0; i < arraySize; i++) {
+            unions[i] = START + i * STEPS;
+        }
+
+        return unions;
+    }
+    
     /**
      * This finds the quartile specified in a list of some number type.
      * The type must be an object, not a primitive.
