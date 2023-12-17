@@ -1,14 +1,10 @@
 from numpy import log2
-# from scipy.stats import linregress
-
 
 
 def linear_regression(x: list[float], y: list[float]) -> tuple[float, float, float]:
     """
     Calculate and return the slope, intercept and linear regression coefficient
     from the x and y values passed in.
-
-   slope, intercept, r_value, _, _ = linregress(x, y)
     """
     
     n = len(x)
@@ -62,6 +58,6 @@ def generate_expected_data(slope: float, intercept:float,x: list[float], plot_ty
         case "Exponential":
             return [intercept*(x_val**slope) for x_val in x]
         case "Logarithmic":
-            return [intercept*log2(x_val*slope) for x_val in x]
+            return [intercept*(x_val**slope) for x_val in x]
         case _:
             return None

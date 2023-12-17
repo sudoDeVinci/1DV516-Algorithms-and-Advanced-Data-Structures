@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
+/**
+ * brute-force implementation of 3-sum.
+ */
 public class ThreeSum {
     TwoSum two;
     public ThreeSum () {

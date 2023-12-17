@@ -32,10 +32,12 @@ java src/Sum
 ```
 
 #### Problem 08
+Viewable in [PercEstimator.java](src/PercEstimator.java)
 ```shell
 javac src/PercEstimator.java
 java src/PercEstimator
 ```
+tThreshold Results Viewable in [runs.csv](src/graphs/perc/runs.csv)
 
 ### Python
 The plotter script uses numpy and matplotlib.
@@ -51,5 +53,4 @@ python src/scripts/pyplot.py Graph path.extension [x1, x2, ... xn] [y1, y2, ... 
 
 python3 src/scripts/plotter.py graphs/uf/FS1_000_000_QuickFind.png [100000,125000,150000,175000] [578595.1,523364.3929,455945.3793,565627.0] 'Unions' 'Time(ns)' 'Quick Find_1_000_000 elements' Linear
 
-
-python src/scripts/plotter.py graphs/uf/test.png [1,2,3,4,5] [2,4,6,8,10] TEST 'TEST Y' 'TEST SPACE' Linear
+python src/scripts/plotter.py graphs/uf/FS1_000_000_QuickFind.png [100000,125000,150000,175000] [578595.1,523364.3929,455945.3793,565627.0] 'Unions' 'Time(ns)' 'Quick Find_1_000_000 elements' Linear

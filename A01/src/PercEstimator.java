@@ -4,6 +4,13 @@ import java.util.Random;
 
 public class PercEstimator {
 
+    /**
+     * Calculate the percolation threshold for a given set of runs
+     * for grids of a given size.
+     * @param N
+     * @param SAMPLES
+     * @return
+     */
     public static double[] getThreshold(int N, int SAMPLES) {
         Random rand = new Random();
         double size = N*N;
@@ -27,7 +34,12 @@ public class PercEstimator {
         return thresholds;
     }
 
-
+    /**
+     * Run Percolation and check threshold for a given grid.
+     * @param N
+     * @param SAMPLES
+     * @return
+     */
     public static double[] run(int N, int SAMPLES) {
         double[] thresholds = PercEstimator.getThreshold(N, SAMPLES);
         double mean = Util.mean(thresholds);
@@ -43,8 +55,8 @@ public class PercEstimator {
 
     public static void main(String[] args) {
         int SIZE = 1000;
-        int SAMPLES = 50;
-        int STEPS = 10;
+        int SAMPLES = 100;
+        int STEPS = 50;
         int START = 10;
         
 

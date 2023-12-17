@@ -202,22 +202,34 @@ public class BSTIso {
     }
 
     public static void main(String[] args) {
-        int SIZE = 100_000;
+        int SIZE = 50_000;
         int SPACING = 500;
         Double[][] stats;
+        
+        /**
+        Plotter<Integer, Double> plt;
+        plt = Plotter.LoadPlotter("src/graphs/ISOMORPH_SAME_500000_plotter.ser");
+        plt.setType(Plotter.Type.SCATTER);
+        plt.plot();
 
-        Integer[] x = xAxis(SIZE, SPACING);
+        plt = Plotter.LoadPlotter("src/graphs/ISOMORPH_SAME_HEIGHT500000_plotter.ser");
+        plt.setType(Plotter.Type.SCATTER);
+        plt.plot();
+        */
+
+         Integer[] x = xAxis(SIZE, SPACING);
         stats = runSame(SIZE, SPACING);
 
-        Plotter<Integer, Double> plt = new Plotter<>("ISOMORPH_SAME_" + SIZE*2 + ".png", "Tree Size",  "Time (micro s)", Plotter.Type.LINE, "Tree Isomorphism Check Time");
+        Plotter<Integer, Double> plt = new Plotter<>("ISOMORPH_SAME_" + SIZE*2 + ".png", "Tree Size",  "Time (micro s)", Plotter.Type.EXPONENTIAL, "Tree Isomorphism Check Time");
         plt.add(x, stats[0], "BST Tree");
         plt.save();
         plt.plot();
 
-        Plotter<Double, Double> pltH = new Plotter<>("ISOMORPH_SAME_HEIGHT" + SIZE*2 + ".png", "Tree Height",  "Time (micro s)", Plotter.Type.LINE, "Tree Isomorphism Check Time");
+        Plotter<Double, Double> pltH = new Plotter<>("ISOMORPH_SAME_HEIGHT" + SIZE*2 + ".png", "Tree Height",  "Time (micro s)", Plotter.Type.SCATTER, "Tree Isomorphism Check Time");
         pltH.add(stats[1], stats[0], "BST Tree");
         pltH.save();
         pltH.plot();
+       
 
         System.out.println("Done!");
     }
