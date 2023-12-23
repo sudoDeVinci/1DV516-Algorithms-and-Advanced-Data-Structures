@@ -45,24 +45,6 @@ public class BSTIso {
         return arr;
 
     }
-
-    /**
-     * Get an array of generic elements. 
-     * @param <T>
-     * @param N
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    private static <T extends Comparable<T>> T[] getGenericArray(Random rand, int N) throws IllegalArgumentException{
-        if (N < 0)  throw new IllegalArgumentException("N and bound must be non-negative");
-
-        T[] arr = (T[]) new Comparable[N];
-
-        for(int i = 0 ; i<N; i++) arr[i] = getValue(rand, N);
-
-        return arr;
-
-    }
     
     /**
      * Randomize Trees.
