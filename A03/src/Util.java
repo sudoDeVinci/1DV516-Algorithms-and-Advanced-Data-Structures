@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Random;
+import java.lang.Math;
 
 /**
  * A Utility class made for statistical functions and useful static methods.
@@ -273,4 +274,43 @@ public class Util {
         }
         
     }
+
+    public static int findNextPrime(int n) {
+        int[] primes = { 2 };
+
+        n = Math.max(2, n + 1);
+
+        while (true) {
+            if (isPrime(n, primes)) {
+                primes = addToArray(primes, n);
+                return n;
+            }
+            n++;
+        }
+    }
+
+    private static boolean isPrime(int num, int[] primes) {
+        if (num < 2) {
+            return false;
+        }
+
+        for (int prime : primes) {
+            if (prime * prime > num) {
+                break;
+            }
+            if (num % prime == 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static int[] addToArray(int[] array, int element) {
+        int[] newArray = new int[array.length + 1];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        newArray[array.length] = element;
+        return newArray;
+    }
+
 }

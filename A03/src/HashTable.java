@@ -1,108 +1,135 @@
 package src;
 
-public class HashTable<K, V> {
-    private static final int INITIAL_CAPACITY = 16;
-    private static final double LOAD_FACTOR = 0.75;
+public class HashTable<K> {
+    private final int size;
+    private static final int P = 670244987;
 
-    private Entry<K, V>[] table;
-    private int size;
+    private Entry<K>[] table;
 
-    public HashTable() {
-        this.table = (Entry<K, V>[]) new Entry[INITIAL_CAPACITY];
+    @SuppressWarnings("unchecked")
+    public HashTable(int capacity) {
         this.size = 0;
+        this.table = new Entry[Util.findNextPrime(capacity)];
     }
 
-    private static class Entry<K, V> {
-        private K key;
-        private V value;
+    /**
+     * Class to represent entry in HashTable.
+     */
+    private static class Entry<K> {
+        public boolean Active;
+        public K key;
 
-        public Entry(K key, V value) {
-            this.key = key;
-            this.value = value;
+        public Entry(K key) {
+            this(key, true);
         }
 
-        public K getKey() {
-            return key;
-        }
-
-        public V getValue() {
-            return value;
+        public Entry(K k, boolean active) {
+            this.Active = active;
+            this.key = k;
         }
     }
 
-    public void insert(K key, V value) {
-        ensureCapacity();
-        int index = findEmptySlot(key);
-        table[index] = new Entry<>(key, value);
-        size++;
+    /**
+     * Get the hash value for a given key.
+     * @param key
+     * @return
+     */
+    private int hash(K key) {
+        int hash = key.hashCode();
+        //System.out.println("Before reduction, hash is " + hash);
+        while(hash < 0) hash = (table.length + hash) % table.length;
+        hash = hash % table.length;
+        //System.out.println("After reduction, hash is " + hash);
+        return hash % table.length;
     }
 
-    public V find(K key) {
-        int index = findIndex(key);
-        return (index != -1) ? table[index].getValue() : null;
+    /**
+     * Insert a value into the table.
+     * @param key
+     * @return
+     */
+    public void insert(K key) {
+        int index = find(key);
+        if(exists(index)) return;
+        this.table[index] = new Entry<K>(key, true);
     }
 
+    /**
+     * Check if the table contains a given key.
+     * @param key
+     * @return
+     */
+    public boolean contains (K key) {
+        int index = find(key);
+        return exists(index);
+    }
+
+    /**
+     * Delete the key from a table..
+     * @param key
+     */
     public void delete(K key) {
-        int index = findIndex(key);
-        if (index != -1) {
-            table[index] = null;
-            size--;
-        }
+        int index = find(key);
+
+        if(exists(index)) this.table[index].Active = false;
     }
 
-    private int findIndex(K key) {
-        int hash = hash(key);
-        int index = hash % table.length;
-        int quadratic = 1;
-
-        while (table[index] != null && !table[index].getKey().equals(key)) {
-            index = (index + quadratic * quadratic) % table.length;
-            quadratic++;
-        }
-
-        return (table[index] != null && table[index].getKey().equals(key)) ? index : -1;
+    private boolean exists(int index) {
+        return this.table[index] != null && this.table[index].Active;
     }
 
-    private int findEmptySlot(K key) {
-        int hash = hash(key);
-        int index = hash % table.length;
-        int quadratic = 1;
+    /**
+     * Find the end index for a given entry.
+     * @param inkey
+     * @return
+     */
+    private int find(K inkey) {
+        int index = hash(inkey);
+        int offset = 1;
 
-        while (table[index] != null) {
-            index = (index + quadratic * quadratic) % table.length;
-            quadratic++;
+        while (this.table[index] != null && !this.table[index].key.equals(inkey)) {
+            index += offset;
+            offset += 2;
+            if( index >= table.length ) index -= this.table.length;
         }
 
         return index;
     }
 
-    private int hash(K key) {
-        int hash = 0;
-        for (char c : key.toString().toCharArray()) {
-            hash += c;
-        }
-        return hash;
-    }
-
-    private void ensureCapacity() {
-        if ((double) size / table.length > LOAD_FACTOR) {
-            Entry<K, V>[] newTable = (Entry<K, V>[]) new Entry[table.length * 2];
-            System.arraycopy(table, 0, newTable, 0, table.length);
-            table = newTable;
-        }
+    public void print() {
+        System.out.print("[ ");
+        for (Entry<K> item : this.table) if(item == null || item.Active == false) System.out.print("NULL" + " ");else System.out.print(item.key + " ");
+        System.out.println("] ");
     }
 
     public static void main(String[] args) {
-        HashTable<String, Integer> hashTable = new HashTable<>();
+        HashTable<String> table = new HashTable<>(10);
+        table.insert("apple");
+        table.insert("cherry");
 
-        hashTable.insert("one", 1);
-        hashTable.insert("two", 2);
-        hashTable.insert("three", 3);
+        /*
+         * This should be true.
+         */
+        table.insert("banana");
+        System.out.println("Contains 'banana': " + table.contains("banana"));
 
-        System.out.println("Value for key 'one': " + hashTable.find("one")); // 1
-        System.out.println("Value for key 'four': " + hashTable.find("four")); // null
+        /*
+         * Visulaizing the table after adding elements.
+         */
+        table.print();
+        System.out.println();
 
-        hashTable.delete("two");
-        System.out.println("Value for key 'two' after deletion: " + hashTable.find("two")); // null
+        /*
+         * This should be false.
+         */
+        table.delete("banana");
+        System.out.println("Contains 'banana' after deletion: " + table.contains("banana"));
+
+        /*
+         * Visulaizing the table after deleting element.
+         */
+        table.print();
+        System.out.println();
     }
+
 }
