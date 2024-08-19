@@ -242,7 +242,7 @@ public class Util {
      * Ensure a folder exists.
      * @param path Path to folder
      */
-    public static void ensureFolderExists(String path) {
+    public void ensureFolderExists(String path) {
         Path folder = Paths.get(path);
         if (Files.exists(folder) && Files.isDirectory(folder)) {
            return;
@@ -271,13 +271,6 @@ public class Util {
         } catch (IOException e) { 
             e.printStackTrace();
         }
-    }
-
-    public static void writeJson(String path, String json) {
-        try (FileWriter writer = new FileWriter(path)) {
-            writer.write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
     }
 }
