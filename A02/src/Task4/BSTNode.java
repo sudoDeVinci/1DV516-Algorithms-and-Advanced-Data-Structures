@@ -73,7 +73,7 @@ public class BSTNode {
             previous.setValue(previous.getRight().min().getValue());
             previous.setRight(remove(previous.getRight(), previous.getValue()));
         } else {
-            
+            return null;
         }
     }
 }
