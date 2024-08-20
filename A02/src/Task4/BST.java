@@ -1,10 +1,10 @@
-package src;
+package src.Task4;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> implements Iterable<T>{
-    private BSTNode<T> root;
+public class BST implements Iterable<Integer> {
+    private BSTNode root;
     private IterType iterType = IterType.INORDER;
 
     public static enum IterType{
@@ -14,7 +14,7 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
       POSTORDER
     }
 
-    public BSTNode<T> getRoot() {
+    public BSTNode getRoot() {
       return this.root;
     }
 
@@ -49,7 +49,7 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
      * @param node
      * @return
      */
-    private int height(BSTNode<T> node) {
+    private int height(BSTNode node) {
         if (node == null)
             return -1;
         return 1 + Math.max(height(node.left), height(node.right));
@@ -60,24 +60,7 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
      * @return
      */
     public int height() {
-        return height(root);
-    }
-
-    /**
-     * Check if a subtree contains a value.
-     * @param node
-     * @param value
-     * @return
-     */
-    private boolean contains(BSTNode<T> node, T value) {
-        if (node == null) return false;
-
-        int cmp = value.compareTo(node.value);
-
-        if (cmp < 0) return contains(node.left, value);
-        if (cmp > 0) return contains(node.right, value);
-        
-        return true;
+      return height(root);
     }
 
     /**
@@ -85,31 +68,8 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
      * @param value
      * @return
      */
-    public boolean contains(T value) {
-        return contains(this.root, value);
-    }
-
-    /**
-     * Add a node to the tree.
-     * The return of the top-most recursive call will set the root node.
-     *   If the input node is null, we return our set node value. Other wise we 
-     *   return the parent itself.
-     * The bottom-most recursive call will set the added value for the leaf.
-     * Eventually, the node called will be null, meaning we hit a leaf. This will return the
-     *   new node we want to input.
-     * @param parent Usually the root node
-     * @param value
-     * @return
-     */
-    private BSTNode<T> add(BSTNode<T> parent, T value) {
-        if (parent == null) return new BSTNode<T>(value);
-    
-        int cmp = value.compareTo(parent.value);
-    
-        if (cmp < 0) parent.left = add(parent.left, value);
-        else parent.right = add(parent.right, value);
-    
-        return parent;
+    public boolean contains(int value) {
+      return root.contains(value);
     }
 
     /**
@@ -117,8 +77,8 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
      * @param value
      * @return
      */
-    public void add(T value) {
-        root = add(root, value);
+    public void add(int value) {
+      root.add(new BSTNode(value));
     }
 
     /**
@@ -126,53 +86,28 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
      * @param value
      * @return
      */
-    public void remove(T value) {
-        root = remove(root, value);
+    public void remove(int value) {
+        root = root.remove(root, value);
     }
-
-    /**
-     * 
-     * @param node
-     * @param value
-     * @return
-     */
-    private BSTNode<T> remove(BSTNode<T> node, T value) {
-      if (node == null) return null;
-
-      int cmp = value.compareTo(node.value);
-
-      if (cmp < 0) node.left = remove(node.left, value);
-      else if (cmp > 0) node.right = remove(node.right, value);
-      else {
-        if (node.right == null) return node.left;
-        else if (node.left == null) return node.right;
-
-        node.value = findMin(node.right);
-        node.right = remove(node.right, node.value);
-      }
-
-      return node;
-    }
-
     /**
      * Find the minimum node in a given subtree.
      * @param node
      * @return
      */
-    private T findMin(BSTNode<T> node) {
-        if (node.left == null) return node.value;
-        else return findMin(node.left);
+    public int min() {
+        if (root.left == null) return root.value;
+        else return root.min().value;
     }
 
 
-    private class InOrderIterator implements Iterator<T> {
-        private Deque<BSTNode<T>> stack = new Deque<>();
+    private class InOrderIterator implements Iterator<Integer> {
+        private final Deque<BSTNode> stack = new Deque<>();
     
         private InOrderIterator() {
           pushLeftChildren(root);
         }
     
-        private void pushLeftChildren(BSTNode<T> node) {
+        private void pushLeftChildren(BSTNode node) {
           while (node != null) {
             stack.addFirst(node);
             node = node.left;
@@ -185,21 +120,21 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
         }
     
         @Override
-        public T next() {
-          BSTNode<T> node = stack.removeFirst();
+        public Integer next() {
+          BSTNode node = stack.removeFirst();
           pushLeftChildren(node.right);
           return node.value;
         }
     }
 
-    private class ReverseInOrderIterator implements Iterator<T> {
-        private Deque<BSTNode<T>> stack = new Deque<>();
+    private class ReverseInOrderIterator implements Iterator<Integer> {
+        private final Deque<BSTNode> stack = new Deque<>();
     
         private ReverseInOrderIterator() {
           pushRightChildren(root);
         }
     
-        private void pushRightChildren(BSTNode<T> node) {
+        private void pushRightChildren(BSTNode node) {
           while (node != null) {
             stack.addFirst(node);
             node = node.right;
@@ -212,18 +147,18 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
         }
     
         @Override
-        public T next() {
+        public Integer next() {
           if (!hasNext())
             throw new NoSuchElementException();
-          BSTNode<T> node = stack.removeFirst();
+          BSTNode node = stack.removeFirst();
           pushRightChildren(node.left);
           return node.value;
         }
     }
 
     
-    private class PreOrderIterator implements Iterator<T> {
-        private Deque<BSTNode<T>> stack = new Deque<>();
+    private class PreOrderIterator implements Iterator<Integer> {
+        private final Deque<BSTNode> stack = new Deque<>();
     
         private PreOrderIterator() {
           if (root != null) {
@@ -237,11 +172,11 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
         }
     
         @Override
-        public T next() {
+        public Integer next() {
           if (!hasNext()) {
             throw new NoSuchElementException();
           }
-          BSTNode<T> node = stack.removeFirst();
+          BSTNode node = stack.removeFirst();
           if (node.right != null) {
             stack.addFirst(node.right);
           }
@@ -252,15 +187,15 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
         }
     }
 
-    private class PostOrderIterator implements Iterator<T> {
-        private Deque<BSTNode<T>> stack1 = new Deque<>();
-        private Deque<BSTNode<T>> stack2 = new Deque<>();
+    private class PostOrderIterator implements Iterator<Integer> {
+        private final Deque<BSTNode> stack1 = new Deque<>();
+        private final Deque<BSTNode> stack2 = new Deque<>();
     
         private PostOrderIterator() {
           if (root != null) {
             stack1.addFirst(root);
             while (!stack1.isEmpty()) {
-              BSTNode<T> node = stack1.removeFirst();
+              BSTNode node = stack1.removeFirst();
               stack2.addFirst(node);
               if (node.left != null) {
                 stack1.addFirst(node.left);
@@ -278,7 +213,7 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
         }
     
         @Override
-        public T next() {
+        public Integer next() {
           if (!hasNext()) {
             throw new NoSuchElementException();
           }
@@ -290,8 +225,8 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
      * Return an iterator according to which iteration type has been previously set.
      */
     @Override
-    public Iterator<T> iterator() throws NoSuchElementException{
-        Iterator<T> iter;
+    public Iterator<Integer> iterator() throws NoSuchElementException{
+        Iterator<Integer> iter;
 
         switch(this.iterType) {
             case INORDER -> iter = new InOrderIterator();
@@ -308,28 +243,28 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
         if (k <= 0 || k > size())
           throw new NoSuchElementException();
     
-        T value = findKthLargest(k);
+        int value = findKthLargest(k);
         remove(value);
       }
     
 
-    private T findKthLargest(int k) {
-    Iterator<T> iter = new ReverseInOrderIterator();
-    T value = null;
-    while (k-- > 0 && iter.hasNext()) {
-        value = iter.next();
-    }
-    if (k > 0)
-        throw new NoSuchElementException();
-    return value;
+    private int findKthLargest(int k) {
+      Iterator<Integer> iter = new ReverseInOrderIterator();
+      Integer value = null;
+      while (k-- > 0 && iter.hasNext()) {
+          value = iter.next();
+      }
+      if (k > 0)
+          throw new NoSuchElementException();
+      return value;
     }
 
-  private void printTree(String prefix, BSTNode<T> node, boolean isTail) {
-    T nodeName = node.value;
+  private void printTree(String prefix, BSTNode node, boolean isTail) {
+    int nodeName = node.value;
     String nodeConnection = isTail ? "└── " : "├── ";
     System.out.println(prefix + nodeConnection + nodeName);
 
-    BSTNode<T>[] children = getChildren(node);
+    BSTNode[] children = getChildren(node);
     if (children!=null) {
         for (int i = 0; i < children.length; i++) {
             String newPrefix = prefix + (isTail ? "    " : "│   ");
@@ -338,7 +273,7 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
     }
   }
 
-  public void printTree(BSTNode<T> n) {
+  public void printTree(BSTNode n) {
     printTree("", n, true);
   }
 
@@ -346,15 +281,14 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
     printTree("", root, true);
   }
   
-  @SuppressWarnings("unchecked")
-  private BSTNode<T>[] getChildren(BSTNode<T> node) {
+  private BSTNode[] getChildren(BSTNode node) {
 
       if (node.left != null && node.right != null) {
           return new BSTNode[]{node.left, node.right};
       }
 
       if(node.left != null || node.right != null) {
-          BSTNode<T> outNode = node.left == null ? node.right:node.left;
+          BSTNode outNode = node.left == null ? node.right:node.left;
           return new BSTNode[]{outNode};
       }
 
@@ -362,7 +296,7 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
   }
 
     public static void main(String[] args) {
-        BSTTree<Integer> bst = new BSTTree<>();
+        BST bst = new BST();
 
         // Add elements to the BST
         bst.add(5);
@@ -408,7 +342,7 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
         System.out.println("Contains 11: " + bst.contains(11)); // Should be false
 
         // Set the traversal type (optional)
-        bst.setIterType(BSTTree.IterType.INORDER);
+        bst.setIterType(BST.IterType.INORDER);
 
         // Iterate over the elements
         System.out.println("In-Order Traversal:");
@@ -418,7 +352,7 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
         System.out.println();
 
         // Set the traversal type (optional)
-        bst.setIterType(BSTTree.IterType.PREORDER);
+        bst.setIterType(BST.IterType.PREORDER);
 
         // Iterate over the elements
         System.out.println("Pre-Order Traversal:");
@@ -428,7 +362,7 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
         System.out.println();
 
         // Set the traversal type (optional)
-        bst.setIterType(BSTTree.IterType.POSTORDER);
+        bst.setIterType(BST.IterType.POSTORDER);
 
         // Iterate over the elements
         System.out.println("Post-Order Traversal:");
@@ -442,7 +376,7 @@ public class BSTTree<T extends Comparable<T>> extends BST<T, BSTNode<T>> impleme
         
 
         // Test removal of kth largest element
-         bst.setIterType(BSTTree.IterType.INORDER);
+         bst.setIterType(BST.IterType.INORDER);
         System.out.println("In-Order Traversal after removing 2nd largest:");
         for (Integer value : bst) {
             System.out.print(value + " ");

@@ -2,6 +2,8 @@ package src;
 
 import java.util.Random;
 
+import src.Task4.BSTTree;
+
 public class BSTIso {
 
     private static int SAMPLES = 200;
