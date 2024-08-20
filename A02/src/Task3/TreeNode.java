@@ -1,4 +1,4 @@
-package src;
+package src.Task3;
 
 class TreeNode {
   String name; // both files or directories work, it's a name
