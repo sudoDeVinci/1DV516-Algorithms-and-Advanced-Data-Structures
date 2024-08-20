@@ -1,4 +1,4 @@
-package src;
+package src.Task2;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -69,7 +69,7 @@ public class DequeRand<T> implements Iterable<T> {
   public T dequeue() {
     if (this.isEmpty()) throw new NoSuchElementException("Queue is empty!");
 
-    int randomIndex = new Random().nextInt(size);
+    int randomIndex = new Random().nextInt(inQueue);
     T tempdata = queue[randomIndex];
     this.queue[randomIndex] = queue[this.inQueue - 1];
     this.queue[this.inQueue - 1] = tempdata;
@@ -99,13 +99,13 @@ public class DequeRand<T> implements Iterable<T> {
   }
 
   private class RandomizedQueueIterator implements Iterator<T> {
-    private int i = size;
+    private int i = inQueue;
     private final T[] randomizedArray;
 
     @SuppressWarnings("unchecked")
     public RandomizedQueueIterator() {
-      randomizedArray = (T[]) new Object[size];
-      for (int j = 0; j < size; j++) {
+      randomizedArray = (T[]) new Object[inQueue];
+      for (int j = 0; j < inQueue; j++) {
         randomizedArray[j] = queue[j];
       }
       shuffleArray(randomizedArray);
@@ -125,7 +125,7 @@ public class DequeRand<T> implements Iterable<T> {
 
     private void shuffleArray(T[] arr) {
       Random rand = new Random();
-      for (int j = size - 1; j > 0; j--) {
+      for (int j = inQueue - 1; j > 0; j--) {
         int index = rand.nextInt(j + 1);
         T temp = arr[index];
         arr[index] = arr[j];
