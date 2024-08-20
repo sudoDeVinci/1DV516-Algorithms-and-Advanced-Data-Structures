@@ -20,7 +20,7 @@ public class BSTNode {
     }
 
     public BSTNode getLeft() {
-        return left;
+        return this.left;
     }
 
     public void setLeft(BSTNode left) {
@@ -28,7 +28,7 @@ public class BSTNode {
     }
 
     public BSTNode getRight() {
-        return right;
+        return this.right;
     }
 
     public void setRight(BSTNode right) {
@@ -45,7 +45,35 @@ public class BSTNode {
         }
     }
 
+    public BSTNode min() {
+        if (this.left == null) return this;
+        else return this.left.min();
+    }
+
+    public BSTNode max() {
+        if (this.right == null) return this;
+        else return this.right.max();
+    }
+
     public int getDepth() {
-        
+        if (left == null && right == null) return 1;
+        else if (getLeft() != null && getRight() == null) return getLeft().getDepth() + 1;
+        else if (getRight()!= null && getLeft() == null) return getRight().getDepth() + 1;
+        else {
+            return Math.max(getLeft().getDepth(), getRight().getDepth()) + 1;
+        }
+    }
+
+    public BSTNode remove(BSTNode previous, int key) {
+        if (previous == null) return null;
+
+        if (key < previous.getValue()) previous.setLeft(remove(previous.getLeft(), key));
+        else if (key > previous.getValue()) previous.setRight(remove(previous.getRight(), key));
+        else if (previous.getLeft() != null && previous.getRight()!= null) {
+            previous.setValue(previous.getRight().min().getValue());
+            previous.setRight(remove(previous.getRight(), previous.getValue()));
+        } else {
+            
+        }
     }
 }
