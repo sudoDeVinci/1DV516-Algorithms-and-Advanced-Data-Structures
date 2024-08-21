@@ -206,6 +206,7 @@ public class Plotter <X, Y> {
         graph.setXLabel("Test X Label");
         graph.setYLabel("Test Y Label");
         graph.setFontSize(20);
+        
         Plot<Integer, Double> p1 = new Plot<Integer, Double>("Plot01", Plot.Type.LINEAR, new Integer[]{1, 2, 3, 4, 5}, new Double[]{1.0, 2.0, 3.0, 4.0, 5.0});
         p1.setSize(40);
         Plot<Integer, Double> p2 = new Plot<Integer, Double>("Plot02", Plot.Type.EXPONENTIAL, new Integer[]{1, 2, 3, 4, 5}, new Double[]{1.0, 4.0, 9.0, 16.0, 25.0});

@@ -1,10 +1,12 @@
-package src.Task4;
+package src.Task6;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 public class BST implements Iterable<Integer> {
     private BSTNode root;
+    private final Random rand = new Random();
     private IterType iterType = IterType.INORDER;
 
     public static enum IterType{
@@ -69,6 +71,7 @@ public class BST implements Iterable<Integer> {
      * @return
      */
     public boolean contains(int value) {
+      if (root == null) return false;
       return root.contains(value);
     }
 
@@ -260,6 +263,39 @@ public class BST implements Iterable<Integer> {
           throw new NoSuchElementException();
       return value;
     }
+  
+    // This cast can end up bad but I am dumb.
+    private Integer getValue(int size) {
+      return this.rand.nextInt(size + 1);
+  }
+
+  /**
+   * Construct randomly made trees of integers and return the root.
+   * @param size
+   * @return
+   */
+  public void randomizeTree(int size) {
+    this.root = new BSTNode(size);
+
+    int val;
+    int sz = 0;
+
+    while (sz < size) {
+        val = getValue(size*2);
+        if (rand.nextDouble() < 0.48) {
+            if (val!=size && this.contains(val)) {
+                this.remove(val);
+                sz -= 1;
+            }
+        } else {
+            if(!this.contains(val)) {
+                this.add(val);
+                sz += 1;
+            }
+        }
+        
+    }
+  }
 
   private void printTree(String prefix, BSTNode node, boolean isTail) {
     int nodeName = node.value;

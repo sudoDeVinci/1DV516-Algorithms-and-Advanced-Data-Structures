@@ -88,7 +88,8 @@ public class BST implements Iterable<Integer> {
      * @return
      */
     public void remove(int value) {
-        root = root.remove(root, value);
+      if (root == null) return;
+      root = root.remove(root, value);
     }
     /**
      * Find the minimum node in a given subtree.

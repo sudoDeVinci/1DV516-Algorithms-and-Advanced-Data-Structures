@@ -1,4 +1,4 @@
-package src;
+package src.Task7;
 
 public class HuffNode {
     public int frequency;

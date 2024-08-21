@@ -1,9 +1,11 @@
-package src;
+package src.Task6;
 
-public class AVLNode<T extends Comparable<T>> extends LRNode<T,AVLNode<T>>{
+public class AVLNode {
     public int height;
+    public Integer value;
+    public AVLNode left, right;
 
-    public AVLNode(T data) {
+    public AVLNode(int data) {
         this.height = 0;
         this.value = data;
         this.left = null;
