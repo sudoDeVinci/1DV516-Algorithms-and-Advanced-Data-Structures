@@ -1,6 +1,6 @@
 package src.Task5;
 
-public class BSTIso {
+public class BSTIso extends BST {
 
     /**
      * Given the root Nodes of two trees, check them for "strict" isomorphism.
@@ -21,14 +21,14 @@ public class BSTIso {
         /**
          * If the values are not the same, return false.
          */
-        if (root1.getValue() != root2.getValue()) return false;
+        if (root1.value != root2.value) return false;
 
         /**
          * Check all combinations of left and right nodes for the wo input nodes.
          * We don't need to explicitly return True because that will happen when a leaf is reached.
          * Either the nodes are exactly the same, or they are swapped.
          */
-        return (isIsomorphic(root1.getLeft(), root2.getLeft()) && isIsomorphic(root1.getRight(), root2.getRight()) ||
-                isIsomorphic(root1.getLeft(), root2.getRight()) && isIsomorphic(root1.getRight(), root2.getLeft()));
+        return (isIsomorphic(root1.left, root2.left) && isIsomorphic(root1.right, root2.right) ||
+                isIsomorphic(root1.left, root2.right) && isIsomorphic(root1.right, root2.left));
     }
 }
