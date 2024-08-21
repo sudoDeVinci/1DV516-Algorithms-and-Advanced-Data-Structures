@@ -1,4 +1,4 @@
-package src;
+package util;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Random;
-import java.lang.Math;
 
 /**
  * A Utility class made for statistical functions and useful static methods.
@@ -243,7 +242,7 @@ public class Util {
      * Ensure a folder exists.
      * @param path Path to folder
      */
-    public void ensureFolderExists(String path) {
+    public static void ensureFolderExists(String path) {
         Path folder = Paths.get(path);
         if (Files.exists(folder) && Files.isDirectory(folder)) {
            return;
@@ -272,45 +271,13 @@ public class Util {
         } catch (IOException e) { 
             e.printStackTrace();
         }
-        
     }
 
-    public static int findNextPrime(int n) {
-        int[] primes = { 2 };
-
-        n = Math.max(2, n + 1);
-
-        while (true) {
-            if (isPrime(n, primes)) {
-                primes = addToArray(primes, n);
-                return n;
-            }
-            n++;
+    public static void writeJson(String path, String json) {
+        try (FileWriter writer = new FileWriter(path)) {
+            writer.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
-    private static boolean isPrime(int num, int[] primes) {
-        if (num < 2) {
-            return false;
-        }
-
-        for (int prime : primes) {
-            if (prime * prime > num) {
-                break;
-            }
-            if (num % prime == 0) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static int[] addToArray(int[] array, int element) {
-        int[] newArray = new int[array.length + 1];
-        System.arraycopy(array, 0, newArray, 0, array.length);
-        newArray[array.length] = element;
-        return newArray;
-    }
-
 }

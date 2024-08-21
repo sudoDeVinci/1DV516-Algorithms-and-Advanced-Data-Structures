@@ -1,4 +1,4 @@
-package src;
+package util;
 import java.util.function.Consumer;
 
 /**
@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 public class Timeit {
     private long start;
     private long stop;
-    private Consumer<Object[]> timedMethod;
+    private final Consumer<Object[]> timedMethod;
 
     /**
      * Take in the method to be measured.s

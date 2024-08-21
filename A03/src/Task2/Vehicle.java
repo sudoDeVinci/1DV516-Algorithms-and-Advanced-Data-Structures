@@ -1,4 +1,4 @@
-package src;
+package Task2;
 
 public class Vehicle {
 
@@ -52,9 +52,54 @@ public class Vehicle {
     private String plate;
     private int year;
     private Colour colour;
+    private String make;
 
-    public Vehicle() {
+    public Vehicle(String plate, int year, Colour colour, String make) {
+        this.plate = plate;
+        this.year = year;
+        this.colour = colour;
+        this.make = make;
+    }
 
+    public String getPlate() {
+        return plate;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public Colour getColour() {
+        return colour;
+    }
+
+    public String getMake() {
+        return make;
+    }
+
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "plate='" + plate + '\'' +
+                ", year=" + year +
+                ", colour=" + colour +
+                ", make='" + make + '\'' +
+                '}';
+    }
+
+    public boolean equals(Onject o) {
+        if (this == o) return true;
+        if (o == null || getClass()!= o.getClass()) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return plate.equals(vehicle.plate) &&
+                year == vehicle.year &&
+                colour == vehicle.colour &&
+                make.equals(vehicle.make);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(plate, year, colour, make);
     }
     
 }

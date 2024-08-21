@@ -1,181 +1,164 @@
 import sys
-from numpy import log2
-from typing import List
-from os import path, makedirs
-import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
-from plotmath import *
-from plotters import *
+import json
+import toml
+import argparse
+from os import path
+from _plotters import *
 
 
-"""
-Tuple of colour-marker pairs for graphing.
-"""
-COLOUR_MARKERS:List[tuple[str,str]] = [
-    ('b', 'o'),  # blue, circle
-    ('g', '^'),  # green, triangle up
-    ('r', 's'),  # red, square
-    ('c', 'D'),  # cyan, diamond
-    ('m', 'p'),  # magenta, pentagon
-    ('y', '*'),  # yellow, star
-    ('k', 'x'),  # black, x
-    ('#FFA07A', 'H'),  # LightSalmon, hexagon1
-    ('#20B2AA', 'v'),  # LightSeaGreen, triangle down
-    ('#8A2BE2', '8'),  # BlueViolet, octagon
-    ('#7FFF00', 'D'),  # Chartreuse, diamond
-    ('#FF4500', 'h'),  # OrangeRed, hexagon2
-    ('#9932CC', 'p'),  # DarkOrchid, pentagon
-    ('#3CB371', 'X'),  # MediumSeaGreen, x
-    ('#40E0D0', 'd'),  # Turquoise, thin_diamond
-    ('#FFD700', '+'),  # Gold, plus
-    ('#DC143C', '|'),  # Crimson, vline
-    ('#800080', '_')   # Purple, hline
-]
-
-"""
-List of all graph types supported
-"""
-TYPES: List[str] = ["Line","Linear","Exponential","Histogram","Scatter","None"]
-
-
-def graph(graph_path:str, x:  List[List[float]], y: List[List[float]], x_label:str, y_label:str, title:str, plot_type: List[str], labels: List[str]) -> None:
+def _load_json(file_path: str) -> Dict[str , Any] | None:
     """
-    Plot a number of plots on the same graph plane.
-    
-    Args:
-        graph_path (str): Path to save graph to
-        x (List[List[float]]): List of x coord lists for each plot
-        y (List[List[float]]): List of y coord lists for each plot
-        x_label (str): x axis label
-        y_label (str): y axis label
-        title (str): Graph title
-        plot_type (List[str]): Lists of plot types.
+    Attempt to load JSON file data as a dictionary.
     """
-    # If the number of coord details doesn't match, exit.
-    if not (len(x) == len(y) == len(plot_type)):
-        print("length mismatch!")
-        print(len(x), len(y), len(plot_type))
-        sys.exit(1)
+    data = None
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+            if not data:
+                return None
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found.")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON file: {e}")
+        return None
     
-     # Declare the plot to write to
-    _, ax  = plt.subplots(figsize = (8,6))
+    return data
+
+def _load_toml(file_path:str) -> Dict[str , Any] | None:
+    """ 
+    Attempt to load a toml file as a dictionary.
+    """
+    toml_data = None
+    try:
+        with open(file_path, 'r') as file:
+            toml_data = toml.load(file)
+            if not toml_data:
+                return None
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found.")
+        return None
+    except toml.TomlDecodeError as e:
+        print(f"Error decoding TOML file: {e}")
+        return None
+
+    return toml_data
+
+
+def __same_dimensions(list1: List|object, list2: List|object) -> bool:
+    """
+    Recursively check if passed in lists have the same dimensionality.
+    """
+    if isinstance(list1, list) and isinstance(list2, list):
+        try:
+            if len(list1) != len(list2): return False
+        except Exception as e:
+            print(f"Couldn't check dimensionality: {e}")
+            return False
+        for sublist1, sublist2 in zip(list1, list2):
+            if not __same_dimensions(sublist1, sublist2):
+                return False
+        return True
     
-    count = 1
-    for x_coords, y_coords, type, markers, label in zip (x, y, plot_type, COLOUR_MARKERS, labels):
-        match type:
-            case "Linear":
-                approximated(ax, x_coords, y_coords, type, markers, count, label)
-            case "Exponential":
-                approximated(ax, x_coords, y_coords, type, markers, count, label)
-            case "Histogram":
-                pass
-            case "Logarithmic":
-                approximated(ax, x_coords, y_coords, type, markers, count, label)
-            case "Scatter":
-                scatter(ax, x_coords, y_coords, markers, count, label)
-            case "Line":
-                line(ax, x_coords, y_coords, count, label)
-            case "None":
-                scatter(ax, x_coords, y_coords, markers, count, label)
-            case _:
-                pass
-                
-                
-        count += 1
+    else:
+        return False
 
-    # Add labels and title
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.title(title)
-    plt.legend(loc = "upper left", fontsize = 8)
+def _json_to_Plot(plot: dict) -> Plot:
+    """
+    Convert a graph plot dictionary to a Plot object.
+    """
+    return Plot(label = plot['label'],
+                x = plot['x'],
+                y = plot['y'],
+                type = PlotType.match(plot['type']),
+                size = plot['size']
+            )
 
-    # Save the graph
-    __resolve_path(graph_path)
+def _json_to_Graph(graph: dict) -> Graph:
+    """
+    Convert the graph data Dictionary to a Graph object.
+    """
+    outGraph = Graph(name = graph['name'],
+                    title = graph['title'],
+                    x_label = graph['x_label'],
+                    y_label = graph['y_label'],
+                    fontsize=graph['fontsize'])
+    
+    outGraph['plots'] = [_json_to_Plot(graph['plots'][index]) for index in range(len(graph['plots']))]
+    return outGraph
+
+def graph(graph: Graph, graph_path: str = "src/graphs/test.png") -> None:
+    """
+    Renders and saves a graph based on the provided Graph object and path.
+
+    This function takes a Graph object containing all necessary data for plotting,
+    including labels, titles, and plot data. It then renders the graph using matplotlib
+    and saves it to the specified path. The fontsize for the graph elements is adjusted
+    based on the Graph object's fontsize attribute, with a default and minimum value set to 10.
+
+    Parameters:
+    - graph: Graph object containing the data and settings for the graph to be plotted.
+    - graph_path: str, optional. The file path where the graph image will be saved. Defaults to "src/graphs/test.png".
+
+    Returns:
+    - None. The graph is saved to the specified file path.
+    """
+    # Set the fontsize, ensuring it is not below 10
+    fs = graph['fontsize'] if graph['fontsize'] is not None else 10
+    fs = graph['fontsize'] if graph['fontsize'] >= 10 else 10
+    
+    # Initialize the figure and axis for the plot
+    fig, ax  = plt.subplots()
+    fig.set_figheight(fs)
+    fig.set_figwidth(fs*1.5)
+
+    # Plot each plot in the graph
+    for plot in graph["plots"]:
+        plotFunc = get_plotter(plot)
+        plotFunc(ax, plot)
+    
+    # Set the labels and title with the specified fontsize
+    plt.xlabel(f"\n{graph['x_label']}\n", fontsize = fs)
+    plt.ylabel(f"{graph['y_label']}\n", fontsize = fs)
+    plt.title(f"{graph['title']}\n", fontsize = fs*1.50)
+    plt.xticks(fontsize = fs)
+    plt.yticks(fontsize = fs)
+    
+    # Configure and display the legend
+    ax.legend(loc='upper left',
+          fancybox=True, shadow=True, ncol=2, fontsize= (fs-2) if fs >= 12 else 8)
+
+    # Save the rendered graph to the specified path
     plt.savefig(graph_path)
 
 
 
-def __resolve_path(image_path:str) -> None:
-    """
-    Ensure graph save path exists.
-    
-    Args:
-        image_path (str): _description_
-    """
-    
-    basefolder:str = path.dirname(image_path)
-    print(basefolder)
-    if not path.isdir(basefolder):
-        makedirs(basefolder)
-    
-
-
-
-if __name__ == "__main__":
-    
-    import argparse
-    import ast
-    import platform
-
-    system = platform.system()
-    print(system)
-    
-    # Define a custom type function to convert strings to lists
-    def parse_list(s):
-        return ast.literal_eval(s)
-
+if  __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Process some arguments.')
     
     # Define the expected arguments
-    parser.add_argument('graph_path', type=str, help='Path to the image file')
-    parser.add_argument('x', type=parse_list, help='List of lists of integers')
-    parser.add_argument('y', type=parse_list, help='List of lists of integers')
-    parser.add_argument('x_label', type=str, help='Label for data1')
-    parser.add_argument('y_label', type=str, help='Label for data2')
-    parser.add_argument('title', type=str, help='Title of the plot')
-    
-    
-
-
-    if system == "Linux": 
-        parser.add_argument('plot_type', type=str, help='List of strings')
-        parser.add_argument('labels', type=str, help='List of strings')
-    else:
-        parser.add_argument('plot_type', type=str, help='List of strings')
-        parser.add_argument('labels', type=str, help='List of strings')
-    
-    #parser.add_argument('analyze', type=bool, help='Boolean')
-
+    parser.add_argument('json_path', type=str, help='Path to the json graph file')
+    parser.add_argument('graph_path', type=str, help='Path to save the graph image file to')
     # Parse
     args = parser.parse_args()
-    
     # Assign the args
     argsl = len(sys.argv)
-    graph_path: str = args.graph_path
-    x: List[List[float]] | List[float] = args.x
-    y: List[List[float]] | List[float] = args.y
-    x_label: str = args.x_label
-    y_label: str = args.y_label
-    title: str = args.title
-    #analyze: bool = args.analyze
+    if argsl != 3: 
+        print(f"ERROR: Wrong Usage.")
+        exit(1)
 
-    
-    plot_type = sys.argv[7].split(",")
-    plot_type =  [l.replace("[",'').replace("]",'').strip() for l in plot_type]
-    labels = sys.argv[8].split(",")
-    labels = [l.replace("[",'').replace("]",'').strip() for l in labels]
-    
-    
-    print(f"Image Path: {graph_path}")
-    print(f"X: {x} - {len(x)}: \n{type(x)} of {type(x[0])} of {type(x[0][0])}")
-    print(f"Y: {y} - {len(y)}")
-    print(f"X Label : {x_label}")
-    print(f"Y Label : {y_label}")
-    print(f"Title: {title}")
-    print(f"Types: {plot_type} - {len(plot_type)}")
-    print(f"Types: {labels} - {len(labels)}")
-    print(f"Constructing {len(plot_type)} graphs")
-    #print(f"Analysis: {analyze}")
-    
-    graph(graph_path, x, y, x_label, y_label, title, plot_type, labels)
+    graph_path: str = args.graph_path
+    json_path:str = args.json_path
+
+    if not path.exists(json_path):
+        print(f"ERROR: FileNotFound \"{json_path}\"")
+        exit(1)
+
+    data = _load_toml(json_path)
+    if data is None:
+        print(f"ERROR: Graph data could not be loaded. Check file contents.")
+        exit(1)
+
+    graph_data = _json_to_Graph(data)
+    graph(graph_data, graph_path)

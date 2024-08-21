@@ -1,15 +1,24 @@
-package src;
+package Task1;
 
 public class HashTable<K> {
-    private final int size;
+    private int size;
     private static final int P = 670244987;
-
     private Entry<K>[] table;
+
+    public int size() {
+        return size;
+    }
 
     @SuppressWarnings("unchecked")
     public HashTable(int capacity) {
         this.size = 0;
-        this.table = new Entry[Util.findNextPrime(capacity)];
+        this.table = new Entry[capacity];
+    }
+
+    @SuppressWarnings("unchecked")
+    public HashTable() {
+        this.size = 0;
+        this.table = new Entry[P];
     }
 
     /**
@@ -51,7 +60,8 @@ public class HashTable<K> {
     public void insert(K key) {
         int index = find(key);
         if(exists(index)) return;
-        this.table[index] = new Entry<K>(key, true);
+        this.table[index] = new Entry<>(key, true);
+        this.size += 1;
     }
 
     /**
@@ -71,7 +81,10 @@ public class HashTable<K> {
     public void delete(K key) {
         int index = find(key);
 
-        if(exists(index)) this.table[index].Active = false;
+        if(exists(index)) {
+            this.table[index].Active = false;
+            this.size -= 1;
+        }
     }
 
     private boolean exists(int index) {
