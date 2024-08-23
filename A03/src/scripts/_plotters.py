@@ -34,6 +34,7 @@ def get_graph_data(inPlot: Plot) -> Plot|None:
     
     return expected_data
 
+
 def get_plotter(plot:Plot) -> Callable:
     """
     Return the plotting function corresponding to the graph type.
@@ -47,6 +48,8 @@ def get_plotter(plot:Plot) -> Callable:
             plotFunc = _line
         case PlotType.SCATTER:
             plotFunc = _scatter
+        case PlotType.HISTOGRAM:
+            plotFunc = _hist
         case PlotType.NONE:
             plotFunc = _do_nothing
     
@@ -59,6 +62,15 @@ def _line(ax: Axes, plot: Plot) -> None:
     """
     l:str = f"{plot['label']}" if plot['label'] != "None" else f"Plot data"
     ax.plot(plot['x'], plot['y'], label = l, linewidth = str(plot['size']))
+
+
+def _hist(ax: Axes, plot: Plot) -> None:
+    """
+    Plot a histogram and give it a label.
+    """
+    
+    l:str = f"{plot['label']}" if plot['label']!= "None" else f"Plot data"
+    ax.bar(plot['x'], plot['y'], alpha = 0.8, label = l)
 
 
 def _scatter(ax: Axes,plot: Plot) -> None:
@@ -81,6 +93,7 @@ def _approximated(ax: Axes,plot: Plot) -> None:
     if expected_plot is not None:
         expected_plot["label"] = f"{plot['label']} {expected_plot['label']}"
         _line(ax, expected_plot)
+
 
 def _do_nothing(ax: Axes, plot: Plot) -> None:
     """

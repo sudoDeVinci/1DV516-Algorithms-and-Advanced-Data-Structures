@@ -1,9 +1,6 @@
-package src.plot;
+package Plot;
 
-import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * 
@@ -21,6 +18,7 @@ public class Plot<X, Y> {
         SCATTER("scatter"),
         LOGARITHMIC("logarithmic"),
         LINE("line"),
+        HISTOGRAM("histogram"),
         NONE("none");
 
         private final String type;
@@ -29,6 +27,7 @@ public class Plot<X, Y> {
             this.type = type;
         }
 
+        @Override
         public String toString() {
             return type;
         }

@@ -39,6 +39,7 @@ class PlotType(Enum):
     LOGARITHMIC = "logarithmic"
     SCATTER  = "scatter"
     LINE = "line"
+    HISTOGRAM = "histogram"
     NONE = "None"
 
     @classmethod

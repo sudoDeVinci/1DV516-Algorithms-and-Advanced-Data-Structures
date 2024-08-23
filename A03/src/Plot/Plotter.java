@@ -1,24 +1,24 @@
-package src.plot;
+package Plot;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import src.Util;
+import util.Util;
 
 public class Plotter <X, Y> {
-    private List<Plot<X, Y>> plots = new ArrayList<>();
+    private final List<Plot<X, Y>> plots = new ArrayList<>();
     private String x_label = "_";
     private String y_label = "_";
     private String title = "_";
     private String name = "_";
     private int fontsize = 10;
-    private String ROOT  = "src";
-    private String SEP = File.separator;
-    private String SAVES = ROOT + SEP + "saves";
-    private String SCRIPTS = ROOT + SEP + "scripts";
+    private final String ROOT  = "src";
+    private final String SEP = File.separator;
+    private final String SAVES = ROOT + SEP + "saves";
+    private final String SCRIPTS = ROOT + SEP + "scripts";
     private final String PLOTSCRIPT = SCRIPTS + SEP + "pyplot.py";
-    private String GRAPHS = ROOT + SEP + "graphs";
+    private final String GRAPHS = ROOT + SEP + "graphs";
 
     /**
      * 
@@ -201,15 +201,15 @@ public class Plotter <X, Y> {
 
 
     public static void main(String[] args) {
-        Plotter<Integer, Double> graph = new Plotter<Integer, Double>("Plot");
+        Plotter<Integer, Double> graph = new Plotter<>("Plot");
         graph.setTitle("Test Plot");
         graph.setXLabel("Test X Label");
         graph.setYLabel("Test Y Label");
         graph.setFontSize(20);
         
-        Plot<Integer, Double> p1 = new Plot<Integer, Double>("Plot01", Plot.Type.LINEAR, new Integer[]{1, 2, 3, 4, 5}, new Double[]{1.0, 2.0, 3.0, 4.0, 5.0});
+        Plot<Integer, Double> p1 = new Plot<>("Plot01", Plot.Type.LINEAR, new Integer[]{1, 2, 3, 4, 5}, new Double[]{1.0, 2.0, 3.0, 4.0, 5.0});
         p1.setSize(40);
-        Plot<Integer, Double> p2 = new Plot<Integer, Double>("Plot02", Plot.Type.EXPONENTIAL, new Integer[]{1, 2, 3, 4, 5}, new Double[]{1.0, 4.0, 9.0, 16.0, 25.0});
+        Plot<Integer, Double> p2 = new Plot<>("Plot02", Plot.Type.EXPONENTIAL, new Integer[]{1, 2, 3, 4, 5}, new Double[]{1.0, 4.0, 9.0, 16.0, 25.0});
         p2.setSize(40);
         graph.add(p1);
         graph.add(p2);
