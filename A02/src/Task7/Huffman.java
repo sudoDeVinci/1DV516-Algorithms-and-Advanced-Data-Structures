@@ -34,6 +34,13 @@ public class Huffman {
         return this.root;
     }
 
+
+    private HuffNode construct() {
+        HashMap<Character, Integer> freqmap = new HashMap<>();
+        for (char c : this.string.toCharArray()) freqmap.put(c, freqmap.getOrDefault(c, 0) + 1);
+        return fromHashMap(freqmap);
+    }
+
     private HuffNode fromHashMap(HashMap<Character, Integer> freqmap) {
 
         PriorityQueue<HuffNode> freqQ = new PriorityQueue<>(Comparator.comparingInt(node -> node.frequency));
@@ -51,12 +58,6 @@ public class Huffman {
 
 
         return freqQ.poll();
-    }
-
-    private HuffNode construct() {
-        HashMap<Character, Integer> freqmap = new HashMap<>();
-        for (char c : this.string.toCharArray()) freqmap.put(c, freqmap.getOrDefault(c, 0) + 1);
-        return fromHashMap(freqmap);
     }
 
     public HuffNode fromFilePath(String filePath) {

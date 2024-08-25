@@ -27,25 +27,33 @@ public class Task4 {
 
         // Test height
         System.out.println("Height: " + bst.height());
+        assert bst.height() == 3 : "Expected height 3, got " + bst.height();
 
         // Test size
         System.out.println("Size: " + bst.size());
+        assert bst.size() == 8 : "Expected size 8, got " + bst.size();
 
         // test removes
         int val = 8; 
         bst.remove(val);
         System.out.println(!bst.contains(8) ? "Succesfully removed value "+val+"!" : "Remove of value " + val + " unsuccessful!");
+        assert !bst.contains(8) : "BST still contains removed value 8";
 
         bst.printTree();
         
         // Test height
         System.out.println("Height: " + bst.height());
+        assert bst.height() == 2 : "Expected height 2, got " + bst.height();
 
         // Test size
         System.out.println("Size: " + bst.size());
+        assert bst.size() == 7 : "Expected size 7, got " + bst.size();
+
         // Test contains
         System.out.println("Contains 4: " + bst.contains(4)); // Should be true
+        assert bst.contains(4) : "BST does not contain value 4";
         System.out.println("Contains 11: " + bst.contains(11)); // Should be false
+        assert !bst.contains(11) : "BST contains value 11";
 
         // Set the traversal type (optional)
         bst.setIterType(BST.IterType.INORDER);
@@ -79,6 +87,7 @@ public class Task4 {
 
         // Remove 2nd largest value (7)
         bst.removeKthLargest(2);
+        assert bst.contains(7) : "BST still contains value second largest value (7)";
         
 
         // Test removal of kth largest element

@@ -8,6 +8,7 @@ public class Task7 {
         testGetHuffmanString_SingleCharacter();
         testGetHuffmanString_RepeatedCharacters();
         testGetHuffmanString_fromFilePath();
+        System.out.println("Tests passed!");
     }
 
     private static void testHuffmanConstruction() {

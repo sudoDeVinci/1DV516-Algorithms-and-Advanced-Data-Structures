@@ -96,7 +96,8 @@ public class BST implements Iterable<Integer> {
      * @param node
      * @return
      */
-    public int min() {
+    public int min() throws NoSuchElementException {
+        if (root == null) throw new NoSuchElementException();
         if (root.left == null) return root.value;
         else return root.min().value;
     }

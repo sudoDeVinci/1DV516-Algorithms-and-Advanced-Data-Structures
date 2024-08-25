@@ -1,5 +1,7 @@
 package src.Task6;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -275,27 +277,32 @@ public class BST implements Iterable<Integer> {
    * @return
    */
   public void randomizeTree(int size) {
-    this.root = new BSTNode(size);
+    this.root = null;
+    ArrayList<Integer> values = new ArrayList<>();
 
-    int val;
-    int sz = 0;
-
-    while (sz < size) {
-        val = getValue(size*2);
-        if (rand.nextDouble() < 0.48) {
-            if (val!=size && this.contains(val)) {
-                this.remove(val);
-                sz -= 1;
-            }
-        } else {
-            if(!this.contains(val)) {
-                this.add(val);
-                sz += 1;
-            }
-        }
-        
+    // Fill the array with values from 1 to size
+    for (int i = 0; i < (int)(size*1.5); i++) {
+        values.add(i);
     }
-  }
+
+    // Shuffle the array to randomize the values
+    Collections.shuffle(values);
+
+    // Insert the values into the AVL tree
+    for (Integer value : values) {
+        this.add(value);
+    }
+    
+    int count = 0;
+
+    // Randomly delete items from the AVL tree
+    while (count < size) {
+        int i = rand.nextInt(values.size()-1);
+        remove(values.get(i));
+        values.remove(i);
+        count++;
+    }
+}
 
   private void printTree(String prefix, BSTNode node, boolean isTail) {
     int nodeName = node.value;

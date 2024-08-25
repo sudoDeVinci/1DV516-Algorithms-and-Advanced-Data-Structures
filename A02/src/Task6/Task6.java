@@ -5,12 +5,12 @@ import src.plot.Plotter;
 
 public class Task6 {
     public static void main(String[] args) {
-        int SIZE = 25_000;
-        int SPACING = 250;
+        int SIZE = 1_000;
         Double[][] stats;
 
-        Integer[] x = TreeComp.xAxisInc(SIZE, SPACING);
-        stats = TreeComp.runAdd(SIZE, SPACING);
+        Integer[] x = new Integer[SIZE];
+        for (int i = 0; i < SIZE; i++) x[i] = i;
+        stats = TreeComp.runAdd(SIZE);
 
         Plotter<Integer, Double> graph_add = new Plotter<>("Tree_add_comp");
         graph_add.setTitle("Comparison of Tree Addition Operation Times");
@@ -18,10 +18,10 @@ public class Task6 {
         graph_add.setYLabel("Time (micro seconds)");
         graph_add.setFontSize(20);
 
-        Plot<Integer, Double> p1 = new Plot<>("AVL Tree", Plot.Type.EXPONENTIAL, x, stats[0]);
+        Plot<Integer, Double> p1 = new Plot<>("AVL Tree", Plot.Type.SCATTER, x, stats[0]);
         p1.setSize(40);
 
-        Plot<Integer, Double> p2 = new Plot<>("BST Tree", Plot.Type.EXPONENTIAL, x, stats[1]);
+        Plot<Integer, Double> p2 = new Plot<>("BST Tree", Plot.Type.SCATTER, x, stats[1]);
         p2.setSize(40);
 
         graph_add.add(p1);
@@ -35,10 +35,10 @@ public class Task6 {
         graph_height.setYLabel("Height");
         graph_height.setFontSize(20);
 
-        p1 = new Plot<>("AVL Tree", Plot.Type.LOGARITHMIC, x, stats[2]); 
+        p1 = new Plot<>("AVL Tree", Plot.Type.SCATTER, x, stats[2]); 
         p1.setSize(40);
 
-        p2 = new Plot<>("BST Tree", Plot.Type.LOGARITHMIC, x, stats[3]);
+        p2 = new Plot<>("BST Tree", Plot.Type.SCATTER, x, stats[3]);
         p2.setSize(40);
 
         graph_height.add(p1);
@@ -47,8 +47,8 @@ public class Task6 {
 
 
 
-        Integer[] x_dec = TreeComp.xAxisDec(SIZE, SPACING);
-        stats = TreeComp.runDel(SIZE, SPACING);
+        for (int i = 1; i < SIZE; i++) x[SIZE - i] = i;
+        stats = TreeComp.runDel(SIZE);
 
         Plotter<Integer, Double> graph_del = new Plotter<>("Tree_del_comp");
         graph_del.setTitle("Comparison of Tree Deletion Operation Times");
@@ -56,10 +56,10 @@ public class Task6 {
         graph_del.setYLabel("Time (micro seconds)");
         graph_del.setFontSize(20);
 
-        p1 = new Plot<>("AVL Tree", Plot.Type.EXPONENTIAL, x_dec, stats[0]);
+        p1 = new Plot<>("AVL Tree", Plot.Type.SCATTER, x, stats[0]);
         p1.setSize(40);
 
-        p2 = new Plot<>("BST Tree", Plot.Type.EXPONENTIAL, x_dec, stats[1]);
+        p2 = new Plot<>("BST Tree", Plot.Type.SCATTER, x, stats[1]);
         p2.setSize(40);
 
         graph_del.add(p1);
