@@ -20,6 +20,16 @@ public class AVLTree implements Iterable<Integer>{
       POSTORDER
     }
 
+    public int size() {
+      int count = 0;
+      InOrderIterator in = new InOrderIterator();
+      while (in.hasNext()){
+        in.next();
+        count++;
+      }  
+      return count;
+    }
+
     public void setIterType(IterType type) {
         this.iterType = type;
     }
@@ -369,13 +379,103 @@ public class AVLTree implements Iterable<Integer>{
 
 
     public static void main(String[] args) {
-        AVLTree tree = new AVLTree();
-        for(int i = 0; i < 10; i++) tree.add(i);
-        tree.printTree();
-        System.out.println('\n');
+      AVLTree bst = new AVLTree();
 
-        tree = new AVLTree();
-        tree.randomizeTree(10);
-        tree.printTree();
+      // Add elements to the BST
+      bst.add(5);
+      bst.add(3);
+      bst.add(7);
+      bst.add(2);
+      bst.add(4);
+      bst.add(6);
+      bst.add(8);
+      bst.add(9);
+      bst.printTree();
+
+      /*
+       *            5
+       *        /       \
+       *       3         7
+       *     /   \     /   \
+       *    2     4   6     8
+       *                      \
+       *                       9
+       */
+
+      // Test height
+      System.out.println("Height: " + bst.height());
+      assert bst.height() == 3 : "Expected height 3, got " + bst.height();
+
+      // Test size
+      System.out.println("Size: " + bst.size());
+      assert bst.size() == 8 : "Expected size 8, got " + bst.size();
+
+      // test removes
+      int val = 8; 
+      bst.remove(val);
+      System.out.println(!bst.contains(8) ? "Succesfully removed value "+val+"!" : "Remove of value " + val + " unsuccessful!");
+      assert !bst.contains(8) : "BST still contains removed value 8";
+
+      bst.printTree();
+      
+      // Test height
+      System.out.println("Height: " + bst.height());
+      assert bst.height() == 2 : "Expected height 2, got " + bst.height();
+
+      // Test size
+      System.out.println("Size: " + bst.size());
+      assert bst.size() == 7 : "Expected size 7, got " + bst.size();
+
+      // Test contains
+      System.out.println("Contains 4: " + bst.contains(4)); // Should be true
+      assert bst.contains(4) : "BST does not contain value 4";
+      System.out.println("Contains 11: " + bst.contains(11)); // Should be false
+      assert !bst.contains(11) : "BST contains value 11";
+
+      // Set the traversal type (optional)
+      bst.setIterType(AVLTree.IterType.INORDER);
+
+      // Iterate over the elements
+      System.out.println("In-Order Traversal:");
+      for (Integer value : bst) {
+          System.out.print(value + " ");
+      }
+      System.out.println();
+
+      // Set the traversal type (optional)
+      bst.setIterType(AVLTree.IterType.PREORDER);
+
+      // Iterate over the elements
+      System.out.println("Pre-Order Traversal:");
+      for (Integer value : bst) {
+          System.out.print(value + " ");
+      }
+      System.out.println();
+
+      // Set the traversal type (optional)
+      bst.setIterType(AVLTree.IterType.POSTORDER);
+
+      // Iterate over the elements
+      System.out.println("Post-Order Traversal:");
+      for (Integer value : bst) {
+          System.out.print(value + " ");
+      }
+      System.out.println();
+
+      // Removing 5, show rotations.
+      bst.remove(5);
+      bst.printTree();
+
+      /*
+       *           6
+       *        /     \
+       *       3        7
+       *     /   \       \
+       *    2     4       9
+       */
+
+      // Test contains
+      System.out.println("Contains 5: " + bst.contains(5)); // Should be falseT still contains value 5 after rotation";
+      assert !bst.contains(5) : "BST still contains value 5 after rotation";
     }
 }

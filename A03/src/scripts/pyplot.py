@@ -161,4 +161,5 @@ if  __name__ == "__main__":
         exit(1)
 
     graph_data = _json_to_Graph(data)
+
     graph(graph_data, graph_path)

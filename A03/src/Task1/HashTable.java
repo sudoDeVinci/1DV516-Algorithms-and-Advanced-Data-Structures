@@ -33,7 +33,7 @@ public class HashTable<K, V> {
 
     private int hash(K k) {
         int hash = k.hashCode();
-        return hash < 0 ? (hash % table.length) * 1 : (hash % table.length);
+        return hash < 0 ? (hash % table.length) * -1 : (hash % table.length);
     }
 
     private int getPos(K key) {
@@ -104,5 +104,9 @@ public class HashTable<K, V> {
         if (index < 0 || index >= size()) throw new IndexOutOfBoundsException("Index out of bounds.");
         if (table[index]== null || table[index].dead) throw new RuntimeException("Element not found.");
         return table[index].key;
+    }
+
+    public  double loadFactor  () {
+        return (double) size / table.length;
     }
 }

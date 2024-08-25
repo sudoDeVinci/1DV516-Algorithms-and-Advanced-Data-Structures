@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -278,6 +280,37 @@ public class Util {
             writer.write(json);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // Helper function to check if a number is prime using memoization
+    private static boolean isPrime(int num, List<Integer> primeCache) {
+        if (num <= 1) {
+            return false;
+        }
+        for (int prime : primeCache) {
+            if (prime > Math.sqrt(num)) {
+                break;
+            }
+            if (num % prime == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Static method to find the next prime number after N using memoization
+    public static int nextPrime(int N) {
+        // List to store previously computed prime numbers
+        List<Integer> primeCache = new ArrayList<>();
+
+        int nextNum = N + 1;
+        while (true) {
+            if (isPrime(nextNum, primeCache)) {
+                primeCache.add(nextNum);
+                return nextNum;
+            }
+            nextNum++;
         }
     }
 }

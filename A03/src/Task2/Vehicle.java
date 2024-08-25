@@ -1,6 +1,7 @@
 package Task2;
 
-import java.util.Objects;
+import java.math.BigInteger;
+import util.Util;
 
 public class Vehicle {
 
@@ -54,9 +55,9 @@ public class Vehicle {
     private String plate;
     private int year;
     private Colour colour;
-    private String make;
+    private Make make;
 
-    public Vehicle(String plate, int year, Colour colour, String make) {
+    public Vehicle(String plate, int year, Colour colour, Make make) {
         this.plate = plate;
         this.year = year;
         this.colour = colour;
@@ -75,7 +76,7 @@ public class Vehicle {
         return colour;
     }
 
-    public String getMake() {
+    public Make getMake() {
         return make;
     }
 
@@ -101,7 +102,20 @@ public class Vehicle {
 
     @Override
     public int hashCode() {
-        return Objects.hash(plate, year, colour, make);
+        int yearSuffix;
+        if (year < 2000) yearSuffix = year % 1900;
+        else yearSuffix = year % 2000;
+
+        BigInteger hashval = BigInteger.ZERO;
+        for (char c : plate.toCharArray()) {
+            int num = Character.getNumericValue(c);
+            hashval = hashval.multiply(BigInteger.valueOf(2)).add(BigInteger.valueOf(num));
+        }
+
+        BigInteger colorMake = BigInteger.valueOf(colour.hashCode()).multiply(BigInteger.valueOf(Util.nextPrime(yearSuffix))).multiply(BigInteger.valueOf(make.label));
+        if (colorMake.compareTo(BigInteger.ZERO) < 0) colorMake = colorMake.negate();
+
+        BigInteger longformatted = hashval.multiply(BigInteger.valueOf(Util.nextPrime(yearSuffix))).add(colorMake);
+        return longformatted.mod(BigInteger.valueOf(Integer.MAX_VALUE)).intValue();
     }
-    
 }

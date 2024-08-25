@@ -49,6 +49,7 @@ def get_plotter(plot:Plot) -> Callable:
         case PlotType.SCATTER:
             plotFunc = _scatter
         case PlotType.HISTOGRAM:
+            print("hist")
             plotFunc = _hist
         case PlotType.NONE:
             plotFunc = _do_nothing
@@ -70,7 +71,8 @@ def _hist(ax: Axes, plot: Plot) -> None:
     """
     
     l:str = f"{plot['label']}" if plot['label']!= "None" else f"Plot data"
-    ax.bar(plot['x'], plot['y'], alpha = 0.8, label = l)
+    print(plot['y'])
+    ax.bar(plot['x'], plot['y'], color="#dc267f", alpha = 0.8, label = l)
 
 
 def _scatter(ax: Axes,plot: Plot) -> None:

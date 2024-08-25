@@ -158,7 +158,7 @@ public class TreeLCRS {
    * Print the tree to show files/folder and subfiles/folders.
    */
   public void printTree(TreeNode node, int depth) {
-    if (node == null || node.firstChild == null) System.out.println("- empty");
+    if (node == null)  System.out.println("- empty");
 
     TreeNode child = node.firstChild;
 

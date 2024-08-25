@@ -24,7 +24,6 @@ public class Plotter <X, Y> {
      * 
      */
     public Plotter() {
-        ;
     }
 
     /**
@@ -151,7 +150,7 @@ public class Plotter <X, Y> {
             fileWriter.write(this.toToml());
             System.out.println("State Json file has been written successfully.");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
     }
 
@@ -186,12 +185,10 @@ public class Plotter <X, Y> {
 
                 int exitCode = p.waitFor();
                 System.out.println("Python script exited with code: " + exitCode);
-            } catch (IOException e) {
-                return ;
             }
         
         } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e);
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

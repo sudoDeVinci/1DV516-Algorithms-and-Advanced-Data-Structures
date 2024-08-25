@@ -1,39 +1,53 @@
 # Assignment 02
 
 ## Problem 01 
-The double-ended queue is defined in [Deque](src/Deque.java).
-The queue uses a Linked List which is defined [here](src/LinkedList.java)
+The double-ended queue is defined in [Deque](src/Task1/Deque.java).
+The queue uses a Linked List which is defined [here](src/Task1/LinkedList.java)
 
 ## Problem 02
-The randomized queue is defined in [DequeRand](src/DequeRand.java).
+The randomized queue is defined in [DequeRand](src/Task2/DequeRand.java).
+Simple tests for it are defined in [Task2](src/Task2/Task2.java)
+
+```shell
+javac src/Task2/Task2.java
+java src/Task2/Task2
+```
+
 
 ## Probelm 03
-The LCRS directory tree is defined in [Tree LCRS](src/TreeLCRS.java).
+The LCRS directory tree is defined in [Tree LCRS](src/Task3/TreeLCRS.java).
+Simple example for testing is in [Task3](src/Task3/Task3.java)
 Left or right slashes ("/" or "\") can be used for paths, but please stick to one convention.
 
 ```shell
-javac src/TreeLCRS.java
-java src/TreeLCRS
+javac src/Task3/Task3.java
+java src/Task3/Task3
 ```
 
 ## Problem 04
-The BST implementation is defined in [BST](src/BST.java).
+The BST implementation is defined in [BST](src/Task4/BST.java).
+Tests for it are defined in [Task4](src/Task4/Task4.java)
+
 ```shell
-javac src/BST.java
-java src/BST
+javac src/Task4/Task4.java
+java src/Task4/Task4
 ```
 
 ## Problem 05
-The Isomorphic test method is the static BSTIso.isIsomorhphic() method defined in [BSTIso](src/BSTIso.java).
+The Isomorphic test method is the static BSTIso.isIsomorhphic() method defined in [BSTIso](src/Task5/BSTIso.java).
+Tests for different tree types are in [Task 5](src/Task5/Task5.java)
 Time Complexity: Time complexity is O(min(m,n)*2) or O(min(m,n)) where m and n are number of nodes in given trees.
+
 ```shell
-javac src/BSTIso.java
-java src/BSTIso
+javac src/Task5/Task5.java
+java src/Task5/Task5
 ```
 
 ## Problem 06
-The AVL Tree is defined in [AVLTree](src/AVLTree.java).
-The Tree Comparison is defined in [TreeComp](src/AVLTree.java).
+The AVL Tree is defined in [AVLTree](src/Task6/AVLTree.java).
+The Tree Comparison is defined in [TreeComp](src/Task6/Task6.java).
+Code used to 
+
 ```shell
 javac src/TreeComp.java
 java src/TreeComp
@@ -41,7 +55,7 @@ java src/TreeComp
 
 
 ## Problem 07
-N/A
+The huffman tree is defined in [](src/Task7/Task7.java)
 
 ### Python
 The plotter script uses numpy and matplotlib.
