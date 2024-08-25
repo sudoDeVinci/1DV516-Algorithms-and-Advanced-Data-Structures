@@ -71,7 +71,7 @@ public class Huffman {
                 if(Character.isLetter(c)) freqmap.put(c, freqmap.getOrDefault(c, 0) + 1);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
 
         this.root = fromHashMap(freqmap);
