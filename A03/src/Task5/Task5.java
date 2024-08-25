@@ -53,14 +53,18 @@ public class Task5 {
         Double[] times_qs_hs = new Double[items];
         Double[] times_qs_is = new Double[items];
 
+        for (int idx = 0; idx < samples; idx++) {
+            times_qs[idx] = 0.0;
+            times_qs_hs[idx] = 0.0;
+            times_qs_is[idx] = 0.0;
+        }
+
         Integer[] depths = new Integer[items];
 
         for (int i = 0; i < items; i++) {
             
             depths[i] = i;
-            Integer[] qs = new Integer[samples];
-            Integer[] qs_hs = new Integer[samples];
-            Integer[] qs_is = new Integer[samples];
+            System.out.println("Depth " + depths[i]);
 
             Integer[] arr = Task5.getRandomArray(10000);
 

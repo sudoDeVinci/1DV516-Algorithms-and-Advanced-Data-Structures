@@ -34,13 +34,11 @@ public class QuickSort {
     }
 
     public static int medianofThree(Integer[] arr, int low, int high) {
-        int mid = low + (high - low) / 2;
-
-        if (arr[low] > arr[mid]) swap(arr, low, mid);
+        int mid = (low + high) / 2;
         if (arr[low] > arr[high]) swap(arr, low, high);
         if (arr[mid] > arr[high]) swap(arr, mid, high);
-        swap(arr, mid, high - 1);
-        return arr[high - 1];
+        if (arr[low] > arr[mid]) swap(arr, low, mid);
+        return mid;
     }
 
     public static int partition(Integer[] arr, int low, int high) {
