@@ -46,14 +46,14 @@ public class Task5 {
 
     public static void main(String[] args) {
 
-        int items = 100;
+        int items = 10;
         int samples = 30;
 
         Double[] times_qs = new Double[items];
         Double[] times_qs_hs = new Double[items];
         Double[] times_qs_is = new Double[items];
 
-        for (int idx = 0; idx < samples; idx++) {
+        for (int idx = 0; idx < items; idx++) {
             times_qs[idx] = 0.0;
             times_qs_hs[idx] = 0.0;
             times_qs_is[idx] = 0.0;

@@ -1,7 +1,7 @@
 package Task5;
 import Task3.InsertSort;
 import Task4.HeapSort;
-
+import java.util.Arrays;
 public class QuickSort {
 
     public static enum Secondary {
@@ -15,7 +15,7 @@ public class QuickSort {
     }
 
     private static void sort (Integer[] arr, int low, int high, int depth, Secondary secondary) {
-        if (depth == 0 && secondary!= Secondary.None) {  
+        if (depth == 0 && secondary!= Secondary.None) { 
             if (secondary == Secondary.Insertion) InsertSort.sort(arr, low, high);
             else if (secondary == Secondary.Heap) HeapSort.sort(arr);
         } else {
@@ -57,5 +57,15 @@ public class QuickSort {
         swap(arr, lower, high);
         return lower;
 
+    }
+
+    public static void main(String[] args) {
+        Integer[] arr = new Integer[20];
+        for (int i = 0; i < 20; i++) {
+            arr[i] = (int) (Math.random() * 20);
+        }
+
+        QuickSort.sort(arr, 2, Secondary.Heap);
+        System.out.println(Arrays.toString(arr));
     }
 }
