@@ -8,10 +8,10 @@ import java.util.Iterator;
  */
 public class Deque<T> implements Iterable<T>{
 
-  private LinkedList<T> list;
+  private final LinkedList<T> list;
 
   public Deque() {
-    list = new LinkedList<T>();
+    list = new LinkedList<>();
   }
 
   public boolean isEmpty() {

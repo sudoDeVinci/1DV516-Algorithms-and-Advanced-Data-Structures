@@ -1,4 +1,4 @@
-package src.Task7;
+package src.Task1;
 
 public class Node<T> {
   private T data;

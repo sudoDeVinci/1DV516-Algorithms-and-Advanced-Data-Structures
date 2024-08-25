@@ -4,14 +4,15 @@ public class Task2 {
     public static void run() throws Exception {
         System.out.println("\nTest for starting size 0");
         try {
-            DequeRand<Integer> queue0 = new DequeRand<Integer>(0);
+            DequeRand<Integer> __ = new DequeRand<>(0);
+            __.size();
         } catch (Exception e) {
             System.out.println(e + "\n");
         }
 
         System.out.println("\nTest for deleting from empty queue");
         try {
-            DequeRand<Integer> queue1 = new DequeRand<Integer>(1);
+            DequeRand<Integer> queue1 = new DequeRand<>(1);
             queue1.enqueue(3);
             queue1.dequeue();
             queue1.dequeue();
@@ -19,7 +20,7 @@ public class Task2 {
             System.out.println(e + "\n");
         }
 
-        DequeRand<Integer> queue2 = new DequeRand<Integer>(1);
+        DequeRand<Integer> queue2 = new DequeRand<>(1);
         queue2.enqueue(1);
         queue2.enqueue(2);
         queue2.enqueue(3);

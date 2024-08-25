@@ -84,16 +84,6 @@ public class TreeLCRS {
   }
 
   /**
-   * Add child node to the parent node with only a parent's name.
-   * @param parentName
-   * @param childName
-   */
-  private TreeNode addChild(String parentName, String childName) {
-    TreeNode parent = findNode(root, parentName);
-    return addChild(parent, childName);
-  }
-
-  /**
    * Find a Node with a matching name.
    * @param node
    * @param name
@@ -168,9 +158,7 @@ public class TreeLCRS {
    * Print the tree to show files/folder and subfiles/folders.
    */
   public void printTree(TreeNode node, int depth) {
-    if (node == null) {
-      System.out.println("- empty");
-    }
+    if (node == null || node.firstChild == null) System.out.println("- empty");
 
     TreeNode child = node.firstChild;
 
@@ -193,6 +181,10 @@ public class TreeLCRS {
     }
   }
 
+  /**
+   * Check if the tree has a root.
+   * @return true if the tree has a root, false otherwise.
+   */
   public boolean hasRoot() {
       return root == null;
   }

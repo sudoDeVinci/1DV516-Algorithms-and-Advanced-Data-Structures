@@ -42,20 +42,20 @@ public class LinkedList<T> implements Iterable<T> {
 
   public void append(T data) {
     if (first == null) {
-      first = new Node<T>(data);
+      first = new Node<>(data);
       last = first;
     } else {
-      last.setNext(new Node<T>(data));
+      last.setNext(new Node<>(data));
       last = last.getNext();
     }
   }
 
   public void prepend(T data) {
     if (first == null) {
-      first = new Node<T>(data);
+      first = new Node<>(data);
       last = first;
     } else {
-      Node<T> temp = new Node<T>(data);
+      Node<T> temp = new Node<>(data);
       temp.setNext(first);
       first = temp;
     }

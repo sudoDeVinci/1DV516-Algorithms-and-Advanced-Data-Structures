@@ -4,8 +4,9 @@ public class BSTIso extends BST {
 
     /**
      * Given the root Nodes of two trees, check them for "strict" isomorphism.
-     * @param root1
-     * @param root2
+     * O(min(m,n)), where m and n are the number of nodes in the two trees. 
+     * @param root1 - Root of the first tree.
+     * @param root2 - Root of the second tree.
      * @return
      */
     public static boolean isIsomorphic(BSTNode root1, BSTNode root2) {
