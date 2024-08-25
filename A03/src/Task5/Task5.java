@@ -13,7 +13,7 @@ public class Task5 {
         return new Timeit((args) -> {
             Integer[] arr = (Integer[]) args[0];
             Integer depth = (Integer) args[1];
-            QuickSort.sort(arr, depth, QuickSort.Secondary.Heap);
+            QuickSort.sort(arr, QuickSort.Secondary.Heap, depth);
         });
     }
 
@@ -21,24 +21,23 @@ public class Task5 {
         return new Timeit((args) -> {
             Integer[] arr = (Integer[]) args[0];
             Integer depth = (Integer) args[1];
-            QuickSort.sort(arr, depth, QuickSort.Secondary.Insertion);
+            QuickSort.sort(arr, QuickSort.Secondary.Insertion, depth);
         });
     }
 
     public static Timeit QSt () {
         return new Timeit((args) -> {
             Integer[] arr = (Integer[]) args[0];
-            Integer depth = (Integer) args[1];
-            QuickSort.sort(arr, depth, QuickSort.Secondary.None);
+            QuickSort.sort(arr, QuickSort.Secondary.None, arr.length);
         });
     }
 
-    static Integer[] getRandomArray(int N) throws IllegalArgumentException {
+    public static Integer[] getRandomArray(int N) throws IllegalArgumentException {
     if (N < 0) throw new IllegalArgumentException("N and bound must be non-negative");
 
     HashSet<Integer> uniqueNumbers = new HashSet<>(N);
     while (uniqueNumbers.size() < N) {
-        int number = rand.nextInt((int)(N*1.5) + 1);
+        int number = rand.nextInt(N + 1);
         uniqueNumbers.add(number);
     }
     return uniqueNumbers.toArray(Integer[]::new);
@@ -46,8 +45,8 @@ public class Task5 {
 
     public static void main(String[] args) {
 
-        int items = 10;
-        int samples = 30;
+        int items = 25;
+        int samples = 60;
 
         Double[] times_qs = new Double[items];
         Double[] times_qs_hs = new Double[items];
@@ -66,37 +65,37 @@ public class Task5 {
             depths[i] = i;
             System.out.println("Depth " + depths[i]);
 
-            Integer[] arr = Task5.getRandomArray(10000);
+            Integer[] arr = Task5.getRandomArray(1000);
 
             for (int j = 0; j < samples; j++) {
                 // Deep copy arr to new arr for sorting,
                 Integer[] arr_qs_hs = arr.clone();
-                times_qs[i] += Task5.QStoHS().measureMicros(arr_qs_hs, i);
+                times_qs[i] += Task5.QStoHS().measureMilis(arr_qs_hs, i);
 
                 Integer[] arr_qs_is = arr.clone();
-                times_qs_is[i] += Task5.QStoIS().measureMicros(arr_qs_is, i);
+                times_qs_is[i] += Task5.QStoIS().measureMilis(arr_qs_is, i);
 
                 Integer[] arr_qs = arr.clone();
-                times_qs_hs[i] += Task5.QSt().measureMicros(arr_qs, i);
+                times_qs_hs[i] += Task5.QSt().measureMilis(arr_qs, i);
             }
         
-        times_qs_hs[i] /= samples;
-        times_qs_is[i] /= samples;
-        times_qs[i] /= samples;
-        }
+            times_qs_hs[i] /= samples;
+            times_qs_is[i] /= samples;
+            times_qs[i] /= samples;
+            }
 
         Plotter<Integer, Double> plotter = new Plotter<>("");
         plotter.setTitle("QuickSort vs HeapSort vs Insertion Sort");
         plotter.setXLabel("Depth");
-        plotter.setYLabel("Time (microseconds)");
-        plotter.setFontSize(20);
+        plotter.setYLabel("Time (miliseconds)");
+        plotter.setFontSize(30);
 
-        Plot<Integer, Double> plot_qs_hs = new Plot<>("HeapSort", Plot.Type.LINEAR, depths, times_qs_hs);
-        plot_qs_hs.setSize(40);
-        Plot<Integer, Double> plot_qs_is = new Plot<>("Insertion Sort", Plot.Type.LINEAR, depths, times_qs_is);
-        plot_qs_is.setSize(40);
-        Plot<Integer, Double> plot_qs = new Plot<>("QuickSort", Plot.Type.LINEAR, depths, times_qs);
-        plot_qs.setSize(40);
+        Plot<Integer, Double> plot_qs_hs = new Plot<>("HeapSort", Plot.Type.LINE, depths, times_qs_hs);
+        plot_qs_hs.setSize(10);
+        Plot<Integer, Double> plot_qs_is = new Plot<>("Insertion Sort", Plot.Type.LINE, depths, times_qs_is);
+        plot_qs_is.setSize(10);
+        Plot<Integer, Double> plot_qs = new Plot<>("QuickSort", Plot.Type.LINE, depths, times_qs);
+        plot_qs.setSize(10);
 
         plotter.add(plot_qs_hs);
         plotter.add(plot_qs_is);

@@ -10,20 +10,33 @@ public class QuickSort {
         None
     }
 
-    public static void sort (Integer[] arr, int depth, Secondary secondary) {
-        sort(arr, 0, arr.length - 1, depth, secondary);
+    public static void sort(Integer[] arr, Secondary secondary, Integer depth) {
+        sort(arr, 0, arr.length - 2, secondary, depth);
     }
 
-    private static void sort (Integer[] arr, int low, int high, int depth, Secondary secondary) {
-        if (depth == 0 && secondary!= Secondary.None) { 
-            if (secondary == Secondary.Insertion) InsertSort.sort(arr, low, high);
-            else if (secondary == Secondary.Heap) HeapSort.sort(arr);
+
+    public static void sort (Integer[] arr, Integer lo, Integer hi, Secondary secondary, Integer depth) {
+        if (lo >= hi) return;
+
+        if (depth == 0) {
+            if (secondary == Secondary.Insertion) InsertSort.sort(arr, lo, hi + 1);
+            else if (secondary == Secondary.Heap) HeapSort.sort(arr, lo, hi);
         } else {
-            if (low < high) {
-                int pivot = partition(arr, low, high);
-                sort(arr, low, pivot - 1, depth - 1, secondary);
-                sort(arr, pivot + 1, high, depth - 1, secondary);
+            int pivotIndex = medianofThree(arr, lo, hi);
+            int a = lo;
+            int b = hi + 1;
+            if (a == b) return;
+            while (true) {
+                do { a++; } while (arr[a] < arr[pivotIndex]);
+                do { b--; } while (arr[b] > arr[pivotIndex]);
+                
+                if (a < b) swap(arr, a, b);
+                else break;
             }
+
+            swap(arr, a, hi - 1);
+            sort(arr, lo, a - 1, secondary, depth - 1);
+            sort(arr, a + 1, hi, secondary, depth - 1);
         }
     }
 
@@ -41,23 +54,6 @@ public class QuickSort {
         return mid;
     }
 
-    public static int partition(Integer[] arr, int low, int high) {
-        int medianIndex = medianofThree(arr, low, high);
-        int median = arr[medianIndex];
-        swap(arr, medianIndex, high);
-        int lower = low;
-
-        for (int i = low; i < high; i++) {
-            if (arr[i] <= median) {
-                swap(arr, lower, i);
-                lower++;
-            }
-        }
-
-        swap(arr, lower, high);
-        return lower;
-
-    }
 
     public static void main(String[] args) {
         Integer[] arr = new Integer[20];
@@ -65,7 +61,7 @@ public class QuickSort {
             arr[i] = (int) (Math.random() * 20);
         }
 
-        QuickSort.sort(arr, 2, Secondary.Heap);
+        QuickSort.sort(arr, Secondary.Heap, 0);
         System.out.println(Arrays.toString(arr));
     }
 }

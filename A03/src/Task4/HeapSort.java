@@ -6,41 +6,58 @@ package Task4;
  */
 public class HeapSort {
 
+    public static void sort(Integer arr[]) {
+        sort(arr, 0, arr.length - 1);
+    }
 
-    static void heapify(Integer[] arr, Integer N, Integer max) {
-        Integer root = max;
-        Integer left = 2 * root + 1;
-        Integer right = 2 * root + 2;
 
-        if (left < N && arr[left] > arr[root]) root = left;
-        if (right < N && arr[right] > arr[root]) root = right;
-        if (!root.equals(max)) {
-            Integer swap = arr[root];
-            arr[root] = arr[max];
-            arr[max] = swap;
+    public static void sort(Integer arr[], Integer start, Integer end) {
+        Integer x;
+        if (start <= 1) x = end / 2;
+        else {
+            if (start % 2 == 0) x = end / 2 + start;
+            else x = end / 2 + start + 1;
+        }
 
-            heapify(arr, N, root);
+        while (x >= start) {
+            swim_down(arr, start, end, x);
+            x--;
+        }
+
+        while (end >= start) {
+            swap(arr, start, end);
+            end--;
+            swim_down(arr, start, end, start);
         }
     }
 
-    public static void sort(Integer arr[]) {
-        Integer n = arr.length;
-        for (Integer i = n / 2 - 1; i >= 0; i--)
-            heapify(arr, n, i);
+    private static void swim_down(Integer[] arr, Integer start, Integer end, Integer x) {
+        int parent = 1 - start;
 
-        for (Integer i=n-1; i>=0; i--) {
-            Integer temp = arr[0];
-            arr[0] = arr[i];
-            arr[i] = temp;
+        while (2 * x + parent <= end) {
+            int ab = 2 * x + parent;
 
-            heapify(arr, i, 0);
+            if (ab < end && arr[ab] < arr[ab + 1]) ab++;
+
+            if (arr[x] >= arr[ab]) break;
+
+            swap(arr, x, ab);
+
+            x = ab;
         }
+
     }
 
     static void print(Integer arr[]) {
         Integer N = arr.length;
         for (Integer i = 0; i < N; ++i) System.out.print(arr[i] + " ");
         System.out.println();
+    }
+
+    private static void swap(Integer[] arr, Integer x, Integer y) {
+        int temp = arr[x];
+        arr[x] = arr[y];
+        arr[y] = temp;
     }
 
     public static void main(String args[])
