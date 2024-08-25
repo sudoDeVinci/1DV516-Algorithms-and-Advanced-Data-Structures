@@ -1,9 +1,6 @@
 package src.plot;
 
-import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * 
@@ -28,7 +25,8 @@ public class Plot<X, Y> {
         private Type(String type) {
             this.type = type;
         }
-
+        
+        @Override
         public String toString() {
             return type;
         }
